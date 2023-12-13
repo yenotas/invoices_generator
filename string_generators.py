@@ -505,43 +505,27 @@ list_files = {
     'banks.csv': 'https://drive.google.com/uc?export=download&id=1axTYKpLPCeuh943r6s6E8K7Nf9wGg0fz'
     }
 
-for filename, url in list_files.items():
-    data[filename] = load_data_from_file(filename)
-    # для скачивания:
-    # data[filename] = load_data_from_file(filename, url)
-
-# Пример: генерация данных и сохраниение записей для счетов
-
-folder = '/temp'
-if not os.path.exists(folder):
-    os.makedirs(folder)
-file_name = 'invoices.json'
-full_path = os.path.join(folder, file_name)
-
-dataset = []
-n = 2 # количество счетов
-for i in range(n):
-    json_data = gen_invoice_json(data, i+1, random.randint(1, 8))
-    dataset.append(json_data)
-
-# список JSON-записей в файл
-with open(full_path, "w", encoding="utf-8") as json_file:
-    json.dump(dataset, json_file, indent=2, ensure_ascii=False)
-
-
-base_splitters = ' '
-
-for i in range(0, 5):
-    num_splitters = random.randint(4, 8)
-    holder = str_generator(num_splitters, num_splitters, lang='ru')
-    holder_len = len(holder)
-    num_symbols = 54
-    letters_len = num_symbols - holder_len - num_splitters
-
-    text1 = holder + str_generator(num_symbols, num_symbols-holder_len, lang='RU')
-    print(set_splitters(text1, holder_len, 0, num_splitters))
-    text2 = str_generator(num_symbols+4, num_symbols + 4, lang='en')
-    text2_ = set_splitters(text2, 0, 0, num_splitters+1)
-    print(text2_)
-    text3 = str_line_splitter(text2_[:10], 5, 2)
-    print(text3)
+'''
+    for filename, url in list_files.items():
+        data[filename] = load_data_from_file(filename)
+        # для скачивания:
+        # data[filename] = load_data_from_file(filename, url)
+    
+    # Пример: генерация данных и сохраниение записей для счетов
+    
+    folder = '/temp'
+    if not os.path.exists(folder):
+        os.makedirs(folder)
+    file_name = 'invoices.json'
+    full_path = os.path.join(folder, file_name)
+    
+    dataset = []
+    n = 2 # количество счетов
+    for i in range(n):
+        json_data = gen_invoice_json(data, i+1, random.randint(1, 8))
+        dataset.append(json_data)
+    
+    # список JSON-записей в файл
+    with open(full_path, "w", encoding="utf-8") as json_file:
+        json.dump(dataset, json_file, indent=2, ensure_ascii=False)
+'''

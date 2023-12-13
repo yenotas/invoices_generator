@@ -88,3 +88,20 @@ def generate_stamp(filename, text_outer_circle, text_inner_circle, text_center):
     final_image.save('/stamps/'+filename)
 
 
+from string_generators import str_generator, set_splitters, str_line_splitter
+
+base_splitters = ' '
+
+for i in range(0, 5):
+    num_splitters = random.randint(4, 8)
+    holder = str_generator(num_splitters, num_splitters, lang='ru')
+    holder_len = len(holder)
+    num_symbols = 54
+    letters_len = num_symbols - holder_len - num_splitters
+
+    text_outer_circle = holder + str_generator(num_symbols, num_symbols-holder_len, lang='RU')
+    text_outer_circle = set_splitters(text_outer_circle, holder_len, 0, num_splitters)
+    text_inner_circle = str_generator(num_symbols+4, num_symbols + 4, lang='en')
+    text_inner_circle = set_splitters(text_inner_circle, 0, 0, num_splitters+1)
+    text_center = str_line_splitter(text_inner_circle[:10], 5, 2)
+    generate_stamp('tmp_stmp_'+str(i)+'.png', text_outer_circle, text_inner_circle, text_center)
