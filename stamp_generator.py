@@ -5,9 +5,8 @@ import math
 import random
 
 
-def draw_text_along_circle(draw, text, radius, center, font, color, start_angle=-math.pi / 2):
+def draw_text_along_circle(image, draw, text, radius, center, font, color, start_angle=-math.pi / 2):
     angle_per_letter = 2 * math.pi / len(text)
-
     for i, letter in enumerate(text):
         angle = angle_per_letter * i + start_angle
         bbox = draw.textbbox((0, 0), letter, font=font)
@@ -64,8 +63,8 @@ def generate_stamp(filename, text_outer_circle, text_inner_circle, text_center):
     draw.ellipse([center[0]-radius_inner, center[1]-radius_inner, center[0]+radius_inner, center[1]+radius_inner], outline=text_color, width=3)
 
     # Рисуем тексты
-    draw_text_along_circle(draw, text_outer_circle, radius_outer-25, center, font_by_circle, text_color)
-    draw_text_along_circle(draw, text_inner_circle, radius_inner+20, center, font_by_circle, text_color)
+    draw_text_along_circle(image, draw, text_outer_circle, radius_outer-25, center, font_by_circle, text_color)
+    draw_text_along_circle(image, draw, text_inner_circle, radius_inner+20, center, font_by_circle, text_color)
     draw_center_text(draw, text_center, center, font_by_center, text_color)
 
     # Масштабируем изображение вверх
@@ -85,7 +84,7 @@ def generate_stamp(filename, text_outer_circle, text_inner_circle, text_center):
     final_image = rotated_image.resize(img_size, Image.LANCZOS)
 
     # Сохраняем
-    final_image.save('/stamps/'+filename)
+    final_image.save('stamps/'+filename)
 
 
 from string_generators import str_generator, set_splitters, str_line_splitter
