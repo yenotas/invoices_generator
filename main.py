@@ -50,7 +50,10 @@ def main():
     img = img.convert('L')
 
     np_img = create_light_spot(img)
-    np_img, new_corners = random_perspective_change(np_img)
+    # геометрические искажения: на выходе искаженное изображение и новые координаты углов документа
+    # np_img, new_corners = random_perspective_change(np_img)
+    np_img, new_corners = random_rotate_image(np_img)
+
 
     img = Image.fromarray(np_img, 'L')
     np_img = create_grey_spot(img)
