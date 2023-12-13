@@ -152,3 +152,39 @@ def light_overlay_images(base_gray, overlay_img):
     result_array = np.where(base_array < limited_overlay, limited_overlay + base_array, base_array)
 
     return result_array
+
+
+def random_perspective_change(image):
+    rows, cols = image.shape[:2]
+    shift_y = rows // 20
+    shift_x = cols // 20
+    top_left = [random.randint(0, shift_x), random.randint(0, shift_y)]
+    top_right = [random.randint(cols - shift_x, cols), random.randint(0, shift_y)]
+    bottom_left = [random.randint(0, shift_x), random.randint(rows - shift_y, rows)]
+    bottom_right = [random.randint(cols - shift_x, cols), random.randint(rows - shift_y, rows)]
+
+    pts1 = np.float32([[0, 0], [cols, 0], [0, rows], [cols, rows]])
+    pts2 = np.float32([top_left, top_right, bottom_left, bottom_right])
+
+    M = cv2.getPerspectiveTransform(pts1, pts2)
+    dst = cv2.warpPerspective(image, M, (cols, rows))
+
+    return dst, pts2.astype(int)
+
+
+def random_rotate_image(image):
+    rows, cols = image.shape[:2]
+    angle = random.uniform(-5, 5)
+    M = cv2.getRotationMatrix2D((cols / 2, rows / 2), angle, 1)
+    rotated_image = cv2.warpAffine(image, M, (cols, rows))
+
+    # Расчёт новых координат углов
+    corners = np.array([
+        [0, 0],
+        [cols, 0],
+        [0, rows],
+        [cols, rows]
+    ])
+    new_corners = np.int32(np.dot(M[:, :2], corners.T).T + M[:, 2])
+
+    return rotated_image, new_corners

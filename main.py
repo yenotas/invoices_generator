@@ -3,7 +3,7 @@ import random
 
 from PIL import Image
 
-from distortions import (cv_view, cv_resize,
+from distortions import (cv_view, cv_resize, random_perspective_change, random_rotate_image,
                          create_grey_spot, create_shadow, create_light_spot, create_noise)
 
 
@@ -48,7 +48,9 @@ def main():
 
     img = Image.open('invoices/invoice_2.png')
     img = img.convert('L')
+
     np_img = create_light_spot(img)
+    np_img, new_corners = random_perspective_change(np_img)
 
     img = Image.fromarray(np_img, 'L')
     np_img = create_grey_spot(img)
@@ -59,7 +61,7 @@ def main():
 
     cv_view(np_img)
 
-
+    print(new_corners)
 
 
 if __name__ == "__main__":
