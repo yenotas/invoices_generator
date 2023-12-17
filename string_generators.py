@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Генерация данных для счетов на оплату. Автор: Коваленко А.В. 11.2023
 https://colab.research.google.com/drive/14-MopXdOeDVNon2703N-1R928mNxMmnJ?usp=sharing
@@ -23,8 +24,7 @@ import requests
 import csv
 from math import ceil
 import os
-import pandas as pd
-import json
+from invoices_generator.config import data_files_folder
 
 from number_to_string import get_string_by_number
 
@@ -48,7 +48,7 @@ numeric = '0123456789'
 
 
 def random_invoice_startswith():
-    return random.choice(['Счет ', 'Счет №', 'Счет на оплату №'])
+    return random.choice(['Счет', 'Счет №', 'Счет на оплату №'])
 
 
 def random_endswith():
@@ -324,6 +324,7 @@ def str_line_splitter(text, num_symbols, num_lines):
 
     num_lines = min(num_lines, ceil(text_len / num_symbols))  # наименьшее необходимое число строк
 
+    i = 0
     for i in range(0, num_lines):
         pos = new_text[i].rfind(" ")
         line_list.append(text_clean(prev_last + new_text[i][:pos]))
@@ -340,7 +341,7 @@ def gen_full_address(data):
     companies, addresses = data['companies.tsv'], data['addresses.csv']
     city, company_name = random.choice(companies)
     company_name = company_name.replace('`', '"')
-    street = random.choice(addresses)
+    street = ''.join(random.choice(addresses))
     post_index = get_random_post_index() + ' '
     tel = random.choice([', тел:', ', тел:', ', т:', ', телефон:', ', т/ф:', ''])
     tel = '' if tel == '' else f"{tel}{get_random_telephone()}"
@@ -391,28 +392,6 @@ def gen_products_list(data, n=3):
         amount += sum_val
 
     return product_names, units, prices, vals, summ, round(amount, 2)
-
-
-''' Пример вывода товаров в счете
-
-n = 4 # количество товаров в счете
-product_names, units, prices, vals, summ, amount = gen_products_list(data, n)
-
-df = pd.DataFrame({
-    "Наименование": product_names,
-    "Кол-во": vals,
-    "Ед.": units,
-    "Цена": prices,
-    "Сумма": summ
-})
-df.index = df.index + 1
-print(df, '\n')
-print(f"Итого: {'{:.2f}'.format(amount)}")
-print(f"В том числе НДС: {'{:.2f}'.format(round(amount * 12/(12 + 100), 2))}\n")
-print(f"Всего нанаименований: {n}, на сумму {'{:.2f}'.format(amount)} KZT\n")
-invoice_amount_str = get_string_by_number(amount, currency_main, currency_additional)
-print(f"Всего к оплате: {invoice_amount_str}")
-'''
 
 
 # Генерация всех значиний в счете номер [number] на [n] товаров
@@ -474,7 +453,6 @@ def gen_invoice_json(data, number=0, n=1):
     return fields
 
 
-# ЗАГРУЗКА ФАЙЛОВ С АДРЕСАМИ, КОМПАНИЯМИ И ТОВАРАМИ
 def download_file(fn, url):
     response = requests.get(url)
     if response.status_code == 200:
@@ -489,43 +467,6 @@ def load_data_from_file(fn, url=''):
     if url:
         download_file(fn, url)
     # Читаем файлы в массивы
+    delimiter = '\t' if fn[-3:] == 'tsv' else ','
     with open(os.path.join(data_files_folder, fn), 'r', encoding='utf-8') as file:
-        return [row[0] for row in csv.reader(file)]
-
-
-data = {}
-
-data_files_folder = "data"
-generated_files_folder = "generated"
-
-list_files = {
-    'addresses.csv': 'https://drive.google.com/uc?export=download&id=14qnEbj33g6XDxotNZBjEwZE49MrhrPBQ',
-    'companies.tsv': 'https://drive.google.com/uc?export=download&id=1JnM0XWKVUPMQeeHDZb0O_pzO9yHhU2SL',
-    'products.csv': 'https://drive.google.com/uc?export=download&id=158xXZiDMELAChxU4Gci7p6E-2Ns59qsN',
-    'banks.csv': 'https://drive.google.com/uc?export=download&id=1axTYKpLPCeuh943r6s6E8K7Nf9wGg0fz'
-    }
-
-'''
-    for filename, url in list_files.items():
-        data[filename] = load_data_from_file(filename)
-        # для скачивания:
-        # data[filename] = load_data_from_file(filename, url)
-    
-    # Пример: генерация данных и сохраниение записей для счетов
-    
-    folder = '/temp'
-    if not os.path.exists(folder):
-        os.makedirs(folder)
-    file_name = 'invoices.json'
-    full_path = os.path.join(folder, file_name)
-    
-    dataset = []
-    n = 2 # количество счетов
-    for i in range(n):
-        json_data = gen_invoice_json(data, i+1, random.randint(1, 8))
-        dataset.append(json_data)
-    
-    # список JSON-записей в файл
-    with open(full_path, "w", encoding="utf-8") as json_file:
-        json.dump(dataset, json_file, indent=2, ensure_ascii=False)
-'''
+        return [row for row in csv.reader(file, delimiter=delimiter)]

@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+'''
+Генератор случайных искажений документов в PNG, иммитирующих сканы документов разного качества.
+Автор: Коваленко А.В. 12.2023
+'''
+
 import random
 from PIL import Image, ImageDraw, ImageFilter
 import numpy as np
