@@ -25,5 +25,5 @@ with open(json_file_name, "w", encoding="utf-8") as json_file:
 
 
 print()
-print('generate JSON data is complete')
+print('generation JSON data is complete')
 print('file', json_file_name, 'in parent folder')

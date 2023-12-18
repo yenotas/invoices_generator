@@ -18,5 +18,5 @@ for i in range(0, len(json_data)):
 
 
 print()
-print('generate PNG circle stamps from JSON is complete')
+print('generation PNG circle stamps from JSON is complete')
 print('files in folder "generated_stamps"')

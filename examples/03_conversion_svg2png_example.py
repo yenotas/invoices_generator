@@ -20,5 +20,5 @@ for svg_file in svg_files:
 
 
 print()
-print('convert all SVG templates to PNG is complete')
+print('conversion all SVG templates to PNG is complete')
 print('files in folder "generated_images"')

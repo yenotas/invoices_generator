@@ -20,12 +20,6 @@ def cv_resize(np_img, k):
     return cv2.resize(np_img, None, fx=k, fy=k)
 
 
-def create_shadow(np_img):
-    # Код для создания тени
-    pass
-    return np_img
-
-
 # Добавление шума
 def create_noise(np_img):
     # Генерируем гауссовский шум (cр. знач. шума, стандартное отклонение шума, размеры изобр.)
@@ -101,7 +95,7 @@ def create_abstract_spot(width, height):
 
 # Создания абстрактного серого пятна
 def create_grey_spot(np_img):
-    width, height = np_img.shape
+    height, width = np_img.shape
     overlay_array = create_abstract_spot(width, height)
     limited_overlay = np.clip(overlay_array, random.randint(0, 20), 100)
     np_array = np.where(limited_overlay < np_img, np_img - limited_overlay, np_img)
@@ -110,7 +104,7 @@ def create_grey_spot(np_img):
 
 # Создания абстрактного белого пятна
 def create_light_spot(np_img):
-    width, height = np_img.shape
+    height, width = np_img.shape
     overlay_array = create_abstract_spot(width, height)
     limited_overlay = np.clip(overlay_array, random.randint(0, 80), 120)
     np_array = np.where(np_img < limited_overlay, limited_overlay + np_img, np_img)
@@ -126,13 +120,13 @@ def random_perspective_change(np_img):
     bottom_left = [random.randint(0, shift_x), random.randint(rows - shift_y, rows)]
     bottom_right = [random.randint(cols - shift_x, cols), random.randint(rows - shift_y, rows)]
 
-    corners = np.int32([[0, 0], [cols, 0], [0, rows], [cols, rows]])
-    new_corners = np.int32([top_left, top_right, bottom_left, bottom_right])
+    corners = np.float32([[0, 0], [cols, 0], [0, rows], [cols, rows]])
+    new_corners = np.float32([top_left, top_right, bottom_left, bottom_right])
 
     M = cv2.getPerspectiveTransform(corners, new_corners)
     np_img = cv2.warpPerspective(np_img, M, (cols, rows))
 
-    return np_img, new_corners
+    return np_img, new_corners.astype(int)
 
 
 def random_rotate_image(np_img):
@@ -148,6 +142,18 @@ def random_rotate_image(np_img):
         [0, rows],
         [cols, rows]
     ])
-    new_corners = np.int32(np.dot(M[:, :2], corners.T).T + M[:, 2])
+    new_corners = np.float32(np.dot(M[:, :2], corners.T).T + M[:, 2])
 
-    return np_img, new_corners
+    return np_img, new_corners.astype(int)
+
+
+# Заглушка - никаких преобразований
+def no_distortions(np_img):
+    rows, cols = np_img.shape[:2]
+    corners = np.array([
+        [0, 0],
+        [cols, 0],
+        [0, rows],
+        [cols, rows]
+    ])
+    return np_img, corners

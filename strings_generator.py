@@ -37,7 +37,7 @@ month = {'01': 'января', '02': 'февраля', '03': 'марта', '04':
          '08': 'августа', '09': 'сентября', '10': 'октября', '11': 'ноября', '12': 'декабря'}
 
 # набор возможных разделителей: чем больше одинаковых символов, тем выше их вероятность в строоке
-base_splitters = '--/-'
+base_splitters = '--/'
 
 symbols_set = {'EN': string.ascii_uppercase,
                'en': string.ascii_lowercase,
@@ -47,20 +47,23 @@ symbols_set = {'EN': string.ascii_uppercase,
 numeric = '0123456789'
 
 
+# случайный пробел
+def random_space():
+    return random.choice([' ', ''])
+
+
 def random_invoice_startswith():
-    return random.choice(['Счет', 'Счет №', 'Счет на оплату №'])
+    return random.choice(['Счет ', 'Счет №' + random_space(), 'Счет на оплату №' + random_space()])
 
 
 def random_endswith():
     return random.choice(['г', 'г.', ''])
 
 
-def random_space():
-    return random.choice([' ', ''])
-
-
 def random_contract_startswith():
-    return random.choice(['', '№', 'Договор поставки №', 'Договор подряда №', 'Договор №', 'Без договора'])
+    s = random.choice(['', '№', 'Договор поставки №', 'Договор подряда №', 'Договор №', 'Без договора'])
+    s = s + random_space() if s else s
+    return s
 
 
 # генератор номера из n цифр без нуля в начале
@@ -234,7 +237,6 @@ def get_random_invoice_name(start=2015, end=2023):
     if random.randint(0, 8) == 7:
         result = result.upper()
 
-    result += random_space()
     result += random_invoice_number() + ' от '
     result += random_date(start, end) + random_space()
     result += random_endswith()

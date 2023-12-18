@@ -17,5 +17,5 @@ with open(json_file_name, 'w', encoding='utf-8') as json_file:
 
 
 print()
-print('generate SVG templates is complete')
+print('generation SVG templates is complete')
 print('files in folder "svg_templates"')
