@@ -20,65 +20,21 @@ def cv_resize(np_img, k):
     return cv2.resize(np_img, None, fx=k, fy=k)
 
 
-# Создания абстрактного серого пятна
-def create_grey_spot(img):
-    width, height = img.width, img.height
-    spot = generate_spot(width, height)
-
-    # Рассчёт случайного смещения
-    shift_x = random.randint(-width // 2, width // 2)
-    shift_y = random.randint(-height // 2, height // 2)
-
-    # Обеспечение, что координаты обрезки находятся в пределах изображения
-    left = max(0, min(shift_x, width))
-    upper = max(0, min(shift_y, height))
-    right = max(width, min(shift_x + width, width * 2))
-    lower = max(height, min(shift_y + height, height * 2))
-
-    # Создание нового изображения для смещённого пятна
-    shifted_spot = spot.crop((left, upper, right, lower))
-
-    return grey_overlay_images(img, shifted_spot)
-
-
-# Создания абстрактного белого пятна
-def create_light_spot(img):
-    width, height = img.width, img.height
-    spot = generate_spot(width, height)
-
-    # Рассчёт случайного смещения
-    shift_x = random.randint(-width // 2, width // 2)
-    shift_y = random.randint(-height // 2, height // 2)
-
-    # Обеспечение, что координаты обрезки находятся в пределах изображения
-    left = max(0, min(shift_x, width))
-    upper = max(0, min(shift_y, height))
-    right = max(width, min(shift_x + width, width * 2))
-    lower = max(height, min(shift_y + height, height * 2))
-
-    # Создание нового изображения для смещённого пятна
-    shifted_spot = spot.crop((left, upper, right, lower))
-
-    return light_overlay_images(img, shifted_spot)
-
-
-def create_shadow(image):
+def create_shadow(np_img):
     # Код для создания тени
     pass
-    return image
+    return np_img
 
 
 # Добавление шума
-def create_noise(image):
+def create_noise(np_img):
     # Генерируем гауссовский шум (cр. знач. шума, стандартное отклонение шума, размеры изобр.)
-    noise = np.random.normal(5, 15, image.shape).astype(np.uint8)
+    noise = np.random.normal(5, 15, np_img.shape).astype(np.uint8)
     random_image = round(random.uniform(0.9, 1.0), 1)
     random_noise = round(random.uniform(0.0, 0.3), 1)
-    print(random_image, random_noise)
     # добавляем сгенерированный шум к исходному изображению с помощью функции cv2.addWeighted
-    noisy_image = cv2.addWeighted(image, random_image, noise, random_noise, 0)
     # cv2.bitwise_and, cv2.bitwise_or, cv2.bitwise_xor
-    noisy_image = cv2.addWeighted(image, random_image, noise, random_noise, 0)
+    noisy_image = cv2.addWeighted(np_img, random_image, noise, random_noise, 0)
 
     return noisy_image
 
@@ -94,7 +50,7 @@ def make_gradient_rectangle(width, height, direction='horizontal'):
 
 
 # Создание абстрактного пятна
-def generate_spot(width, height):
+def create_abstract_spot(width, height):
     # Создание большего рабочего холста
     canvas_width, canvas_height = width * 2, height * 2
     spot_img = Image.new('L', (canvas_width, canvas_height), 0)
@@ -125,43 +81,44 @@ def generate_spot(width, height):
         # Наложение повернутого эллипса на основное изображение
         spot_img.paste(rotated_gradient, (upper_left_x, upper_left_y), rotated_gradient)
 
-    spot_img = spot_img.filter(ImageFilter.GaussianBlur(random.randint(50, 200)))
+    spot = spot_img.filter(ImageFilter.GaussianBlur(random.randint(50, 200)))
 
-    return spot_img
+    # Рассчёт случайного смещения
+    shift_x = random.randint(-width // 2, width // 2)
+    shift_y = random.randint(-height // 2, height // 2)
+
+    # Обеспечение, что координаты обрезки находятся в пределах изображения
+    left = max(0, min(shift_x, width))
+    upper = max(0, min(shift_y, height))
+    right = max(width, min(shift_x + width, width * 2))
+    lower = max(height, min(shift_y + height, height * 2))
+
+    # Создание нового изображения для смещённого пятна
+    shifted_spot = np.array(spot.crop((left, upper, right, lower)))
+
+    return shifted_spot
 
 
-def grey_overlay_images(base_gray, overlay_img):
-
-    # Конвертация изображений в массивы NumPy
-    base_array = np.array(base_gray)
-    overlay_array = np.array(overlay_img)
-
-    # Ограничение значения пятна
+# Создания абстрактного серого пятна
+def create_grey_spot(np_img):
+    width, height = np_img.shape
+    overlay_array = create_abstract_spot(width, height)
     limited_overlay = np.clip(overlay_array, random.randint(0, 20), 100)
-
-    # Вычитание пятна из базового изображения только там, где это подходит по условию
-    result_array = np.where(limited_overlay < base_array, base_array - limited_overlay, base_array)
-
-    return result_array
+    np_array = np.where(limited_overlay < np_img, np_img - limited_overlay, np_img)
+    return np_array
 
 
-def light_overlay_images(base_gray, overlay_img):
-
-    # Конвертация изображений в массивы NumPy
-    base_array = np.array(base_gray)
-    overlay_array = np.array(overlay_img)
-
-    # Ограничение значения пятна
+# Создания абстрактного белого пятна
+def create_light_spot(np_img):
+    width, height = np_img.shape
+    overlay_array = create_abstract_spot(width, height)
     limited_overlay = np.clip(overlay_array, random.randint(0, 80), 120)
-
-    # Вычитание пятна из базового изображения только там, где это подходит по условию
-    result_array = np.where(base_array < limited_overlay, limited_overlay + base_array, base_array)
-
-    return result_array
+    np_array = np.where(np_img < limited_overlay, limited_overlay + np_img, np_img)
+    return np_array
 
 
-def random_perspective_change(image):
-    rows, cols = image.shape[:2]
+def random_perspective_change(np_img):
+    rows, cols = np_img.shape[:2]
     shift_y = rows // 20
     shift_x = cols // 20
     top_left = [random.randint(0, shift_x), random.randint(0, shift_y)]
@@ -169,20 +126,20 @@ def random_perspective_change(image):
     bottom_left = [random.randint(0, shift_x), random.randint(rows - shift_y, rows)]
     bottom_right = [random.randint(cols - shift_x, cols), random.randint(rows - shift_y, rows)]
 
-    pts1 = np.float32([[0, 0], [cols, 0], [0, rows], [cols, rows]])
-    pts2 = np.float32([top_left, top_right, bottom_left, bottom_right])
+    corners = np.int32([[0, 0], [cols, 0], [0, rows], [cols, rows]])
+    new_corners = np.int32([top_left, top_right, bottom_left, bottom_right])
 
-    M = cv2.getPerspectiveTransform(pts1, pts2)
-    dst = cv2.warpPerspective(image, M, (cols, rows))
+    M = cv2.getPerspectiveTransform(corners, new_corners)
+    np_img = cv2.warpPerspective(np_img, M, (cols, rows))
 
-    return dst, pts2.astype(int)
+    return np_img, new_corners
 
 
-def random_rotate_image(image):
-    rows, cols = image.shape[:2]
+def random_rotate_image(np_img):
+    rows, cols = np_img.shape[:2]
     angle = random.uniform(-5, 5)
     M = cv2.getRotationMatrix2D((cols / 2, rows / 2), angle, 1)
-    rotated_image = cv2.warpAffine(image, M, (cols, rows))
+    np_img = cv2.warpAffine(np_img, M, (cols, rows))
 
     # Расчёт новых координат углов
     corners = np.array([
@@ -193,4 +150,4 @@ def random_rotate_image(image):
     ])
     new_corners = np.int32(np.dot(M[:, :2], corners.T).T + M[:, 2])
 
-    return rotated_image, new_corners
+    return np_img, new_corners

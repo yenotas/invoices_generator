@@ -1,18 +1,20 @@
 # -*- coding: utf-8 -*-
 '''
 Генератор SVG-файлов cчетов из JSON + конвертер в PNG.
+SVG и PNG именуются по формуле "invoice_" + номер записи JSON (invoice['number'])
 https://colab.research.google.com/drive/1OCEg_X-DKPEl3-e9iesYAuuyb2ZD1kIk?usp=sharing
 Автор: Коваленко А.В. 11.2023
 '''
 
-from invoices_generator.config import data_files_folder, original_images_files_folder, distorted_images_files_folder, temp_folder
+from invoices_generator.config import svg_templates_files_folder
 
 import os
-import json
 from bs4 import BeautifulSoup
 
-# Конвертация SVG-файлов в PDF и PNG
+# Конвертация SVG-файлов в PDF и PNG:
 # pip install svglib Pillow pdf2image
+# Для работы библиотеки pdf2image необходимо наличие утилиты Poppler
+
 from svglib.svglib import svg2rlg
 from reportlab.graphics import renderPDF
 from pdf2image import convert_from_path
@@ -94,8 +96,6 @@ def generate_svg_templates(json_data, base_svg_file):
                     text_elem = new_elem
 
                 original_text_elem.decompose()
-            else:
-                print(f"Элемент с ключом {key} не найден.")
 
         # проход и подстановка текста внутри таблицы
         border_y = top_line
@@ -150,7 +150,7 @@ def generate_svg_templates(json_data, base_svg_file):
 
         # сохраняю
         file_name = f"invoice_{invoice['number']}.svg"
-        full_path_svg = os.path.join(temp_folder, file_name)
+        full_path_svg = os.path.join(svg_templates_files_folder, file_name)
         with open(full_path_svg, "w", encoding="utf-8") as file:
             file.write(correct_svg_str)
 

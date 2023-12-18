@@ -1,22 +1,17 @@
 # -*- coding: utf-8 -*-
 # Пример: генерация данных и сохраниение записей для счетов
 
-import os
 import random
 import json
 
-from invoices_generator.config import list_data_files, temp_folder
-from invoices_generator.string_generators import gen_invoice_json, load_data_from_file
+from invoices_generator.config import list_data_files, json_file_name
+from invoices_generator.strings_generator import gen_invoice_json, load_data_from_file
 
 json_data = {}
-for filename, url in list_data_files.items():
-    json_data[filename] = load_data_from_file(filename)
+for file_name, url in list_data_files.items():
+    json_data[file_name] = load_data_from_file(file_name)
     # для скачивания из google disk:
     # data[filename] = load_data_from_file(filename, url)
-
-file_name = 'generated_data.json'
-
-full_path = os.path.join(temp_folder, file_name)
 
 dataset = []
 n = 5 # количество счетов
@@ -25,5 +20,10 @@ for i in range(n):
     dataset.append(generated_json_data)
 
 # список JSON-записей в файл
-with open(full_path, "w", encoding="utf-8") as json_file:
+with open(json_file_name, "w", encoding="utf-8") as json_file:
     json.dump(dataset, json_file, indent=2, ensure_ascii=False)
+
+
+print()
+print('generate JSON data is complete')
+print('file', json_file_name, 'in parent folder')

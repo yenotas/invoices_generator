@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 import os
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-
-data_files_folder = os.path.join(current_dir, 'data')
-svg_templates_files_folder = os.path.join(current_dir, 'svg_templates')
-original_images_files_folder = os.path.join(current_dir, 'generated_images')
-stamps_files_folder = os.path.join(current_dir, 'generated_stamps')
-distorted_images_files_folder = os.path.join(current_dir, 'distorted_images')
-temp_folder = os.path.join(current_dir, 'temp_files')
-font_path = os.path.join(current_dir, 'assets', 'arialmt.ttf')
+base_dir = os.path.dirname(os.path.abspath(__file__))
+json_file_name = os.path.join(base_dir, 'generated_data.json')
+data_files_folder = os.path.join(base_dir, 'data')
+base_svg_file_name = os.path.join(data_files_folder, 'invoice.svg')
+svg_templates_files_folder = os.path.join(base_dir, 'svg_templates')
+generated_images_files_folder = os.path.join(base_dir, 'generated_images')
+stamps_files_folder = os.path.join(base_dir, 'generated_stamps')
+distorted_images_files_folder = os.path.join(base_dir, 'distorted_images')
+font_path = os.path.join(base_dir, 'assets', 'arialmt.ttf')
 
 list_data_files = {
     'addresses.csv': 'https://drive.google.com/uc?export=download&id=14qnEbj33g6XDxotNZBjEwZE49MrhrPBQ',
