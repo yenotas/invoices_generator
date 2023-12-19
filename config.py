@@ -5,7 +5,7 @@ import os
 files_number = 5
 # разрешение генерируемых файлов
 dpi = 144
-# коэфициент масштабирования при генерации
+# коэффициент масштабирования при генерации
 dim_scale = dpi / 72
 # коэффициент масштабирования при искажениях
 distortion_scale = 1.0
@@ -23,12 +23,19 @@ base_dir = os.path.dirname(os.path.abspath(__file__))
 json_file_name = os.path.join(base_dir, 'generated_data.json')
 data_files_folder = os.path.join(base_dir, 'data')
 base_svg_file_name = os.path.join(data_files_folder, 'invoice.svg')
-svg_templates_files_folder = os.path.join(base_dir, 'svg_templates')
-generated_images_files_folder = os.path.join(base_dir, 'generated_images')
-stamps_files_folder = os.path.join(base_dir, 'generated_stamps')
-distorted_images_files_folder = os.path.join(base_dir, 'distorted_images')
-stamped_images_files_folder = os.path.join(base_dir, 'stamped_images')
+
+generated_files_folder = os.path.join(base_dir, 'generated_files')
+svg_templates_files_folder = os.path.join(generated_files_folder, 'svg_templates')
+generated_images_files_folder = os.path.join(generated_files_folder, 'generated_images')
+stamps_files_folder = os.path.join(generated_files_folder, 'generated_stamps')
+distorted_images_files_folder = os.path.join(generated_files_folder, 'distorted_images')
+stamped_images_files_folder = os.path.join(generated_files_folder, 'stamped_images')
 font_path = os.path.join(base_dir, 'assets', 'arialmt.ttf')
+
+for folder in [generated_files_folder, svg_templates_files_folder, generated_images_files_folder, stamps_files_folder,
+               distorted_images_files_folder, stamped_images_files_folder]:
+    if not os.path.exists(folder):
+        os.makedirs(folder)
 
 # Сумма счета словами (по-умолчанию - тенге):
 currency_main = ('тенге', 'тенге', 'тенге')
