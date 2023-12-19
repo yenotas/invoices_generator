@@ -4,21 +4,52 @@
 SVG и PNG именуются по формуле "invoice_" + номер записи JSON (invoice['number'])
 https://colab.research.google.com/drive/1OCEg_X-DKPEl3-e9iesYAuuyb2ZD1kIk?usp=sharing
 Автор: Коваленко А.В. 11.2023
+
+Для конвертации SVG-файлов в PDF и PNG:
+1. установить ImageMagick по ссылке:
+Для Windows:
+https://imagemagick.org/script/download.php#windows
+(Для Linux: sudo apt-get install imagemagick
+Для macOS: brew install imagemagick)
+2. затем библиотеку: pip install Wand
+
+ИЛИ 2 способ - закомментирован! смотри README:
+1. Установить утилиту Poppler
+https://github.com/oschwartz10612/poppler-windows/releases/
+2. затем библиотеки
+pip install svglib Pillow pdf2image
 '''
 
-from invoices_generator.config import svg_templates_files_folder
+from invoices_generator.config import svg_templates_files_folder, dim_scale
 
 import os
 from bs4 import BeautifulSoup
 
-# Конвертация SVG-файлов в PDF и PNG:
-# pip install svglib Pillow pdf2image
-# Для работы библиотеки pdf2image необходимо наличие утилиты Poppler
+# from svglib.svglib import svg2rlg
+# from reportlab.graphics import renderPDF
+# from pdf2image import convert_from_path
 
-from svglib.svglib import svg2rlg
-from reportlab.graphics import renderPDF
-from pdf2image import convert_from_path
+from wand.image import Image
+from wand.color import Color
 
+
+def convert_svg_to_png(svg_filename, png_filename):
+    with Image(filename=svg_filename, background=Color('white'), resolution=144) as img:
+        img.format = 'png'
+        img.save(filename=png_filename)
+
+'''
+# Двухэтапная конвертация с утилитой Poppler (см README):
+
+def convert_svg_to_pdf(svg_filename, pdf_filename):
+    drawing = svg2rlg(svg_filename)
+    renderPDF.drawToFile(drawing, pdf_filename)
+
+
+def convert_pdf_to_png(pdf_filename, png_filename):
+    image = convert_from_path(pdf_filename)[0]
+    image.save(png_filename, 'PNG')
+'''
 
 # создание SVG-файлов из JSON-данных по шаблону эталонного SVG-файла
 def generate_svg_templates(json_data, base_svg_file):
@@ -48,14 +79,15 @@ def generate_svg_templates(json_data, base_svg_file):
         # находим гориз. и вертик. линии в таблице товаров
         horizontal_lines = soup.select("line[class*='horizontal_line']")
         vertical_lines = soup.select("line[class*='vertical_line']")
+        stamp_line = soup.select("line[class*='stamp_line']")[0]
+        magnet_stamp_y = float(stamp_line['y1'])  # позиция У для прицеливания штампа
 
         top_line = float(horizontal_lines[1]['y1'])
         bottom_line = float(horizontal_lines[2]['y1'])
-        items_line_height =  bottom_line - top_line
+        items_line_height = bottom_line - top_line
 
         # параметры первой строки
         text_item = soup.find('text', string=lambda text: f'_name_' in text)
-        # table_item_y1 = float(text_item['y'])
         class_name = text_item.get('class', []).split(' ')[1]
         font_size = font_sizes['.'+class_name]
         table_line_height = font_size * 1.2
@@ -64,14 +96,11 @@ def generate_svg_templates(json_data, base_svg_file):
         templates = {key: soup.find('text', string=lambda text: f'_{key}_' in text) for key in ['num', 'name', 'val', 'unit', 'price', 'sum']}
 
         table_line_y = float(templates['num']['y'])
-        magnet_stamp_y = '' # позиция У для прицеливания штампа
 
         # проход и подстановка текста вокруг таблицы
         for key in base_keys:
             text_elem = soup.find('text', string=lambda text: f'_{key}_' in text)
             if text_elem:
-
-                if key == 'total': magnet_stamp_y = text_elem['y']
 
                 original_y1 = float(text_elem['y']) if 'y' in text_elem.attrs else 0
 
@@ -146,7 +175,7 @@ def generate_svg_templates(json_data, base_svg_file):
         correct_svg_str = correct_svg_str.replace('<g name="bottom" transform="matrix(1 0 0 1 0 0)">',
                                 f'<g transform="matrix(1 0 0 1 0 {shift_y})" name="bottom">')
 
-        invoice['magnet_stamp_y'] = str(float(magnet_stamp_y) + shift_y) # уровень +/- по У для штампа
+        invoice['magnet_stamp_y'] = str(int((magnet_stamp_y + shift_y)*dim_scale/100)) # уровень +/- по У для штампа
 
         # сохраняю
         file_name = f"invoice_{invoice['number']}.svg"
@@ -155,14 +184,3 @@ def generate_svg_templates(json_data, base_svg_file):
             file.write(correct_svg_str)
 
     return json_data
-
-
-def convert_svg_to_pdf(svg_filename, pdf_filename):
-    drawing = svg2rlg(svg_filename)
-    renderPDF.drawToFile(drawing, pdf_filename)
-
-
-def convert_pdf_to_png(pdf_filename, png_filename):
-    image = convert_from_path(pdf_filename)[0]
-    image.save(png_filename, 'PNG')
-

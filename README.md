@@ -1,15 +1,22 @@
 # invoices generator
 Генератор тестовых данных и изображений счетов
 
-### Poppler:
-Для работы библиотеки pdf2image необходимо наличие утилиты Poppler. 
-Библиотека pdf2image использует Poppler под капотом для конвертации 
-PDF-файлов в изображения. 
-Нужно установить Poppler и добавить его в переменную окружения PATH вашей системы.
+###  Для конвертации SVG-файлов в PNG:
+1. установить ImageMagick:
+Для Windows: https://imagemagick.org/script/download.php#windows
 
-Вот как вы можете это сделать:
+   Для Linux: sudo apt-get install imagemagick
 
-Установка Poppler
+   Для macOS: brew install imagemagick
+2. затем библиотеку: pip install Wand
+
+###  ИЛИ (2 способ - закомментирован в svg_templates_generator.py):
+1. Установить утилиту Poppler и добавить его в переменную окружения PATH вашей системы
+
+2. затем библиотеки: pip install svglib Pillow pdf2image
+
+
+### Установка Poppler
 Скачать Poppler: Перейдите на страницу сборок Poppler  
 и скачайте последнюю версию.
 https://github.com/oschwartz10612/poppler-windows/releases/
@@ -20,14 +27,11 @@ https://github.com/oschwartz10612/poppler-windows/releases/
 Добавление Poppler в PATH:
 правой кнопкой мыши на значок компьютера и выбрать "Свойства" -> 
 "Дополнительные системные параметры".
-
 Перейдите в "Переменные среды".
-
 Измените переменную Path:
-
 Найдите переменную среды с именем Path и выберите "Изменить".
 Добавьте новый путь к каталогу bin внутри папки, где вы распаковали Poppler 
-(например, C:\poppler\bin).
+(например, C:\poppler\lib\bin).
 Примените изменения и закройте все открытые окна.
 
 Перезагрузите компьютер или закройте и заново откройте командную строку 

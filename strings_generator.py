@@ -37,7 +37,7 @@ month = {'01': 'января', '02': 'февраля', '03': 'марта', '04':
          '08': 'августа', '09': 'сентября', '10': 'октября', '11': 'ноября', '12': 'декабря'}
 
 # набор возможных разделителей: чем больше одинаковых символов, тем выше их вероятность в строоке
-base_splitters = '--/-'
+base_splitters = '--/'
 
 symbols_set = {'EN': string.ascii_uppercase,
                'en': string.ascii_lowercase,
@@ -47,20 +47,23 @@ symbols_set = {'EN': string.ascii_uppercase,
 numeric = '0123456789'
 
 
+# случайный пробел
+def random_space():
+    return random.choice([' ', ''])
+
+
 def random_invoice_startswith():
-    return random.choice(['Счет', 'Счет №', 'Счет на оплату №'])
+    return random.choice(['Счет ', 'Счет №' + random_space(), 'Счет на оплату №' + random_space()])
 
 
 def random_endswith():
     return random.choice(['г', 'г.', ''])
 
 
-def random_space():
-    return random.choice([' ', ''])
-
-
 def random_contract_startswith():
-    return random.choice(['', '№', 'Договор поставки №', 'Договор подряда №', 'Договор №', 'Без договора'])
+    s = random.choice(['', '№', 'Договор поставки №', 'Договор подряда №', 'Договор №', 'Без договора'])
+    s = s + random_space() if s else s
+    return s
 
 
 # генератор номера из n цифр без нуля в начале
@@ -234,7 +237,6 @@ def get_random_invoice_name(start=2015, end=2023):
     if random.randint(0, 8) == 7:
         result = result.upper()
 
-    result += random_space()
     result += random_invoice_number() + ' от '
     result += random_date(start, end) + random_space()
     result += random_endswith()
@@ -396,7 +398,7 @@ def gen_products_list(data, n=3):
 
 # Генерация всех значиний в счете номер [number] на [n] товаров
 # Сборка в JSON
-def gen_invoice_json(data, number=0, n=1):
+def gen_invoice_json(data, number=0, product_lines=1):
     customer_addr, customer_name = gen_full_address(data)
     seller_addr, seller_name = gen_full_address(data)
 
@@ -411,11 +413,11 @@ def gen_invoice_json(data, number=0, n=1):
     bik = get_random_bik()
     title = get_random_invoice_name()
     contract = get_random_contract_name()
-    product_names, units, prices, vals, summ, amount = gen_products_list(data, n)
+    product_names, units, prices, vals, summ, amount = gen_products_list(data, product_lines)
 
     total = "{:.2f}".format(round(amount, 2))
     nds = "{:.2f}".format(round(amount * 12 / (12 + 100), 2))
-    items = f'{n}, на сумму {total} KZT'
+    items = f'{product_lines}, на сумму {total} KZT'
     total_text = get_string_by_number(amount, currency_main, currency_additional)
 
     fields = {
@@ -439,7 +441,7 @@ def gen_invoice_json(data, number=0, n=1):
         "total": total_text
     }
 
-    for i in range(n):
+    for i in range(product_lines):
         item = {
             "num": str(i + 1),  # Номер продукта
             "name": product_names[i],
