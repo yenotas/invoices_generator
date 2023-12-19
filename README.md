@@ -22,29 +22,21 @@ https://github.com/yenotas/invoices_generator/tree/main
 
 ###  Для конвертации SVG-файлов в PNG:
 1. установить ImageMagick:
-+ Для Windows: https://imagemagick.org/script/download.php#windows
-+ Для Linux: sudo apt-get install imagemagick
-+ Для macOS: brew install imagemagick
-
-2. и библиотеку: pip install Wand (уже включена в requirements.txt)
+   + Для Windows: https://imagemagick.org/script/download.php#windows
+   + Для Linux: sudo apt-get install imagemagick
+   + Для macOS: brew install imagemagick
+2. Установить библиотеку: pip install Wand (уже включена в requirements.txt)
 
 ###  ИЛИ (2 способ - закомментирован в svg_templates_generator.py):
-1. Установить утилиту Poppler и добавить его в переменную окружения PATH вашей системы
-
-2. и библиотеки: pip install svglib Pillow pdf2image
-
+1. Установить утилиту Poppler и добавить её в переменную окружения PATH вашей системы
+2. Установить  библиотеки: pip install svglib Pillow pdf2image
 
 ### Установка Poppler:
-Скачать Poppler: со страницы сборок Poppler скачайте последнюю версию.
-https://github.com/oschwartz10612/poppler-windows/releases/
-
-Распакуйте скачанный файл: Распакуйте содержимое в удобное для вас место, 
-например, C:\poppler.
-
-Добавление Poppler в PATH "Переменные среды":
-Добавьте новый путь к каталогу bin внутри папки, где вы распаковали Poppler 
-(например, C:\poppler\lib\bin).
-
-Перезагрузите командную строку (или IDE, если вы используете таковую), 
-чтобы обновления PATH вступили в силу.
++ Скачать Poppler: https://github.com/oschwartz10612/poppler-windows/releases/
+  + Распакуйте содержимое в удобное для вас место, 
+  например, C:\poppler.
+  + Добавьте Poppler в PATH "Переменные среды":
+  путь к каталогу bin внутри папки Poppler (например, C:\poppler\lib\bin).
+  + Перезагрузите командную строку (или IDE, если вы используете таковую), 
+  чтобы обновления PATH вступили в силу.
 
