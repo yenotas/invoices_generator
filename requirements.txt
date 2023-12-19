@@ -17,5 +17,3 @@ soupsieve==2.5
 tzdata==2023.3
 urllib3==2.1.0
 Wand==0.6.13
-
-

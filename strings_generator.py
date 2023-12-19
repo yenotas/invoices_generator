@@ -24,12 +24,9 @@ import requests
 import csv
 from math import ceil
 import os
-from invoices_generator.config import data_files_folder
+from invoices_generator.config import data_files_folder, currency_main, currency_additional
 
 from number_to_string import get_string_by_number
-
-currency_main = ('тенге', 'тенге', 'тенге')
-currency_additional = ('тиын', 'тиына', 'тиынов')
 
 from datetime import datetime, timedelta
 

@@ -39,9 +39,6 @@ print(f"Итого: {'{:.2f}'.format(amount)}")
 print(f"В том числе НДС: {'{:.2f}'.format(round(amount * 12/112, 2))}\n")
 print(f"Всего нанаименований: {n}, на сумму {'{:.2f}'.format(amount)} KZT\n")
 
-# Для рублей (по-умолчанию - тенге):
-# currency_main = ('рубль', 'рубля', 'рублей')
-# currency_additional = ('копейка', 'копейки', 'копеек')
 invoice_amount_str = get_string_by_number(amount, currency_main, currency_additional)
 
 print(f"Всего к оплате: {invoice_amount_str}")
