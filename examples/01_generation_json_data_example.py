@@ -4,7 +4,7 @@
 import random
 import json
 
-from invoices_generator.config import list_data_files, json_file_name
+from invoices_generator.config import list_data_files, json_file_name, files_number
 from invoices_generator.strings_generator import gen_invoice_json, load_data_from_file
 
 json_data = {}
@@ -14,8 +14,8 @@ for file_name, url in list_data_files.items():
     # data[filename] = load_data_from_file(filename, url)
 
 dataset = []
-n = 5 # количество счетов
-for i in range(n):
+
+for i in range(files_number):
     generated_json_data = gen_invoice_json(json_data, i+1, random.randint(1, 8))
     dataset.append(generated_json_data)
 

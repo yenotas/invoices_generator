@@ -398,7 +398,7 @@ def gen_products_list(data, n=3):
 
 # Генерация всех значиний в счете номер [number] на [n] товаров
 # Сборка в JSON
-def gen_invoice_json(data, number=0, n=1):
+def gen_invoice_json(data, number=0, product_lines=1):
     customer_addr, customer_name = gen_full_address(data)
     seller_addr, seller_name = gen_full_address(data)
 
@@ -413,11 +413,11 @@ def gen_invoice_json(data, number=0, n=1):
     bik = get_random_bik()
     title = get_random_invoice_name()
     contract = get_random_contract_name()
-    product_names, units, prices, vals, summ, amount = gen_products_list(data, n)
+    product_names, units, prices, vals, summ, amount = gen_products_list(data, product_lines)
 
     total = "{:.2f}".format(round(amount, 2))
     nds = "{:.2f}".format(round(amount * 12 / (12 + 100), 2))
-    items = f'{n}, на сумму {total} KZT'
+    items = f'{product_lines}, на сумму {total} KZT'
     total_text = get_string_by_number(amount, currency_main, currency_additional)
 
     fields = {
@@ -441,7 +441,7 @@ def gen_invoice_json(data, number=0, n=1):
         "total": total_text
     }
 
-    for i in range(n):
+    for i in range(product_lines):
         item = {
             "num": str(i + 1),  # Номер продукта
             "name": product_names[i],

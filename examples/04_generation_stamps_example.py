@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Пример генерации изображения круглой печати
+# Генерация изображений круглых печатей по данным из JSON
 
 import json
 
@@ -10,13 +10,13 @@ with open(json_file_name, 'r', encoding='utf-8') as json_file:
     json_data = json.load(json_file)
 
 for i in range(0, len(json_data)):
-    text_outer_circle = json_data[i]['seller'][:58].replace('\n', ' ')
-    pos = json_data[i]['seller'][59:110].find(' ')
-    text_inner_circle = json_data[i]['seller'][pos:pos+50].replace('\n', ' ') + ' * '
+    line = json_data[i]['seller'].replace('\n', ' ')
+    text_outer_circle = line[:55] + ' * '
+    pos = line[55:100].find(' ')
+    text_inner_circle = line[55+pos:pos+105] + ' * '
     text_center = json_data[i]['sellerName'][:6]+'\n'+json_data[i]['sellerName'][6:12]
-    generate_stamp(stamps_files_folder, 'tmp_stmp_'+str(i)+'.png', text_outer_circle, text_inner_circle, text_center)
-
+    generate_stamp(stamps_files_folder, 'stamp_'+str(i+1)+'.png', text_outer_circle, text_inner_circle, text_center)
 
 print()
 print('generation PNG circle stamps from JSON is complete')
-print('files in folder "generated_stamps"')
+print(f'files in folder "{stamps_files_folder}"')

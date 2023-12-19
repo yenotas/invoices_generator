@@ -7,7 +7,7 @@
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import math
 import random
-from invoices_generator.config import font_path
+from invoices_generator.config import font_path, stamp_size
 import os
 
 
@@ -47,38 +47,42 @@ def generate_random_color():
 
 def generate_stamp(folder, filename, text_outer_circle, text_inner_circle, text_center):
     # Параметры изображения и текста
-    img_size = (328, 328)
-    center = (img_size[0] / 2, img_size[1] / 2)
-    font_by_circle = ImageFont.truetype(font_path, 18)
-    font_by_center = ImageFont.truetype(font_path, 45)
+
+    center = (int(stamp_size / 2), int(stamp_size / 2))
+    font_by_circle = ImageFont.truetype(font_path, int(18/328*stamp_size))
+    font_by_center = ImageFont.truetype(font_path, int(45/328*stamp_size))
 
     # Тексты
     text_color = generate_random_color()
-    radius_outer = 160
-    radius_inner = 90
-    max_width = 0.8 * radius_inner
+    radius_outer = int(160 / 328 * stamp_size)
+    radius_inner = int(90 / 328 * stamp_size)
+    max_width = 0.8 * radius_inner / 328 * stamp_size
 
     # Создание изображения
     bg_color = (255, 255, 255, 0)  # Прозрачный для PNG, (255, 255, 255) для непрозрачного белого фона
-    image = Image.new('RGBA', img_size, bg_color)
+    image = Image.new('RGBA', (stamp_size, stamp_size), bg_color)
     draw = ImageDraw.Draw(image)
-
+    k = int(8 / 328 * stamp_size)
     # Рисуем окружности
-    draw.ellipse([center[0]-radius_outer, center[1]-radius_outer, center[0]+radius_outer, center[1]+radius_outer], outline=text_color, width=4)
-    draw.ellipse([center[0]-radius_outer+8, center[1]-radius_outer+8, center[0]+radius_outer-8, center[1]+radius_outer-8], outline=text_color, width=4)
-    draw.ellipse([center[0]-radius_inner, center[1]-radius_inner, center[0]+radius_inner, center[1]+radius_inner], outline=text_color, width=3)
+    draw.ellipse([center[0]-radius_outer, center[1]-radius_outer, center[0]+radius_outer, center[1]+radius_outer],
+                 outline=text_color, width=int(4/328*stamp_size))
+    draw.ellipse([center[0]-radius_outer+k, center[1]-radius_outer+k, center[0]+radius_outer-k, center[1]+radius_outer-k],
+                 outline=text_color, width=int(4/328*stamp_size))
+    draw.ellipse([center[0]-radius_inner, center[1]-radius_inner, center[0]+radius_inner, center[1]+radius_inner],
+                 outline=text_color, width=int(3/328*stamp_size))
 
     # Рисуем тексты
-    draw_text_along_circle(image, draw, text_outer_circle, radius_outer-25, center, font_by_circle, text_color)
-    draw_text_along_circle(image, draw, text_inner_circle, radius_inner+20, center, font_by_circle, text_color)
+    draw_text_along_circle(image, draw, text_outer_circle, radius_outer-25/328*stamp_size, center, font_by_circle, text_color)
+    draw_text_along_circle(image, draw, text_inner_circle, radius_inner+20/328*stamp_size, center, font_by_circle, text_color)
     draw_center_text(draw, text_center, center, font_by_center, text_color)
 
     # Масштабируем изображение вверх
     scale_factor = 5  # множитель масштабирования
-    large_image = image.resize((img_size[0] * scale_factor, img_size[1] * scale_factor), Image.NEAREST)
+    new_size = stamp_size * scale_factor
+    large_image = image.resize((new_size, new_size), Image.NEAREST)
 
     # Применяем размытие для сглаживания
-    large_image = large_image.filter(ImageFilter.GaussianBlur(radius=4))
+    large_image = large_image.filter(ImageFilter.GaussianBlur(radius=int(4/328*stamp_size)))
 
     # Поворачиваем изображение
     angle = random.randint(0, 270)
@@ -87,7 +91,7 @@ def generate_stamp(folder, filename, text_outer_circle, text_inner_circle, text_
     rotated_image = new_image.rotate(angle, expand=False)
 
     # Масштабируем изображение вниз
-    final_image = rotated_image.resize(img_size, Image.LANCZOS)
+    final_image = rotated_image.resize((stamp_size, stamp_size), Image.LANCZOS)
 
     # Сохраняем
     final_image.save(os.path.join(folder, filename))

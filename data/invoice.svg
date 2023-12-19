@@ -134,7 +134,8 @@
   <text x="67100" y="49100" class="fil0 fnt0 center">_sum_</text>
 <!-- itemsList -->
   <g transform="matrix(1 0 0 1 0 0)" name="bottom">
-    <g transform="matrix(1 0 0 1 17636.6 -1953.07)">
+    <line class="fil1 str1" x1="6037.2" y1="62521.2" x2="72660.8" y2="62521.2"/>
+    <line class="fil1 str0 stamp_line" x1="16537.2" y1="65304.9" x2="45956.3" y2="65304.9"/><g transform="matrix(1 0 0 1 17636.6 -1953.07)">
     <text x="39700" y="56147.1" class="fil0 fnt6">Итого:</text>
     </g>
     <g transform="matrix(1 0 0 1 32755.9 -1953.07)">
@@ -159,8 +160,6 @@
     <text x="39700" y="56147.1" class="fil0 fnt0">/</text>
     <text x="57700" y="56147.1" class="fil0 fnt0">/</text>
     </g>
-    <line class="fil1 str0" x1="16537.2" y1="65304.9" x2="45956.3" y2="65304.9"/>
-    <line class="fil1 str1" x1="6037.2" y1="62521.2" x2="72660.8" y2="62521.2"/>
   </g>
  </g>
   <line class="fil1 str1 horizontal_line" x1="6037.2" y1="46387.1" x2="72562.3" y2="46387.1"/>

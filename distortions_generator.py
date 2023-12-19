@@ -148,7 +148,7 @@ def random_rotate_image(np_img):
 
 
 # Заглушка - никаких преобразований
-def no_distortions(np_img):
+def not_distortions(np_img):
     rows, cols = np_img.shape[:2]
     corners = np.array([
         [0, 0],
