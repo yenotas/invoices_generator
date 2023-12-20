@@ -1,44 +1,44 @@
 # invoices generator
 #### Код: AndrejPress (Коваленко А.В.) 11/12.2023 в рамках практики УИИ (разработка OCR AI)
-https://github.com/yenotas/invoices_generator/tree/main
+https://github.com/yenotas/invoices_generator/
 ####
 Генератор тестовых данных и изображений счетов с искажениями, шумами и печатями, 
 для тестирования и обучения системы распознавания документов. 
 Библиотека имитации отсканированных документов, с хранением данных 
-(по которым строятся счета) в "generated_data.json"
-####
-В "config.py" можно указать количество генерируемых файлов и качество изображений
+(по которым строятся счета) в "generated_data.json". 
+В JSON при построении SVG-файлов дописываются координаты центров надписей
+### Использование:
+В "config.py" можно указать количество генерируемых файлов, качество и масштабирование 
+изображений, скорректировать размер печати, изменить валюту счета
 ####
 В папке "examples" - скрипты, поочередно запуская которые (по номерам),
 можно заполнить все папки генерациями - от "generated_data.json" и шаблонов SVG 
 до изображений JPEG с искажениями и добавленными круглыми печатями.
 Папка "generated_files" и соответствующие поддиректории, с генерируемыми файлами, 
 создаются скриптами.
-### Установка:
-Предполагается, что установка производится в папке с уже работающей виртуальной средой,
-что позволяет использовать "invoices_generator" как модуль большего проекта.
-Поэтому, копируя в рабочий проект "invoices_generator", лучше перенести файл 
-"requirements.txt" в корневую папку проекта и запустить
-"pip install -r requirements.txt" для установки библиотек в виртуальную среду.
-Также, для конвертации SVG-файлов требуется установка ImageMagick
 
-###  Для конвертации SVG-файлов в PNG:
-1. установить ImageMagick:
-   + Для Windows: https://imagemagick.org/script/download.php#windows
-   + Для Linux: sudo apt-get install imagemagick
-   + Для macOS: brew install imagemagick
-2. Установить библиотеку: pip install Wand (уже включена в requirements.txt)
+####  Для конвертации SVG-файлов в PNG выбрать 1й или 2й способ:
+1й способ - быстрая конвертация локально, но капризен при запуске из google colab
+1. Установить ImageMagick:
+   + для Windows: https://imagemagick.org/script/download.php#windows
+   + для Linux: sudo apt-get install imagemagick
+   + для macOS: brew install imagemagick
+   + установить библиотеку Wand (уже включена в requirements.txt)
+    
+2й способ - заметно медленнее, но нет проблем в google colab
+2. Скачать утилиту Poppler 
+   + для Windows (на локальный диск): https://github.com/oschwartz10612/poppler-windows/releases/
+     + добавить путь к папке \poppler\Library\bin в переменную окружения PATH вашей системы
+     + перезагрузить командную строку (или IDE) для обновления PATH
+   + для Linux: apt-get install poppler-utils
+   + установить библиотеки: svglib reportlab pdf2image (включены в requirements_p.txt)
 
-###  ИЛИ (2 способ - закомментирован в svg_templates_generator.py):
-1. Установить утилиту Poppler и добавить её в переменную окружения PATH вашей системы
-2. Установить  библиотеки: pip install svglib Pillow pdf2image
+### Установка локально:
+Для установки библиотек:
++ "pip install -r requirements.txt" - если выбрана утилита ImageMagick
+  + *для конвертации используйте "03_conversion_svg2png_example.py"
++ "pip install -r requirements_p.txt" - если выбрана утилита Poppler (2й способ)
+  * *для второго способа конвертации используйте "03_conversion_svg2png_example_p.py"
+  работающий на модуле svg_templates_helper_p.py
 
-### Установка Poppler:
-+ Скачать Poppler: https://github.com/oschwartz10612/poppler-windows/releases/
-  + Распакуйте содержимое в удобное для вас место, 
-  например, C:\poppler.
-  + Добавьте Poppler в PATH "Переменные среды":
-  путь к каталогу bin внутри папки Poppler (например, C:\poppler\lib\bin).
-  + Перезагрузите командную строку (или IDE, если вы используете таковую), 
-  чтобы обновления PATH вступили в силу.
 
