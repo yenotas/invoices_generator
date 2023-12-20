@@ -2,22 +2,16 @@
 '''
 Генератор SVG-файлов cчетов из JSON + конвертер в PNG.
 SVG и PNG именуются по формуле "invoice_" + номер записи JSON (invoice['number'])
-https://colab.research.google.com/drive/1OCEg_X-DKPEl3-e9iesYAuuyb2ZD1kIk?usp=sharing
 Автор: Коваленко А.В. 11.2023
 
 Для конвертации SVG-файлов в PDF и PNG:
+(1 способ - смотри README)
 1. установить ImageMagick по ссылке:
 Для Windows:
 https://imagemagick.org/script/download.php#windows
 (Для Linux: sudo apt-get install imagemagick
 Для macOS: brew install imagemagick)
 2. затем библиотеку: pip install Wand
-
-ИЛИ 2 способ - закомментирован! смотри README:
-1. Установить утилиту Poppler
-https://github.com/oschwartz10612/poppler-windows/releases/
-2. затем библиотеки
-pip install svglib Pillow pdf2image
 '''
 
 from invoices_generator.config import svg_templates_files_folder, dim_scale
