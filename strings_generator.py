@@ -24,7 +24,7 @@ import requests
 import csv
 from math import ceil
 import os
-from invoices_generator.config import data_files_folder, currency_main, currency_additional
+from config import data_files_folder, currency_main, currency_additional
 
 from number_to_string import get_string_by_number
 

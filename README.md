@@ -42,3 +42,4 @@ https://github.com/yenotas/invoices_generator/
   работающий на модуле svg_templates_helper_p.py
 
 
+
