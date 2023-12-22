@@ -6,9 +6,9 @@ import cv2
 
 from PIL import Image
 
-from invoices_generator.config import (stamps_files_folder, generated_images_files_folder, json_file_name,
+from config import (stamps_files_folder, generated_images_files_folder, json_file_name,
                                        distortion_scale, distorted_images_files_folder, stamped_images_files_folder)
-from invoices_generator.distortions_generator import (cv_view, cv_resize, random_perspective_change, random_rotate_image,
+from distortions_generator import (cv_view, cv_resize, random_perspective_change, random_rotate_image,
                                                       create_grey_spot, create_light_spot, create_noise,
                                                       not_distortions)
 
@@ -55,7 +55,7 @@ for img, filename in images:
     np_img = create_noise(np_img)
 
     # геометрические искажения: поворот и перспектива -> искаженное изображение и новые координаты углов документа
-    np_img, new_corners = random_geometrical_effects(np_img)
+    np_img, new_corners, info = random_geometrical_effects(np_img)
 
     save_path = os.path.join(distorted_images_files_folder, os.path.splitext(filename)[0] + '.jpeg')
     img = Image.fromarray(np_img)
@@ -92,12 +92,13 @@ for img, filename in images:
     save_path = os.path.join(stamped_images_files_folder, filename)
     img = Image.fromarray(base_image)
     img.save(save_path, 'JPEG')
+    print(info)
+    print('случайное искажение для', filename, 'и печать добавлены')
 
-    print('random distortions', filename, 'and stamping is complete')
 
 print()
-print('all images random distortions is complete')
-print(f'files in folder "{distorted_images_files_folder}"')
+print('Все случайные искажения применены')
+print(f'Файлы сохранены в папке "{distorted_images_files_folder}"')
 # cv_view(np_img)
 
 

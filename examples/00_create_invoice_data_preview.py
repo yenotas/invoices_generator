@@ -2,10 +2,10 @@
 # Пример генерации и вывода товаров в счете
 
 import pandas as pd
-from invoices_generator.strings_generator import gen_products_list, get_string_by_number, currency_main, \
+from strings_generator import gen_products_list, get_string_by_number, currency_main, \
     currency_additional, load_data_from_file, get_random_invoice_name, get_random_contract_name, \
     gen_full_address, str_line_splitter
-from invoices_generator.config import list_data_files
+from config import list_data_files
 
 json_data = {}
 for filename, url in list_data_files.items():

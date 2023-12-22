@@ -12,7 +12,7 @@ https://github.com/oschwartz10612/poppler-windows/releases/
 pip install svglib Pillow pdf2image
 '''
 
-from invoices_generator.config import svg_templates_files_folder, dim_scale
+from config import svg_templates_files_folder, dim_scale
 
 import os
 from bs4 import BeautifulSoup

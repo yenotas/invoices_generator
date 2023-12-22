@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Пример конвертации заполненных SVG-документов в PNG с утилитой ImageMagick
 
-from invoices_generator.config import generated_images_files_folder, svg_templates_files_folder
-from invoices_generator.svg_templates_helper import convert_svg_to_png
+from config import generated_images_files_folder, svg_templates_files_folder
+from svg_templates_helper import convert_svg_to_png
 import os
 
 # Получаем список SVG-файлов в папке
@@ -18,5 +18,5 @@ for svg_file in svg_files:
     print('convert', svg_file, 'is complete')
 
 print()
-print('conversion all SVG templates to PNG is complete')
-print(f'files in folder "{generated_images_files_folder}"')
+print('Конвертация SVG-шаблонов в PNG произведена')
+print(f'Файлы сохранены в папке "{generated_images_files_folder}"')

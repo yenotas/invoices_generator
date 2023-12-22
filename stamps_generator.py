@@ -7,7 +7,7 @@
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import math
 import random
-from invoices_generator.config import font_path, stamp_size
+from config import font_path, stamp_size
 import os
 
 

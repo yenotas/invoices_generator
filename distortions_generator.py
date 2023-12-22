@@ -112,39 +112,41 @@ def create_light_spot(np_img):
 
 
 def random_perspective_change(np_img):
-    rows, cols = np_img.shape[:2]
-    shift_y = rows // 20
-    shift_x = cols // 20
-    top_left = [random.randint(0, shift_x), random.randint(0, shift_y)]
-    top_right = [random.randint(cols - shift_x, cols), random.randint(0, shift_y)]
-    bottom_left = [random.randint(0, shift_x), random.randint(rows - shift_y, rows)]
-    bottom_right = [random.randint(cols - shift_x, cols), random.randint(rows - shift_y, rows)]
+    height, width = np_img.shape[:2]
+    max_shift_y = height // 20
+    max_shift_x = width // 20
+    top_left = [random.randint(0, max_shift_x), random.randint(0, max_shift_y)]
+    top_right = [random.randint(width - max_shift_x, width), random.randint(0, max_shift_y)]
+    bottom_left = [random.randint(0, max_shift_x), random.randint(height - max_shift_y, height)]
+    bottom_right = [random.randint(width - max_shift_x, width), random.randint(height - max_shift_y, height)]
 
-    corners = np.float32([[0, 0], [cols, 0], [0, rows], [cols, rows]])
+    corners = np.float32([[0, 0], [width, 0], [0, height], [width, height]])
     new_corners = np.float32([top_left, top_right, bottom_left, bottom_right])
 
-    M = cv2.getPerspectiveTransform(corners, new_corners)
-    np_img = cv2.warpPerspective(np_img, M, (cols, rows))
-
-    return np_img, new_corners.astype(int)
+    matrix2D = cv2.getPerspectiveTransform(corners, new_corners)
+    np_img = cv2.warpPerspective(np_img, matrix2D, (width, height))
+    ext_info = ('cдвиг углов (x1,y1); (x2,y2): (' + ', '.join(map(str, new_corners[0].astype(int))) + '); (' +
+                ', '.join(map(str, new_corners[3].astype(int))))+')'
+    return np_img, new_corners.astype(int), ext_info
 
 
 def random_rotate_image(np_img):
-    rows, cols = np_img.shape[:2]
-    angle = random.uniform(-5, 5)
-    M = cv2.getRotationMatrix2D((cols / 2, rows / 2), angle, 1)
-    np_img = cv2.warpAffine(np_img, M, (cols, rows))
+    height, width = np_img.shape[:2]
+    angle = random.uniform(0.1, 5.0)
+    angle *= random.choice([-1, 1])
+    matrix2D = cv2.getRotationMatrix2D((width / 2, height / 2), angle, 1)
+    np_img = cv2.warpAffine(np_img, matrix2D, (width, height))
 
     # Расчёт новых координат углов
     corners = np.array([
         [0, 0],
-        [cols, 0],
-        [0, rows],
-        [cols, rows]
+        [width, 0],
+        [0, height],
+        [width, height]
     ])
-    new_corners = np.float32(np.dot(M[:, :2], corners.T).T + M[:, 2])
-
-    return np_img, new_corners.astype(int)
+    new_corners = np.float32(np.dot(matrix2D[:, :2], corners.T).T + matrix2D[:, 2])
+    ext_info = 'угол поворота ' + str(angle)
+    return np_img, new_corners.astype(int), ext_info
 
 
 # Заглушка - никаких преобразований
@@ -156,4 +158,4 @@ def not_distortions(np_img):
         [0, rows],
         [cols, rows]
     ])
-    return np_img, corners
+    return np_img, corners, 'Никаких изменений'

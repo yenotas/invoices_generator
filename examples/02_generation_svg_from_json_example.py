@@ -3,8 +3,8 @@
 
 import json
 
-from invoices_generator.config import json_file_name, base_svg_file_name, svg_templates_files_folder
-from invoices_generator.svg_templates_helper import generate_svg_templates
+from config import json_file_name, base_svg_file_name, svg_templates_files_folder
+from svg_templates_helper import generate_svg_templates
 
 with open(json_file_name, 'r', encoding='utf-8') as json_file:
     json_data = json.load(json_file)
@@ -17,5 +17,5 @@ with open(json_file_name, 'w', encoding='utf-8') as json_file:
 
 
 print()
-print('generation SVG templates is complete')
-print(f'files in folder "{svg_templates_files_folder}"')
+print('SVG-шаблоны созданы')
+print(f'Файлы сохранены в папке "{svg_templates_files_folder}"')

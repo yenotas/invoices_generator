@@ -14,7 +14,7 @@ https://imagemagick.org/script/download.php#windows
 2. затем библиотеку: pip install Wand
 '''
 
-from invoices_generator.config import svg_templates_files_folder, dim_scale
+from config import svg_templates_files_folder, dim_scale
 
 import os
 from bs4 import BeautifulSoup

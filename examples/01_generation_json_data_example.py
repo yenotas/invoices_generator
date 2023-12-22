@@ -4,8 +4,8 @@
 import random
 import json
 
-from invoices_generator.config import list_data_files, json_file_name, files_number
-from invoices_generator.strings_generator import gen_invoice_json, load_data_from_file
+from config import list_data_files, json_file_name, files_number
+from strings_generator import gen_invoice_json, load_data_from_file
 
 json_data = {}
 for file_name, url in list_data_files.items():
@@ -25,5 +25,5 @@ with open(json_file_name, "w", encoding="utf-8") as json_file:
 
 
 print()
-print('generation JSON data is complete')
-print('file', json_file_name, 'in parent folder')
+print('Данные JSON созданы')
+print('Файл', json_file_name, 'сохранен в корневой папке')
