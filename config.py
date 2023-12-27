@@ -4,9 +4,9 @@ import os
 # количество генерируемых счетов
 files_number = 5
 # разрешение генерируемых файлов
-dpi = 144
+dpi = 192
 # коэффициент масштабирования при генерации
-dim_scale = dpi / 72
+dim_scale = dpi / 96
 # коэффициент масштабирования при искажениях
 distortion_scale = 1.0
 # размер печати в пикселях
@@ -30,7 +30,8 @@ generated_images_files_folder = os.path.join(generated_files_folder, 'generated_
 stamps_files_folder = os.path.join(generated_files_folder, 'generated_stamps')
 distorted_images_files_folder = os.path.join(generated_files_folder, 'distorted_images')
 stamped_images_files_folder = os.path.join(generated_files_folder, 'stamped_images')
-font_path = os.path.join(base_dir, 'assets', 'arialmt.ttf')
+stamp_font_path = os.path.join(base_dir, 'assets', 'arialmt.ttf')
+font_path = os.path.join(base_dir, 'assets', 'arial.ttf')
 
 for folder in [generated_files_folder, svg_templates_files_folder, generated_images_files_folder, stamps_files_folder,
                distorted_images_files_folder, stamped_images_files_folder]:

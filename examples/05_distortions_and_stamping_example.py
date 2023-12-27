@@ -6,7 +6,7 @@ import cv2
 
 from PIL import Image
 
-from config import (stamps_files_folder, generated_images_files_folder, json_file_name,
+from config import (stamps_files_folder, generated_images_files_folder, json_file_name, dim_scale,
                                        distortion_scale, distorted_images_files_folder, stamped_images_files_folder)
 from distortions_generator import (cv_view, cv_resize, random_perspective_change, random_rotate_image,
                                                       create_grey_spot, create_light_spot, create_noise,
@@ -61,16 +61,17 @@ for img, filename in images:
     img = Image.fromarray(np_img)
     # сохранение изображение
     img.save(save_path, 'JPEG')
-    #сохранение координат новых углов
-    json_data[int(invoice_number)-1]['new_corners'] = str(new_corners)
+
+    # добавлние координат новых углов
     json_data[int(invoice_number)-1]['distortion'] = distortion
-    # пересохранияю дополненый "магнитами" для штампа json
+    json_data[int(invoice_number)-1]['new_corners'] = ', '.join(map(str, new_corners.astype(str)))
+
+    # сохранение дополненого json
     with open(json_file_name, 'w', encoding='utf-8') as json_file:
         json.dump(json_data, json_file, ensure_ascii=False, indent=4)
 
     # Наложение печати и сохранение с печатью
-    # Координаты для наложения маленького изображения на большое
-    y_offset = int(json_data[int(invoice_number)-1]['magnet_stamp_y']) - 500
+    y_offset = int(json_data[int(invoice_number)-1]['magnet_stamp_y']) - int(dim_scale * 100)
     x_offset = int(new_corners[3][0] / 2 - random.randint(60, 400))
 
     stamp_image = np.array(stamps[int(invoice_number)-1][0])
