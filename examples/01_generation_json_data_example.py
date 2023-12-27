@@ -23,7 +23,6 @@ for i in range(files_number):
 with open(json_file_name, "w", encoding="utf-8") as json_file:
     json.dump(dataset, json_file, indent=2, ensure_ascii=False)
 
-
 print()
 print('Данные JSON созданы')
 print('Файл', json_file_name, 'сохранен в корневой папке')

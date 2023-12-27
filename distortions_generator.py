@@ -125,14 +125,13 @@ def random_perspective_change(np_img):
 
     matrix2D = cv2.getPerspectiveTransform(corners, new_corners)
     np_img = cv2.warpPerspective(np_img, matrix2D, (width, height))
-    ext_info = ('cдвиг углов (x1,y1); (x2,y2): (' + ', '.join(map(str, new_corners[0].astype(int))) + '); (' +
-                ', '.join(map(str, new_corners[3].astype(int))))+')'
-    return np_img, new_corners.astype(int), ext_info
+    info = 'perspective'
+    return np_img, new_corners.astype(int), info
 
 
 def random_rotate_image(np_img):
     height, width = np_img.shape[:2]
-    angle = random.uniform(0.1, 5.0)
+    angle = round(random.uniform(0.1, 5.0), 2)
     angle *= random.choice([-1, 1])
     matrix2D = cv2.getRotationMatrix2D((width / 2, height / 2), angle, 1)
     np_img = cv2.warpAffine(np_img, matrix2D, (width, height))
@@ -145,8 +144,8 @@ def random_rotate_image(np_img):
         [width, height]
     ])
     new_corners = np.float32(np.dot(matrix2D[:, :2], corners.T).T + matrix2D[:, 2])
-    ext_info = 'угол поворота ' + str(angle)
-    return np_img, new_corners.astype(int), ext_info
+    info = 'rotate'
+    return np_img, new_corners.astype(int), info
 
 
 # Заглушка - никаких преобразований

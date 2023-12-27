@@ -11,39 +11,26 @@ SVG и PNG именуются по формуле "invoice_" + номер зап
 https://imagemagick.org/script/download.php#windows
 (Для Linux: sudo apt-get install imagemagick
 Для macOS: brew install imagemagick)
-2. затем библиотеку: pip install Wand
+2. затем библиотеку Wand - включена в requirements.txt
 '''
 
-from config import svg_templates_files_folder, dim_scale
+from config import svg_templates_files_folder, dim_scale, font_path
 
 import os
 from bs4 import BeautifulSoup
 
-# from svglib.svglib import svg2rlg
-# from reportlab.graphics import renderPDF
-# from pdf2image import convert_from_path
+from PIL import Image, ImageDraw, ImageFont
 
-from wand.image import Image
-from wand.color import Color
+image = Image.new('L', (600, 30))
+draw = ImageDraw.Draw(image)
 
 
-def convert_svg_to_png(svg_filename, png_filename):
-    with Image(filename=svg_filename, background=Color('white'), resolution=144) as img:
-        img.format = 'png'
-        img.save(filename=png_filename)
+# временный рендер надписи для определения размера
+def get_text_size(text, font_size):
+    font = ImageFont.truetype(font_path, font_size)
+    bbox = draw.textbbox((0, 0), text, font=font)
+    return round(bbox[2] - bbox[0]), round(bbox[3] - bbox[1])
 
-'''
-# Двухэтапная конвертация с утилитой Poppler (см README):
-
-def convert_svg_to_pdf(svg_filename, pdf_filename):
-    drawing = svg2rlg(svg_filename)
-    renderPDF.drawToFile(drawing, pdf_filename)
-
-
-def convert_pdf_to_png(pdf_filename, png_filename):
-    image = convert_from_path(pdf_filename)[0]
-    image.save(png_filename, 'PNG')
-'''
 
 # создание SVG-файлов из JSON-данных по шаблону эталонного SVG-файла
 def generate_svg_templates(json_data, base_svg_file):
@@ -64,6 +51,8 @@ def generate_svg_templates(json_data, base_svg_file):
 
     for invoice in json_data:
 
+        invoice['bbox_cx_cy_w_h'] = {}
+
         base_keys = [key for key in invoice if key != 'itemsList']
         items = [item for item in invoice['itemsList']]
 
@@ -74,7 +63,7 @@ def generate_svg_templates(json_data, base_svg_file):
         horizontal_lines = soup.select("line[class*='horizontal_line']")
         vertical_lines = soup.select("line[class*='vertical_line']")
         stamp_line = soup.select("line[class*='stamp_line']")[0]
-        magnet_stamp_y = float(stamp_line['y1'])  # позиция У для прицеливания штампа
+        magnet_stamp_y = float(stamp_line['y1'])/100  # позиция У для прицеливания штампа
 
         top_line = float(horizontal_lines[1]['y1'])
         bottom_line = float(horizontal_lines[2]['y1'])
@@ -82,7 +71,7 @@ def generate_svg_templates(json_data, base_svg_file):
 
         # параметры первой строки
         text_item = soup.find('text', string=lambda text: f'_name_' in text)
-        class_name = text_item.get('class', []).split(' ')[1]
+        class_name = text_item.get('class', '').split(' ')[1]
         font_size = font_sizes['.'+class_name]
         table_line_height = font_size * 1.2
 
@@ -93,12 +82,16 @@ def generate_svg_templates(json_data, base_svg_file):
 
         # проход и подстановка текста вокруг таблицы
         for key in base_keys:
+
+
             text_elem = soup.find('text', string=lambda text: f'_{key}_' in text)
             if text_elem:
 
+                invoice['bbox_cx_cy_w_h'][key] = {}
+
                 original_y1 = float(text_elem['y']) if 'y' in text_elem.attrs else 0
 
-                class_name = text_elem.get('class', []).split(' ')[1]
+                class_name = text_elem.get('class', '').split(' ')[1]
                 if class_name:
                     class_name = '.' + class_name
 
@@ -107,8 +100,8 @@ def generate_svg_templates(json_data, base_svg_file):
                 line_height = font_size * 1.2
 
                 text_lines = invoice[key].split('\n')
-
                 original_text_elem = text_elem
+                i = 0
                 for i, line in enumerate(text_lines):
                     new_elem = soup.new_tag('text', **{attr: text_elem[attr] for attr in text_elem.attrs})
                     new_elem.string = line
@@ -117,20 +110,31 @@ def generate_svg_templates(json_data, base_svg_file):
 
                     text_elem.insert_after(new_elem)
                     text_elem = new_elem
+                    tw, th = get_text_size(line, font_size/100)
+                    cx = round((float(new_elem['x']) + tw / 2.0)/100)
+                    cy = round((original_y1 + i * line_height / 2.0) / 100)
+
+                    invoice['bbox_cx_cy_w_h'][key][i] = ', '.join(map(lambda x: str(x * dim_scale), [cx, cy, tw, th]))
 
                 original_text_elem.decompose()
 
         # проход и подстановка текста внутри таблицы
         border_y = top_line
 
-        for item in items:
+        invoice['bbox_cx_cy_w_h']['items'] = {}
+
+        font_size = font_sizes['.fnt0']
+
+        for n, item in enumerate(items):
             max_text_lines = len(item['name'].split('\n'))
+            invoice['bbox_cx_cy_w_h']['items'][n] = {}
 
             for key, template in templates.items():
                 if template is None:
                     continue
 
                 text_lines = str(item[key]).split('\n')
+                invoice['bbox_cx_cy_w_h']['items'][n][key] = {}
 
                 for i, line in enumerate(text_lines):
                     new_elem = soup.new_tag('text', **{attr: template[attr] for attr in template.attrs})
@@ -138,6 +142,10 @@ def generate_svg_templates(json_data, base_svg_file):
                     new_elem['y'] = str(table_line_y + i*table_line_height + 100)
                     new_elem['x'] = template['x']
                     template.insert_after(new_elem)
+                    tw, th = get_text_size(line, font_size/100)
+                    cx = round((float(new_elem['x']) + tw / 2.0) / 100)
+                    cy = round((table_line_y + i*table_line_height / 2 + 50) / 100)
+                    invoice['bbox_cx_cy_w_h']['items'][n][key][i] = ', '.join(map(lambda x: str(x * dim_scale), [cx, cy, tw, th]))
 
             # обновление позиции курсора по Y после добавления строки
             border_y += items_line_height * max_text_lines
@@ -169,7 +177,7 @@ def generate_svg_templates(json_data, base_svg_file):
         correct_svg_str = correct_svg_str.replace('<g name="bottom" transform="matrix(1 0 0 1 0 0)">',
                                 f'<g transform="matrix(1 0 0 1 0 {shift_y})" name="bottom">')
 
-        invoice['magnet_stamp_y'] = str(int((magnet_stamp_y + shift_y)*dim_scale/100)) # уровень +/- по У для штампа
+        invoice['magnet_stamp_y'] = str(int((magnet_stamp_y + shift_y/100)*dim_scale)) # уровень +/- по У для штампа
 
         # сохраняю
         file_name = f"invoice_{invoice['number']}.svg"

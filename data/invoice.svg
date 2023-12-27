@@ -2,6 +2,9 @@
  <defs>
   <style type="text/css">
    <![CDATA[
+     @font-face {
+    font-family: 'Arial';
+     src: url('../assets/arial.ttf') format('truetype');}
     .str0 {stroke:#323332;stroke-width:100;stroke-miterlimit:10}
     .str1 {stroke:#323332;stroke-width:200.1;stroke-miterlimit:10}
     .fil1 {fill:none;fill-rule:nonzero}

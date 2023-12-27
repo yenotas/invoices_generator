@@ -7,7 +7,7 @@
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import math
 import random
-from config import font_path, stamp_size
+from config import stamp_font_path, stamp_size
 import os
 
 
@@ -49,8 +49,8 @@ def generate_stamp(folder, filename, text_outer_circle, text_inner_circle, text_
     # Параметры изображения и текста
 
     center = (int(stamp_size / 2), int(stamp_size / 2))
-    font_by_circle = ImageFont.truetype(font_path, int(18/328*stamp_size))
-    font_by_center = ImageFont.truetype(font_path, int(45/328*stamp_size))
+    font_by_circle = ImageFont.truetype(stamp_font_path, int(18 / 328 * stamp_size))
+    font_by_center = ImageFont.truetype(stamp_font_path, int(45 / 328 * stamp_size))
 
     # Тексты
     text_color = generate_random_color()
