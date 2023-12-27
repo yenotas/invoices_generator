@@ -55,12 +55,18 @@ for img, filename in images:
     np_img = create_noise(np_img)
 
     # геометрические искажения: поворот и перспектива -> искаженное изображение и новые координаты углов документа
-    np_img, new_corners, info = random_geometrical_effects(np_img)
+    np_img, new_corners, distortion = random_geometrical_effects(np_img)
 
     save_path = os.path.join(distorted_images_files_folder, os.path.splitext(filename)[0] + '.jpeg')
     img = Image.fromarray(np_img)
     # сохранение изображение
     img.save(save_path, 'JPEG')
+    #сохранение координат новых углов
+    json_data[int(invoice_number)-1]['new_corners'] = str(new_corners)
+    json_data[int(invoice_number)-1]['distortion'] = distortion
+    # пересохранияю дополненый "магнитами" для штампа json
+    with open(json_file_name, 'w', encoding='utf-8') as json_file:
+        json.dump(json_data, json_file, ensure_ascii=False, indent=4)
 
     # Наложение печати и сохранение с печатью
     # Координаты для наложения маленького изображения на большое
@@ -92,7 +98,7 @@ for img, filename in images:
     save_path = os.path.join(stamped_images_files_folder, filename)
     img = Image.fromarray(base_image)
     img.save(save_path, 'JPEG')
-    print(info)
+
     print('случайное искажение для', filename, 'и печать добавлены')
 
 

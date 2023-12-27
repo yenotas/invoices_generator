@@ -21,7 +21,8 @@ https://github.com/yenotas/invoices_generator/
 1й способ - быстрая конвертация локально, но капризен при запуске из google colab
 1. Установить ImageMagick:
    + для Windows: https://imagemagick.org/script/download.php#windows
-   + для Linux: sudo apt-get install imagemagick
+   + для Linux: sudo apt-get install imagemagick 
+     +   для google colab: !apt-get -qq install imagemagick
    + для macOS: brew install imagemagick
    + установить библиотеку Wand (уже включена в requirements.txt)
     

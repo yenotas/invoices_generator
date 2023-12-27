@@ -11,7 +11,7 @@ with open(json_file_name, 'r', encoding='utf-8') as json_file:
 
 new_data = generate_svg_templates(json_data, base_svg_file_name)
 
-# пересохранияю дополненый "магнитами" для штампа json
+# пересохранияю дополненный координатами json
 with open(json_file_name, 'w', encoding='utf-8') as json_file:
     json.dump(new_data, json_file, ensure_ascii=False, indent=4)
 

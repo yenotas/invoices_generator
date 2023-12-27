@@ -8,8 +8,7 @@ SVG и PNG именуются по формуле "invoice_" + номер зап
 (2 способ смотри README)
 1. Установить утилиту Poppler
 https://github.com/oschwartz10612/poppler-windows/releases/
-2. затем библиотеки
-pip install svglib Pillow pdf2image
+2. затем библиотеки svglib Pillow pdf2image - включены в requirements_p.txt
 '''
 
 from config import svg_templates_files_folder, dim_scale

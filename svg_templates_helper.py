@@ -11,17 +11,13 @@ SVG и PNG именуются по формуле "invoice_" + номер зап
 https://imagemagick.org/script/download.php#windows
 (Для Linux: sudo apt-get install imagemagick
 Для macOS: brew install imagemagick)
-2. затем библиотеку: pip install Wand
+2. затем библиотеку Wand - включена в requirements.txt
 '''
 
 from config import svg_templates_files_folder, dim_scale
 
 import os
 from bs4 import BeautifulSoup
-
-# from svglib.svglib import svg2rlg
-# from reportlab.graphics import renderPDF
-# from pdf2image import convert_from_path
 
 from wand.image import Image
 from wand.color import Color
@@ -31,19 +27,6 @@ def convert_svg_to_png(svg_filename, png_filename):
     with Image(filename=svg_filename, background=Color('white'), resolution=144) as img:
         img.format = 'png'
         img.save(filename=png_filename)
-
-'''
-# Двухэтапная конвертация с утилитой Poppler (см README):
-
-def convert_svg_to_pdf(svg_filename, pdf_filename):
-    drawing = svg2rlg(svg_filename)
-    renderPDF.drawToFile(drawing, pdf_filename)
-
-
-def convert_pdf_to_png(pdf_filename, png_filename):
-    image = convert_from_path(pdf_filename)[0]
-    image.save(png_filename, 'PNG')
-'''
 
 # создание SVG-файлов из JSON-данных по шаблону эталонного SVG-файла
 def generate_svg_templates(json_data, base_svg_file):
@@ -82,7 +65,7 @@ def generate_svg_templates(json_data, base_svg_file):
 
         # параметры первой строки
         text_item = soup.find('text', string=lambda text: f'_name_' in text)
-        class_name = text_item.get('class', []).split(' ')[1]
+        class_name = text_item.get('class', '').split(' ')[1]
         font_size = font_sizes['.'+class_name]
         table_line_height = font_size * 1.2
 
@@ -98,7 +81,7 @@ def generate_svg_templates(json_data, base_svg_file):
 
                 original_y1 = float(text_elem['y']) if 'y' in text_elem.attrs else 0
 
-                class_name = text_elem.get('class', []).split(' ')[1]
+                class_name = text_elem.get('class', '').split(' ')[1]
                 if class_name:
                     class_name = '.' + class_name
 
@@ -107,8 +90,8 @@ def generate_svg_templates(json_data, base_svg_file):
                 line_height = font_size * 1.2
 
                 text_lines = invoice[key].split('\n')
-
                 original_text_elem = text_elem
+                i = 0
                 for i, line in enumerate(text_lines):
                     new_elem = soup.new_tag('text', **{attr: text_elem[attr] for attr in text_elem.attrs})
                     new_elem.string = line
