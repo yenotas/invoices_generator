@@ -72,7 +72,7 @@
   <text x="56800" y="49100" class="fil0 fnt0 center">_price_</text>
   <text x="67100" y="49100" class="fil0 fnt0 center">_sum_</text>
 <!-- itemsList -->
-  <g transform="matrix(1 0 0 1 0 0)" id="bottom">
+
     <line class="fil1 str1" x1="6037.2" y1="62521.2" x2="72660.8" y2="62521.2"/>
     <line class="fil1 str0 stamp_line" x1="16537.2" y1="65304.9" x2="45956.3" y2="65304.9"/><text x="57337" y="54194" class="fil0 fnt6">Итого:</text>
     <text x="72756" y="54194" class="fil0 fnt6 right">_amount_</text>
@@ -83,7 +83,7 @@
     <text x="6357" y="61109" class="fil0 fnt6">Всего к оплате: </text><text x="17457" y="61109" class="fil0 fnt6">_total_</text>
     <text x="6357" y="64854" class="fil0 fnt6">Исполнитель</text>
     <text x="46212" y="64918" class="fil0 fnt0">/</text><text x="64212" y="64918" class="fil0 fnt0">/</text>
-  </g>
+
   <line class="fil1 str1 horizontal_line" x1="6037.2" y1="46387.1" x2="72562.3" y2="46387.1"/>
   <line class="fil1 str0 horizontal_line" x1="6137.3" y1="48065.1" x2="72562.3" y2="48065.1"/>
   <line class="fil1 str1 horizontal_line" x1="6037.2" y1="49656.3" x2="72660.8" y2="49656.3"/>  

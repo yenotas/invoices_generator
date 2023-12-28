@@ -18,3 +18,4 @@ with open(json_file_name, 'w', encoding='utf-8') as json_file:
 print()
 print('SVG-шаблоны созданы')
 print(f'Файлы сохранены в папке "{svg_templates_files_folder}"')
+print('generated_data.json изменен')

@@ -5,12 +5,12 @@ import os
 files_number = 5
 # разрешение генерируемых файлов
 dpi = 192
-# коэффициент масштабирования при генерации
-dim_scale = dpi / 96
 # коэффициент масштабирования при искажениях
 distortion_scale = 1.0
+
+dim_scale = dpi / 96 # НЕ МЕНЯТЬ: 96 = базовое разрешение 1:1
 # размер печати в пикселях
-stamp_size = int(130 * dim_scale)
+stamp_size = int(150 * dim_scale)
 
 # имена и пути к рабочим файлам
 list_data_files = {
@@ -32,6 +32,7 @@ distorted_images_files_folder = os.path.join(generated_files_folder, 'distorted_
 stamped_images_files_folder = os.path.join(generated_files_folder, 'stamped_images')
 stamp_font_path = os.path.join(base_dir, 'assets', 'arialmt.ttf')
 font_path = os.path.join(base_dir, 'assets', 'arial.ttf')
+bold_font_path = os.path.join(base_dir, 'assets', 'arialbd.ttf')
 
 for folder in [generated_files_folder, svg_templates_files_folder, generated_images_files_folder, stamps_files_folder,
                distorted_images_files_folder, stamped_images_files_folder]:

@@ -25,5 +25,5 @@ def convert_svg_to_pdf(svg_filename, pdf_filename):
 
 
 def convert_pdf_to_png(pdf_filename, png_filename):
-    image = convert_from_path(pdf_filename, dpi)[0]
+    image = convert_from_path(pdf_filename, dpi=dpi)[0]
     image.save(png_filename, 'PNG')
