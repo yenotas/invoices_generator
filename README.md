@@ -28,7 +28,7 @@ https://github.com/yenotas/invoices_generator/
 #### По-умолчанию установлено удобное и проверенное разрешение графических документов - DPI = 192
 
 ####  Для конвертации SVG-файлов в PNG выбрать 1й или 2й способ:
-1й способ - быстрая конвертация локально, но капризен при запуске из google colab
+1й способ - быстрая и правильная конвертация локально, но капризен при запуске из google colab
 1. Установить ImageMagick:
    + для Windows: https://imagemagick.org/script/download.php#windows
    + для Linux: sudo apt-get install imagemagick 
@@ -36,7 +36,8 @@ https://github.com/yenotas/invoices_generator/
    + для macOS: brew install imagemagick
    + установить библиотеку Wand (уже включена в requirements.txt)
     
-2й способ - заметно медленнее, но нет проблем в google colab
+2й способ - заметно медленнее, DPI сохраняемых документов не соответствует (значит определяемые BBOX-ы тоже неверные), 
+но нет проблем в google colab, и оставляю его для экспериментов: 
 2. Скачать утилиту Poppler 
    + для Windows (на локальный диск): https://github.com/oschwartz10612/poppler-windows/releases/
      + добавить путь к папке \poppler\Library\bin в переменную окружения PATH вашей системы

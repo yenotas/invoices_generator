@@ -1,27 +1,41 @@
-<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="794px" height="1123px" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd" viewBox="0 0 79400 112294.3">
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve"
+     width="794px" height="1123px" version="1.1"
+     style="shape-rendering:geometricPrecision;
+     text-rendering:geometricPrecision;
+     image-rendering:optimizeQuality; fill-rule:evenodd;
+     clip-rule:evenodd" viewBox="0 0 79400 112294.3">
  <defs>
   <style type="text/css">
    <![CDATA[
-     @font-face {
-    font-family: 'Arial';
-     src: url('../assets/arial.ttf') format('truetype');}
-    .str0 {stroke:#323332;stroke-width:100;stroke-miterlimit:10}
-    .str1 {stroke:#323332;stroke-width:200.1;stroke-miterlimit:10}
-    .fil1 {fill:none;fill-rule:nonzero}
-    .fil0 {fill:black}
-    .fnt0 {font-weight:normal;font-size:1172.4px;font-family:'Arial'}
-    .fnt3 {font-weight:normal;font-size:1200.5px;font-family:'Arial'}
-    .fnt2 {font-weight:bold;font-size:1200.5px;font-family:'Arial'}
-    .fnt5 {font-weight:normal;font-size:1312.5px;font-family:'Arial'}
-    .fnt6 {font-weight:bold;font-size:1312.5px;font-family:'Arial'}
-    .fnt7 {font-weight:bold;font-size:1324px;font-family:'Arial'}
-    .fnt8 {font-weight:normal;font-size:1328.5px;font-family:'Arial'}
-    .fnt1 {font-weight:bold;font-size:1328.5px;font-family:'Arial'}
-    .fnt4 {font-weight:bold;font-size:1904.7px;font-family:'Arial'}
-    .center { text-anchor: middle; }
-    .right { text-anchor: end; }
-    .bold { font-weight: bold; }
-    .ln20 { line-height: 20px; }
+    @font-face {
+    font-family: 'ArialN';
+    src: url('arialmt.ttf') format('truetype');
+    }
+
+    @font-face {
+    font-family: 'ArialB';
+    src: url('arialbd.ttf') format('truetype');
+    }
+
+    svg {fill: #fff; background-color: #fff}
+
+   .str0 {stroke:#323332;stroke-width:100;stroke-miterlimit:10}
+   .str1 {stroke:#323332;stroke-width:200.1;stroke-miterlimit:10}
+   .fil0 {fill:black}
+   .fil1 {fill:none;fill-rule:nonzero}
+   .fnt0 {font-weight:normal;font-size:1172.4px;font-family:'ArialN'}
+   .fnt1 {font-weight:bold;font-size:1328.5px;font-family:'ArialB'}
+   .fnt2 {font-weight:bold;font-size:1200.5px;font-family:'ArialB'}
+   .fnt3 {font-weight:normal;font-size:1200.5px;font-family:'ArialN'}
+   .fnt4 {font-weight:bold;font-size:1904.7px;font-family:'ArialB'}
+   .fnt5 {font-weight:normal;font-size:1312.5px;font-family:'ArialN'}
+   .fnt6 {font-weight:bold;font-size:1312.5px;font-family:'ArialB'}
+   .fnt7 {font-weight:bold;font-size:1324px;font-family:'ArialB'}
+   .fnt8 {font-weight:normal;font-size:1328.5px;font-family:'ArialN'}
+   .center { text-anchor: middle; }
+   .right { text-anchor: end; }
+   .bold { font-weight: bold; }
+   .ln20 { line-height: 20px; }
    ]]>
   </style>
  </defs>

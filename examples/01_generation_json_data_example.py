@@ -4,7 +4,7 @@
 import random
 import json
 
-from config import list_data_files, json_file_name, files_number
+from config import list_data_files, json_file_name, FILES_NUMBER
 from strings_generator import gen_invoice_json, load_data_from_file
 
 json_data = {}
@@ -15,7 +15,7 @@ for file_name, url in list_data_files.items():
 
 dataset = []
 
-for i in range(files_number):
+for i in range(FILES_NUMBER):
     generated_json_data = gen_invoice_json(json_data, i+1, random.randint(1, 8))
     dataset.append(generated_json_data)
 

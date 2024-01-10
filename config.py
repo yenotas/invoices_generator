@@ -1,18 +1,20 @@
 # -*- coding: utf-8 -*-
 import os
 
-# количество генерируемых счетов
-files_number = 5
-# разрешение генерируемых файлов
-dpi = 192
-# коэффициент масштабирования при искажениях
-distortion_scale = 1.0
 
-dim_scale = dpi / 96 # НЕ МЕНЯТЬ: 96 = базовое разрешение 1:1
-# размер печати в пикселях
+# Количество генерируемых счетов
+FILES_NUMBER = 5
+# Разрешение генерируемых файлов
+DPI = 192
+
+
+# Коэффициент масштабирования при искажениях
+distortion_scale = 1.0
+dim_scale = DPI / 96  # Коэффициент соотношения с базовым разрешением. НЕ МЕНЯТЬ: 96 = база!
+# Размер печати в пикселях
 stamp_size = int(150 * dim_scale)
 
-# имена и пути к рабочим файлам
+# Имена и пути к рабочим файлам
 list_data_files = {
     'addresses.csv': 'https://drive.google.com/uc?export=download&id=14qnEbj33g6XDxotNZBjEwZE49MrhrPBQ',
     'companies.tsv': 'https://drive.google.com/uc?export=download&id=1JnM0XWKVUPMQeeHDZb0O_pzO9yHhU2SL',
@@ -31,8 +33,8 @@ stamps_files_folder = os.path.join(generated_files_folder, 'generated_stamps')
 distorted_images_files_folder = os.path.join(generated_files_folder, 'distorted_images')
 stamped_images_files_folder = os.path.join(generated_files_folder, 'stamped_images')
 stamp_font_path = os.path.join(base_dir, 'assets', 'arialmt.ttf')
-font_path = os.path.join(base_dir, 'assets', 'arial.ttf')
-bold_font_path = os.path.join(base_dir, 'assets', 'arialbd.ttf')
+font_path = os.path.join(data_files_folder, 'arial.ttf')
+bold_font_path = os.path.join(data_files_folder, 'arialbd.ttf')
 
 for folder in [generated_files_folder, svg_templates_files_folder, generated_images_files_folder, stamps_files_folder,
                distorted_images_files_folder, stamped_images_files_folder]:
