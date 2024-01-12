@@ -1,61 +1,65 @@
 # -*- coding: utf-8 -*-
 """
-Генератор SVG-файлов счетов из JSON + конвертер в PNG.
-SVG и PNG именуются по формуле "invoice_" + номер записи JSON (invoice['number'])
-Автор: Коваленко А.В. 11.2023
-
-Для конвертации SVG-файлов в PDF и PNG:
-(1 способ - смотри README)
-1. установить ImageMagick по ссылке:
-Для Windows:
-https://imagemagick.org/script/download.php#windows
-(Для Linux: sudo apt-get install imagemagick
-Для macOS: brew install imagemagick)
-2. затем библиотеку Wand - включена в requirements.txt
+Генератор JPEG-файлов счетов из JSON.
+Файлы именуются по формуле "invoice_" + номер записи JSON (invoice['number'])
+Автор: Коваленко А.В. 01.2024
 """
 
-from config import svg_templates_files_folder, dim_scale, font_path, bold_font_path, DPI
+from config import svg_templates_files_folder, dim_scale, font_path, bold_font_path, base_svg_file_name
 
 import os
 from bs4 import BeautifulSoup
 
-# from PIL import Image, ImageDraw, ImageFont
-
-from wand.image import Image as WandImage
-from wand.color import Color
-from wand.drawing import Drawing
+from PIL import Image, ImageDraw, ImageFont
+import numpy as np
 
 text_dir = {'right': -1, 'center': 0}  # коэффициент для вычисления центра надписи в зависимости от выравнивания текста
 font_sizes = {}
 font_weights = {}
-countr = 0
+# countr = 0
 
 
 # Временный рендер надписи для определения размера
 def get_text_size(text, font_size, bold=False):
-    global countr
+    # global countr
     # Создание изображения
-    img = WandImage(width=len(text)*20, height=30, background=Color("white"), resolution=DPI)
-    draw = Drawing()
-    draw.fill_color = Color("black")
-    draw.font = font_path
-    draw.font_size = font_size
-    draw.font_weight = 900 if bold else 400
+    image = Image.new('L', (len(text) * 20, 30))
+    draw = ImageDraw.Draw(image)
+
+    # Загрузка шрифта
+    fp = bold_font_path if bold else font_path
+    font = ImageFont.truetype(fp, font_size)
+
     # Рисование текста на изображении
-    draw.text(0, 30, text)
-    draw.draw(img)
-    m = draw.get_font_metrics(img, text)
+    draw.text((0, 0), text.strip(), font=font, fill=255)
 
-    temp_folder = os.path.join(svg_templates_files_folder, 'temp')
-    print(text, draw.font, draw.font_size, draw.font_weight)
-    print(m.text_width, m.text_height)
+    # Преобразование изображения в массив NumPy
+    np_img = np.array(image)
 
+    # Вычисление реальной ширины текста
+    non_zero_columns = np.where(np_img.max(axis=0) > 0)
+    real_width = non_zero_columns[0][-1] - non_zero_columns[0][0] + 1
+
+    # Вычисление высоты текста
+    non_zero_rows = np.where(np_img.max(axis=1) > 0)
+    real_height = non_zero_rows[0][-1] - non_zero_rows[0][0] + 1
+
+    # Обрезание изображения
+    trimmed_img = np_img[non_zero_rows[0][0]:non_zero_rows[0][-1] + 1,
+                         non_zero_columns[0][0]:non_zero_columns[0][-1] + 1]
+
+    # Увеличение размера изображения в N раз
+    resized_img = np.kron(trimmed_img, np.ones((round(dim_scale), round(dim_scale))))
+
+    # Создание нового изображения из массива
+    resized_img = resized_img.astype(np.uint8)  # Преобразование в целочисленный тип
+    resized_image = Image.fromarray(resized_img, mode='L')
 
     # Сохранение изображения в файл
-    # img.format = 'png'
-    # img.save(filename=os.path.join(temp_folder, f'{countr}.png'))
-    countr += 1
-    return m.text_width, m.text_height
+    # resized_image.save(os.path.join(svg_templates_files_folder, 'temp', f'{countr}.png'))
+    # countr += 1
+
+    return 100 * real_width, 100 * real_height
 
 
 # Вычисляю координаты центра и метрики текстовой надписи
@@ -71,7 +75,7 @@ def get_text_metrics(text_el):
 
     font_size = font_sizes.get(font_class, 1300)
     bold = font_weights.get(font_class, False)
-    text = text_el.string
+    text = text_el.string.strip()
 
     tw, th = get_text_size(text, font_size / 100, bold)
     cx = round((float(text_el['x']) + align * tw / 2) / 100 * dim_scale) - 1
@@ -82,9 +86,9 @@ def get_text_metrics(text_el):
 
 
 # Создание SVG-файлов из JSON-данных по шаблону эталонного SVG-файла
-def generate_svg_templates(json_data, base_svg_file):
+def generate_jpeg_templates(json_data):
 
-    with open(base_svg_file, 'r', encoding='utf-8') as svg_file:
+    with open(base_svg_file_name, 'r', encoding='utf-8') as svg_file:
         base_soup = BeautifulSoup(svg_file, 'xml')
 
     soup_string = str(base_soup)  # клон чистого svg
@@ -101,12 +105,8 @@ def generate_svg_templates(json_data, base_svg_file):
                               for value in line.split('{')[1].split(';') if 'font-size' in value), 1200)
             font_sizes[class_name] = font_size
             font_weight = next((value.split(':')[1].strip()
-                                for value in line.split('{')[1].split(';') if 'font-weight' in value), 'normal')
+                                for value in line.split('{')[0].split(';') if 'font-weight' in value), 'normal')
             font_weights[class_name] = True if font_weight == 'bold' else False
-            # font_weight = next((value.split(':')[1].strip()
-            #                     for value in line.split('{')[1].split(';') if 'font-family' in value), 'Arial')
-            # font_weights[class_name] = True if 'ArialBold' in font_weight else False
-
 
     for invoice in json_data:
 
@@ -162,10 +162,11 @@ def generate_svg_templates(json_data, base_svg_file):
                     new_elem.string = line
                     new_elem['y'] = str(round(float(original_y1 + i * line_height)))
                     new_elem['x'] = str(round(float(text_elem['x'])))
-                    text_elem.insert_after(new_elem)
                     # записываю координаты и размер надписи
                     metrics = get_text_metrics(new_elem)[0]
                     invoice['bbox_cx_cy_w_h'][key][i] = ', '.join(map(lambda x: str(x), metrics))
+
+                    text_elem.insert_after(new_elem)
 
                 original_text_elem.decompose()
 
@@ -190,9 +191,11 @@ def generate_svg_templates(json_data, base_svg_file):
                     new_elem.string = line
                     new_elem['y'] = str(round(float(table_line_y + i*table_line_height + 100)))
                     new_elem['x'] = str(round(float(template['x'])))
-                    template.insert_after(new_elem)
+
                     metrics = get_text_metrics(new_elem)[0]
                     invoice['bbox_cx_cy_w_h']['itemsList'][n][key][i] = ', '.join(map(lambda x: str(x), metrics))
+
+                    template.insert_after(new_elem)
 
             # Обновление позиции курсора по Y после добавления строки
             border_y += round(items_line_height * max_text_lines)

@@ -32,9 +32,9 @@ generated_images_files_folder = os.path.join(generated_files_folder, 'generated_
 stamps_files_folder = os.path.join(generated_files_folder, 'generated_stamps')
 distorted_images_files_folder = os.path.join(generated_files_folder, 'distorted_images')
 stamped_images_files_folder = os.path.join(generated_files_folder, 'stamped_images')
-stamp_font_path = os.path.join(base_dir, 'assets', 'arialmt.ttf')
-font_path = os.path.join(data_files_folder, 'arial.ttf')
-bold_font_path = os.path.join(data_files_folder, 'arialbd.ttf')
+
+font_path = os.path.join(data_files_folder, 'Arial.ttf')
+bold_font_path = os.path.join(data_files_folder, 'ArialBold.ttf')
 
 for folder in [generated_files_folder, svg_templates_files_folder, generated_images_files_folder, stamps_files_folder,
                distorted_images_files_folder, stamped_images_files_folder]:
