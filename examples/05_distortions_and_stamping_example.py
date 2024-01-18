@@ -8,9 +8,9 @@ from PIL import Image
 
 from config import (stamps_files_folder, generated_images_files_folder, json_file_name, dim_scale,
                                        distortion_scale, distorted_images_files_folder, stamped_images_files_folder)
-from distortions_generator import (cv_view, cv_resize, random_perspective_change, random_rotate_image,
-                                                      create_grey_spot, create_light_spot, create_noise,
-                                                      not_distortions)
+from modules.distortions_generator import (cv_resize, random_perspective_change, random_rotate_image,
+                                           create_grey_spot, create_light_spot, create_noise,
+                                           not_distortions)
 
 
 # Чтение изображений из папки

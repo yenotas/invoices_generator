@@ -5,7 +5,7 @@ import random
 import json
 
 from config import list_data_files, json_file_name, FILES_NUMBER
-from strings_generator import gen_invoice_json, load_data_from_file
+from modules.strings_generator import gen_invoice_json, load_data_from_file
 
 json_data = {}
 for file_name, url in list_data_files.items():

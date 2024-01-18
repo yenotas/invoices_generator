@@ -2,7 +2,7 @@
 # Пример генерации и вывода товаров в счете
 
 import pandas as pd
-from strings_generator import gen_products_list, get_string_by_number, currency_main, \
+from modules.strings_generator import gen_products_list, get_string_by_number, currency_main, \
     currency_additional, load_data_from_file, get_random_invoice_name, get_random_contract_name, \
     gen_full_address, str_line_splitter
 from config import list_data_files

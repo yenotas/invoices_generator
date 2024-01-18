@@ -3,7 +3,7 @@ import os
 
 
 # Количество генерируемых счетов
-FILES_NUMBER = 5
+FILES_NUMBER = 1
 # Разрешение генерируемых файлов
 DPI = 192
 
@@ -13,6 +13,7 @@ distortion_scale = 1.0
 dim_scale = DPI / 96  # Коэффициент соотношения с базовым разрешением. НЕ МЕНЯТЬ: 96 = база!
 # Размер печати в пикселях
 stamp_size = int(150 * dim_scale)
+
 
 # Имена и пути к рабочим файлам
 list_data_files = {
@@ -32,12 +33,13 @@ generated_images_files_folder = os.path.join(generated_files_folder, 'generated_
 stamps_files_folder = os.path.join(generated_files_folder, 'generated_stamps')
 distorted_images_files_folder = os.path.join(generated_files_folder, 'distorted_images')
 stamped_images_files_folder = os.path.join(generated_files_folder, 'stamped_images')
+temp_folder = os.path.join(svg_templates_files_folder, 'temp')
 
 font_path = os.path.join(data_files_folder, 'Arial.ttf')
 bold_font_path = os.path.join(data_files_folder, 'ArialBold.ttf')
 
 for folder in [generated_files_folder, svg_templates_files_folder, generated_images_files_folder, stamps_files_folder,
-               distorted_images_files_folder, stamped_images_files_folder]:
+               distorted_images_files_folder, stamped_images_files_folder, temp_folder]:
     if not os.path.exists(folder):
         os.makedirs(folder)
 

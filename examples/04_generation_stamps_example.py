@@ -4,7 +4,7 @@
 import json
 
 from config import stamps_files_folder, json_file_name
-from stamps_generator import generate_stamp
+from modules.stamps_generator import generate_stamp
 
 with open(json_file_name, 'r', encoding='utf-8') as json_file:
     json_data = json.load(json_file)

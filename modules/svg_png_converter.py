@@ -14,13 +14,14 @@ https://imagemagick.org/script/download.php#windows
 2. затем библиотеку Wand - включена в requirements.txt
 """
 
-from config import DPI
+from config import DPI, dim_scale
 from wand.image import Image
 from wand.color import Color
 
 
 def convert_svg_to_png(svg_filename, png_filename):
 
-    with Image(filename=svg_filename, background=Color('white'), resolution=DPI) as img:
+    with Image(width=int(794*dim_scale), height=int(1123*dim_scale), filename=svg_filename, background=Color('white')) as img:
         img.format = 'png'
+        # img.adaptive_resize(int(794*dim_scale), int(1123*dim_scale))
         img.save(filename=png_filename)

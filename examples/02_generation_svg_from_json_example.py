@@ -4,7 +4,7 @@
 import json
 
 from config import json_file_name, base_svg_file_name, svg_templates_files_folder, DPI
-from svg_templates_generator import generate_svg_templates
+from modules.svg_templates_generator import generate_svg_templates
 
 with open(json_file_name, 'r', encoding='utf-8') as json_file:
     json_data = json.load(json_file)

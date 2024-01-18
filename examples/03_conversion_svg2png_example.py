@@ -2,7 +2,7 @@
 # Пример конвертации заполненных SVG-документов в PNG с утилитой ImageMagick
 
 from config import generated_images_files_folder, svg_templates_files_folder
-from svg_png_converter import convert_svg_to_png
+from modules.svg_png_converter import convert_svg_to_png
 import os
 
 # Получаем список SVG-файлов в папке

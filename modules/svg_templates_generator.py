@@ -14,7 +14,7 @@ https://imagemagick.org/script/download.php#windows
 2. затем библиотеку Wand - включена в requirements.txt
 """
 
-from config import svg_templates_files_folder, dim_scale, font_path, bold_font_path, DPI
+from config import svg_templates_files_folder, dim_scale, font_path, bold_font_path, DPI, temp_folder
 
 import os
 from bs4 import BeautifulSoup
@@ -28,42 +28,44 @@ from wand.drawing import Drawing
 text_dir = {'right': -1, 'center': 0}  # коэффициент для вычисления центра надписи в зависимости от выравнивания текста
 font_sizes = {}
 font_weights = {}
-countr = 0
+img = WandImage(width=700, height=30, background=Color("white"))
 
 
 # Временный рендер надписи для определения размера
 def get_text_size(text, font_size, bold=False):
-    global countr
-    # Создание изображения
-    img = WandImage(width=len(text)*20, height=30, background=Color("white"), resolution=DPI)
+    get_text_size.i = -1 if not hasattr(get_text_size, 'i') else get_text_size.i + 1
+
     draw = Drawing()
     draw.fill_color = Color("black")
     draw.font = font_path
-    draw.font_size = font_size
-    draw.font_weight = 900 if bold else 400
-    # Рисование текста на изображении
-    draw.text(0, 30, text)
-    draw.draw(img)
+    draw.font_size = height = round(font_size * dim_scale)
+    draw.font_weight = 700 if bold else 400
+    # Корректировка под кернинг текста при отрисовке из svg
+    draw.text_kerning = draw.text_kerning + height/200 if bold else draw.text_kerning - height/300
     m = draw.get_font_metrics(img, text)
+    width = int(m.text_width)
+    text_image = WandImage(width=width, height=height, background=Color("white"))
 
-    temp_folder = os.path.join(svg_templates_files_folder, 'temp')
-    print(text, draw.font, draw.font_size, draw.font_weight)
-    print(m.text_width, m.text_height)
+    draw.text(0, height - round(3 * dim_scale), text)
+    draw.draw(text_image)
 
+    fn = os.path.join(temp_folder, f'{get_text_size.i}.png')
+
+    print(get_text_size.i, ':  ', text, '  | font:', draw.font_weight, draw.font_size)
 
     # Сохранение изображения в файл
-    # img.format = 'png'
-    # img.save(filename=os.path.join(temp_folder, f'{countr}.png'))
-    countr += 1
-    return m.text_width, m.text_height
+    text_image.format = 'png'
+    text_image.save(filename=fn)
+
+    return width, height
 
 
 # Вычисляю координаты центра и метрики текстовой надписи
-def get_text_metrics(text_el):
+def get_text_metrics(text_elem):
 
     align = 1  # Коэффициент для левого выравнивания текста
     font_class = '.fnt5'
-    classes = text_el.get('class', '').split(' ')
+    classes = text_elem.get('class', '').split(' ')
     if len(classes) > 1:
         font_class = '.' + classes[1]
         if len(classes) > 2:
@@ -71,12 +73,13 @@ def get_text_metrics(text_el):
 
     font_size = font_sizes.get(font_class, 1300)
     bold = font_weights.get(font_class, False)
-    text = text_el.string
+    text = text_elem.string.strip()
 
     tw, th = get_text_size(text, font_size / 100, bold)
-    cx = round((float(text_el['x']) + align * tw / 2) / 100 * dim_scale) - 1
-    cy = round((float(text_el['y']) - th / 2) / 100 * dim_scale) + 1
-    tw, th = round(tw * dim_scale / 100), round(th * dim_scale / 100)
+    cx = int(float(text_elem['x']) / 100 * dim_scale + align * tw / 2)
+    cy = round(float(text_elem['y']) / 100 * dim_scale + th / 2)
+    print('x,y:  ', round(float(text_elem['x']) / 100 * dim_scale), round(float(text_elem['y']) / 100 * dim_scale),
+          'w, h:', tw, th)
 
     return [[cx, cy, tw, th], font_size, bold, align]
 
@@ -99,14 +102,13 @@ def generate_svg_templates(json_data, base_svg_file):
             class_name = line.split('{')[0].strip()
             font_size = next((float(value.split(':')[1].replace('px', '').strip())
                               for value in line.split('{')[1].split(';') if 'font-size' in value), 1200)
-            font_sizes[class_name] = font_size
+            font_sizes[class_name] = round(font_size/100)*100
             font_weight = next((value.split(':')[1].strip()
                                 for value in line.split('{')[1].split(';') if 'font-weight' in value), 'normal')
             font_weights[class_name] = True if font_weight == 'bold' else False
             # font_weight = next((value.split(':')[1].strip()
-            #                     for value in line.split('{')[1].split(';') if 'font-family' in value), 'Arial')
-            # font_weights[class_name] = True if 'ArialBold' in font_weight else False
-
+            #                     for value in line.split('{')[1].split(';') if 'font-family' in value), 'FontNormal')
+            # font_weights[class_name] = True if 'FontBold' in font_weight else False
 
     for invoice in json_data:
 
@@ -148,7 +150,7 @@ def generate_svg_templates(json_data, base_svg_file):
 
                 invoice['bbox_cx_cy_w_h'][key] = {}
 
-                original_y1 = float(text_elem['y']) if 'y' in text_elem.attrs else 0
+                elem_y1 = float(text_elem['y']) if 'y' in text_elem.attrs else 0
 
                 font_size = get_text_metrics(text_elem)[1]
 
@@ -160,7 +162,7 @@ def generate_svg_templates(json_data, base_svg_file):
                 for i, line in enumerate(text_lines):
                     new_elem = soup.new_tag('text', **{attr: text_elem[attr] for attr in text_elem.attrs})
                     new_elem.string = line
-                    new_elem['y'] = str(round(float(original_y1 + i * line_height)))
+                    new_elem['y'] = str(round(float(elem_y1 + i * line_height)))
                     new_elem['x'] = str(round(float(text_elem['x'])))
                     text_elem.insert_after(new_elem)
                     # записываю координаты и размер надписи
