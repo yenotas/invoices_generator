@@ -12,23 +12,22 @@
                     font-family: 'Arial';
                     src: url('Fonts/Arial.ttf') format('truetype');
                 }
-               .str0 {stroke:#323332;stroke-width:100;stroke-miterlimit:10}
-               .str1 {stroke:#323332;stroke-width:200.1;stroke-miterlimit:10}
+               .str0 {stroke:#000000;stroke-width:100;stroke-miterlimit:10}
+               .str1 {stroke:#000000;stroke-width:200;stroke-miterlimit:10}
                .fil0 {fill:black}
                .fil1 {fill:none;fill-rule:nonzero}
-               .fnt0 {font-weight:normal;font-size:1172.4px;font-family:'Arial';}
-               .fnt1 {font-weight:bold;font-size:1328.5px;font-family:'Arial';}
-               .fnt2 {font-weight:bold;font-size:1200.5px;font-family:'Arial';}
-               .fnt3 {font-weight:normal;font-size:1200.5px;font-family:'Arial';}
-               .fnt4 {font-weight:bold;font-size:1904.7px;font-family:'Arial';}
-               .fnt5 {font-weight:normal;font-size:1312.5px;font-family:'Arial';}
-               .fnt6 {font-weight:bold;font-size:1312.5px;font-family:'Arial';}
-               .fnt7 {font-weight:bold;font-size:1324px;font-family:'Arial';}
-               .fnt8 {font-weight:normal;font-size:1328.5px;font-family:'Arial';}
+               .fnt0 {font-weight:normal;font-size:1200px;font-family:'Arial';}
+               .fnt1 {font-weight:bold;font-size:1300px;font-family:'Arial';}
+               .fnt2 {font-weight:bold;font-size:1200px;font-family:'Arial';}
+               .fnt3 {font-weight:normal;font-size:1200px;font-family:'Arial';}
+               .fnt4 {font-weight:bold;font-size:1900px;font-family:'Arial';}
+               .fnt5 {font-weight:normal;font-size:1300px;font-family:'Arial';}
+               .fnt6 {font-weight:bold;font-size:1300px;font-family:'Arial';}
+               .fnt7 {font-weight:bold;font-size:1300px;font-family:'Arial';}
+               .fnt8 {font-weight:normal;font-size:1300px;font-family:'Arial';}
                .center { text-anchor: middle; }
                .right { text-anchor: end; }
                .bold { font-weight: bold; }
-               .ln20 { line-height: 20px; }
             ]]>
         </style>
     </defs>
@@ -37,14 +36,9 @@
     <text x="17706" y="11490" class="fil0 fnt0">прихода денег на р/с Поставщика, самовывозом, при наличии доверенности и документов удостоверяющих </text>
     <text x="42387" y="12722" class="fil0 fnt0">личность.</text>
     <text x="6373" y="17668" class="fil0 fnt1">Образец платежного поручения</text>
-    <line class="fil1 str0" x1="6086.6" y1="18133.8" x2="73111.8" y2="18133.8"/>
     <text x="6341" y="19317" class="fil0 fnt2">Бенефициар: </text>
     <text x="51014" y="19317" class="fil0 fnt2">ИИК</text>
     <text x="65804" y="19317" class="fil0 fnt2">Кбе</text>
-    <line class="fil1 str0" x1="6086.6" y1="27628.1" x2="6086.6" y2="18084.4"/>
-    <line class="fil1 str0" x1="43894.2" y1="27628.1" x2="43894.2" y2="18084.4"/>
-    <line class="fil1 str0" x1="60700.5" y1="24426.8" x2="60700.5" y2="18084.4"/>
-    <line class="fil1 str0" x1="73135.9" y1="27628.1" x2="73135.9" y2="18084.4"/>
     <text x="7010" y="20921" class="fil0 fnt2">_sellerName_</text>
     <text x="52343" y="22438" class="fil0 fnt2 center">_iik_</text>
     <text x="66857" y="22438" class="fil0 fnt2 center">_kbe_</text>
@@ -52,8 +46,6 @@
     <text x="6309" y="25543" class="fil0 fnt3">Банк бенефициара:</text>
     <text x="49117" y="25559" class="fil0 fnt2">БИК</text>
     <text x="57417" y="25559" class="fil0 fnt2">Код назначения платежа</text>
-    <line class="fil1 str0" x1="6086.6" y1="27576.5" x2="73111.8" y2="27576.5"/>
-    <line class="fil1 str0" x1="56506.9" y1="27628.1" x2="56506.9" y2="24426.8"/>
     <text x="6977" y="27144" class="fil0 fnt3">_bank_</text>
     <text x="50097" y="27160" class="fil0 fnt2 center">_bik_</text>
     <text x="64619" y="27160" class="fil0 fnt2 center">_knp_</text>
@@ -94,6 +86,13 @@
         <text x="46212" y="64918" class="fil0 fnt0">/</text>
         <text x="64212" y="64918" class="fil0 fnt0">/</text>
     </g>
+    <line class="fil1 str0" x1="6086.6" y1="18133.8" x2="73111.8" y2="18133.8"/>
+    <line class="fil1 str0" x1="6086.6" y1="27628.1" x2="6086.6" y2="18084.4"/>
+    <line class="fil1 str0" x1="43894.2" y1="27628.1" x2="43894.2" y2="18084.4"/>
+    <line class="fil1 str0" x1="60700.5" y1="24426.8" x2="60700.5" y2="18084.4"/>
+    <line class="fil1 str0" x1="73135.9" y1="27628.1" x2="73135.9" y2="18084.4"/>
+    <line class="fil1 str0" x1="6086.6" y1="27576.5" x2="73111.8" y2="27576.5"/>
+    <line class="fil1 str0" x1="56506.9" y1="27628.1" x2="56506.9" y2="24426.8"/>
     <line class="fil1 str1 horizontal_line" x1="6037.2" y1="46387.1" x2="72562.3" y2="46387.1"/>
     <line class="fil1 str0 horizontal_line" x1="6137.3" y1="48065.1" x2="72562.3" y2="48065.1"/>
     <line class="fil1 str1 horizontal_line" x1="6037.2" y1="49656.3" x2="72660.8" y2="49656.3"/>
