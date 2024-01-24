@@ -78,8 +78,6 @@ def get_text_metrics(text_elem):
     tw, th = get_text_size(text, font_size / 100, bold)
     cx = int(float(text_elem['x']) / 100 * dim_scale + align * tw / 2)
     cy = round(float(text_elem['y']) / 100 * dim_scale + th / 2)
-    print('x,y:  ', round(float(text_elem['x']) / 100 * dim_scale), round(float(text_elem['y']) / 100 * dim_scale),
-          'w, h:', tw, th)
 
     return [[cx, cy, tw, th], font_size, bold, align]
 
@@ -114,8 +112,8 @@ def generate_svg_templates(json_data, base_svg_file):
 
         invoice['bbox_cx_cy_w_h'] = {}  # раздел метрик вставляемых текстовых надписей
 
-        base_keys = [key for key in invoice if key != 'itemsList']
-        items = [item for item in invoice['itemsList']]
+        base_keys = [key for key in invoice if key != 'itemsList'] # подстановки вокруг таблицы
+        items = [item for item in invoice['itemsList']] # подстановки в таблице товаров и услуг
 
         soup = BeautifulSoup(soup_string, 'xml')  # рабочий суп
         root_svg = soup.find('svg')
@@ -135,6 +133,14 @@ def generate_svg_templates(json_data, base_svg_file):
         class_name = text_item.get('class', '').split(' ')[1]
         font_size = font_sizes['.'+class_name]
         table_line_height = font_size * 1.2
+
+        # Считаю прирост по Y после сдвига от новых строк таблицы товаров
+        shift_y = 0
+        for item in items:
+            max_text_lines = len(item['name'].split('\n'))
+            shift_y += max_text_lines
+        shift_y = int((shift_y - 1) * table_line_height / 100)
+        post_lines_keys = ["amount", "nds", "items", "total"]  # подстановки нижней части счета после таблицы
 
         # Сохраняю шаблоны элементов
         templates = {key: soup.find('text', string=lambda text: f'_{key}_' in text)
@@ -165,8 +171,10 @@ def generate_svg_templates(json_data, base_svg_file):
                     new_elem['y'] = str(round(float(elem_y1 + i * line_height)))
                     new_elem['x'] = str(round(float(text_elem['x'])))
                     text_elem.insert_after(new_elem)
+
                     # записываю координаты и размер надписи
                     metrics = get_text_metrics(new_elem)[0]
+                    if key in post_lines_keys: metrics[1] += shift_y  # с учетом сдвига от всей таблицы
                     invoice['bbox_cx_cy_w_h'][key][i] = ', '.join(map(lambda x: str(x), metrics))
 
                 original_text_elem.decompose()
@@ -190,15 +198,15 @@ def generate_svg_templates(json_data, base_svg_file):
                 for i, line in enumerate(text_lines):
                     new_elem = soup.new_tag('text', **{attr: template[attr] for attr in template.attrs})
                     new_elem.string = line
-                    new_elem['y'] = str(round(float(table_line_y + i*table_line_height + 100)))
-                    new_elem['x'] = str(round(float(template['x'])))
+                    new_elem['y'] = str(round(table_line_y + i*table_line_height))
+                    new_elem['x'] = str(round(template['x']))
                     template.insert_after(new_elem)
                     metrics = get_text_metrics(new_elem)[0]
                     invoice['bbox_cx_cy_w_h']['itemsList'][n][key][i] = ', '.join(map(lambda x: str(x), metrics))
 
             # Обновление позиции курсора по Y после добавления строки
             border_y += round(items_line_height * max_text_lines)
-            table_line_y += round(items_line_height * max_text_lines)
+            table_line_y += border_y
 
             # Добавление разделительной линии
             new_breaking_line = soup.new_tag('line', **{attr: horizontal_lines[1][attr]
@@ -206,9 +214,6 @@ def generate_svg_templates(json_data, base_svg_file):
             new_breaking_line['y1'] = new_breaking_line['y2'] = str(border_y)
 
             root_svg.append(new_breaking_line)
-
-        # Прирост по Y от новых строк
-        shift_y = round(table_line_y - float(templates['num']['y']) - table_line_height)
 
         # Удлинение вертикальных линий и сдвиг нижней границы таблицы
         for line in vertical_lines:
