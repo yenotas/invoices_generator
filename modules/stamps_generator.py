@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Генератор случайных искажений документов в PNG, имитирующих сканы документов разного качества.
 Автор: Коваленко А.В. 12.2023
-'''
+"""
 
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import math
 import random
-from config import stamp_font_path, stamp_size
+from config import font_path, stamp_size
 import os
 
 
-def draw_text_along_circle(image, draw, text, radius, center, font, color, start_angle=-math.pi / 2):
+def drawTextAroundCircle(image, draw, text, radius, center, font, color, start_angle=-math.pi / 2):
     angle_per_letter = 2 * math.pi / len(text)
     for i, letter in enumerate(text):
         angle = angle_per_letter * i + start_angle
@@ -30,14 +30,14 @@ def draw_text_along_circle(image, draw, text, radius, center, font, color, start
         image.paste(rotated_letter, (int(x), int(y)), rotated_letter)
 
 
-def draw_center_text(draw, text, center, font, color):
+def drawCenterText(draw, text, center, font, color):
     text_width, text_height = draw.textbbox((0, 0), text, font=font)[2:]
     x = center[0] - text_width / 2
     y = center[1] - text_height / 2
     draw.text((x, y), text, font=font, fill=color)
 
 
-def generate_random_color():
+def generateRandomColor():
     # Генерируем случайные значения для RGB
     r = random.randint(50, 200)
     g = random.randint(50, 200)
@@ -45,15 +45,15 @@ def generate_random_color():
     return f'#{r:02x}{g:02x}{b:02x}'
 
 
-def generate_stamp(folder, filename, text_outer_circle, text_inner_circle, text_center):
+def generateStamp(folder, filename, text_outer_circle, text_inner_circle, text_center):
     # Параметры изображения и текста
 
     center = (int(stamp_size / 2), int(stamp_size / 2))
-    font_by_circle = ImageFont.truetype(stamp_font_path, int(18 / 328 * stamp_size))
-    font_by_center = ImageFont.truetype(stamp_font_path, int(45 / 328 * stamp_size))
+    font_by_circle = ImageFont.truetype(font_path, int(18 / 328 * stamp_size))
+    font_by_center = ImageFont.truetype(font_path, int(45 / 328 * stamp_size))
 
     # Тексты
-    text_color = generate_random_color()
+    text_color = generateRandomColor()
     radius_outer = int(160 / 328 * stamp_size)
     radius_inner = int(90 / 328 * stamp_size)
     max_width = 0.8 * radius_inner / 328 * stamp_size
@@ -72,9 +72,9 @@ def generate_stamp(folder, filename, text_outer_circle, text_inner_circle, text_
                  outline=text_color, width=int(3/328*stamp_size))
 
     # Рисуем тексты
-    draw_text_along_circle(image, draw, text_outer_circle, radius_outer-25/328*stamp_size, center, font_by_circle, text_color)
-    draw_text_along_circle(image, draw, text_inner_circle, radius_inner+20/328*stamp_size, center, font_by_circle, text_color)
-    draw_center_text(draw, text_center, center, font_by_center, text_color)
+    drawTextAroundCircle(image, draw, text_outer_circle, radius_outer - 25 / 328 * stamp_size, center, font_by_circle, text_color)
+    drawTextAroundCircle(image, draw, text_inner_circle, radius_inner + 20 / 328 * stamp_size, center, font_by_circle, text_color)
+    drawCenterText(draw, text_center, center, font_by_center, text_color)
 
     # Масштабируем изображение вверх
     scale_factor = 5  # множитель масштабирования
@@ -95,4 +95,3 @@ def generate_stamp(folder, filename, text_outer_circle, text_inner_circle, text_
 
     # Сохраняем
     final_image.save(os.path.join(folder, filename))
-

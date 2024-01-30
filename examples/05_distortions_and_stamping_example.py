@@ -6,11 +6,11 @@ import cv2
 
 from PIL import Image
 
-from config import (stamps_files_folder, generated_images_files_folder, json_file_name, dim_scale,
-                                       distortion_scale, distorted_images_files_folder, stamped_images_files_folder)
-from distortions_generator import (cv_view, cv_resize, random_perspective_change, random_rotate_image,
-                                                      create_grey_spot, create_light_spot, create_noise,
-                                                      not_distortions)
+from config import (stamps_files_folder, generated_images_files_folder, json_file_path, dim_scale,
+                    distortion_scale, distorted_images_files_folder, stamped_images_files_folder)
+from modules.distortions_generator import (cvResize, randomPerspectiveChange, randomRotateImage,
+                                           createGreySpot, createLightSpot, createNoise,
+                                           notDistortions)
 
 
 # Чтение изображений из папки
@@ -28,7 +28,7 @@ def load_images_from_folder(folder):
 
 # Миксер эффектов
 def random_geometrical_effects(image):
-    effect = random.choice([random_perspective_change, random_rotate_image, not_distortions])
+    effect = random.choice([randomPerspectiveChange, randomRotateImage, notDistortions])
     print('эффект:', str(effect.__name__))
     return effect(image)
 
@@ -38,7 +38,7 @@ images = load_images_from_folder(generated_images_files_folder)
 # загрузка печатей
 stamps = load_images_from_folder(stamps_files_folder)
 # читаем JSON
-with open(json_file_name, 'r', encoding='utf-8') as json_file:
+with open(json_file_path, 'r', encoding='utf-8') as json_file:
     json_data = json.load(json_file)
 
 for img, filename in images:
@@ -47,12 +47,12 @@ for img, filename in images:
     print('\n#'+ invoice_number)
 
     np_img = np.array(img.convert('L'))
-    np_img = cv_resize(np_img, distortion_scale)
+    np_img = cvResize(np_img, distortion_scale)
 
     # графические шумы: светлое и темное пятна и зернистость, размер остается
-    np_img = create_light_spot(np_img)
-    np_img = create_grey_spot(np_img)
-    np_img = create_noise(np_img)
+    np_img = createLightSpot(np_img)
+    np_img = createGreySpot(np_img)
+    np_img = createNoise(np_img)
 
     # геометрические искажения: поворот и перспектива -> искаженное изображение и новые координаты углов документа
     np_img, new_corners, distortion = random_geometrical_effects(np_img)
@@ -67,7 +67,7 @@ for img, filename in images:
     json_data[int(invoice_number)-1]['new_corners'] = ', '.join(map(str, new_corners.astype(str)))
 
     # сохранение дополненого json
-    with open(json_file_name, 'w', encoding='utf-8') as json_file:
+    with open(json_file_path, 'w', encoding='utf-8') as json_file:
         json.dump(json_data, json_file, ensure_ascii=False, indent=4)
 
     # Наложение печати и сохранение с печатью
