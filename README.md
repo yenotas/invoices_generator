@@ -20,38 +20,26 @@ https://github.com/yenotas/invoices_generator/
   - 02_.. создает по данным из generated_data.json счета в формате SVG.
     + записывает в JSON координаты центров, ширину и высоту bbox-ов каждой надписи и уровень для штампа по оси Y
   - 03_.. конвертирует счета из SVG в PNG с заданным в config.py DPI
-    + в зависимости от установки: для утилиты Poppler нужен 03_conversion_svg2png_example_p
   - 04_.. создает штампы - круглые печати в PNG с данными из generated_data.json
   - 05_.. добавляет шумы и искажения документам, накладывает штампы и сохраняет JPEG в папки distorted_images и stamped_images (документы с искажениями и штампами)
     + записывает в generated_data.json новые координаты углов документа и тип искажения (для тренировки выравнивания в предобработке) 
   
 #### По-умолчанию установлено удобное и проверенное разрешение графических документов - DPI = 192
 
-####  Для конвертации SVG-файлов в PNG выбрать 1й или 2й способ:
-1й способ - быстрая и правильная конвертация локально, но капризен при запуске из google colab
-1. Установить ImageMagick:
+####  Для конвертации SVG-файлов в PNG:
+быстрая и правильная конвертация локально, но капризен при запуске из google colab
+Установить ImageMagick:
    + для Windows: https://imagemagick.org/script/download.php#windows
    + для Linux: sudo apt-get install imagemagick 
      +   для google colab: !apt-get -qq install imagemagick
    + для macOS: brew install imagemagick
    + установить библиотеку Wand (уже включена в requirements.txt)
     
-2й способ - заметно медленнее, DPI сохраняемых документов не соответствует (значит определяемые BBOX-ы тоже неверные), 
-но нет проблем в google colab, и оставляю его для экспериментов: 
-2. Скачать утилиту Poppler 
-   + для Windows (на локальный диск): https://github.com/oschwartz10612/poppler-windows/releases/
-     + добавить путь к папке \poppler\Library\bin в переменную окружения PATH вашей системы
-     + перезагрузить командную строку (или IDE) для обновления PATH
-   + для Linux: apt-get install poppler-utils
-   + установить библиотеки: svglib reportlab pdf2image (включены в requirements_p.txt)
 
 ### Установка локально:
 Для установки библиотек:
 + "pip install -r requirements.txt" - если выбрана утилита ImageMagick
-  + *для конвертации используйте "03_conversion_svg2png_example.py"
-+ "pip install -r requirements_p.txt" - если выбрана утилита Poppler (2й способ)
-  * *для второго способа конвертации используйте "03_conversion_svg2png_example_p.py"
-  работающий на модуле svg_png_converter_p.py
+
 
 
 
