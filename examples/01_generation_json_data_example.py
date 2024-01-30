@@ -4,7 +4,7 @@
 import random
 import json
 
-from config import list_data_files, json_file_name, FILES_NUMBER
+from config import list_data_files, json_file_path, FILES_NUMBER
 from modules.strings_generator import gen_invoice_json, load_data_from_file
 
 json_data = {}
@@ -20,9 +20,9 @@ for i in range(FILES_NUMBER):
     dataset.append(generated_json_data)
 
 # список JSON-записей в файл
-with open(json_file_name, "w", encoding="utf-8") as json_file:
+with open(json_file_path, "w", encoding="utf-8") as json_file:
     json.dump(dataset, json_file, indent=2, ensure_ascii=False)
 
 print()
 print('Данные JSON созданы')
-print('Файл', json_file_name, 'сохранен в корневой папке')
+print('Файл', json_file_path, 'сохранен в корневой папке')

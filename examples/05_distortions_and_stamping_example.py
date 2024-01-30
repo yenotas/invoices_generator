@@ -6,8 +6,8 @@ import cv2
 
 from PIL import Image
 
-from config import (stamps_files_folder, generated_images_files_folder, json_file_name, dim_scale,
-                                       distortion_scale, distorted_images_files_folder, stamped_images_files_folder)
+from config import (stamps_files_folder, generated_images_files_folder, json_file_path, dim_scale,
+                    distortion_scale, distorted_images_files_folder, stamped_images_files_folder)
 from modules.distortions_generator import (cv_resize, random_perspective_change, random_rotate_image,
                                            create_grey_spot, create_light_spot, create_noise,
                                            not_distortions)
@@ -38,7 +38,7 @@ images = load_images_from_folder(generated_images_files_folder)
 # загрузка печатей
 stamps = load_images_from_folder(stamps_files_folder)
 # читаем JSON
-with open(json_file_name, 'r', encoding='utf-8') as json_file:
+with open(json_file_path, 'r', encoding='utf-8') as json_file:
     json_data = json.load(json_file)
 
 for img, filename in images:
@@ -67,7 +67,7 @@ for img, filename in images:
     json_data[int(invoice_number)-1]['new_corners'] = ', '.join(map(str, new_corners.astype(str)))
 
     # сохранение дополненого json
-    with open(json_file_name, 'w', encoding='utf-8') as json_file:
+    with open(json_file_path, 'w', encoding='utf-8') as json_file:
         json.dump(json_data, json_file, ensure_ascii=False, indent=4)
 
     # Наложение печати и сохранение с печатью

@@ -14,54 +14,69 @@ https://imagemagick.org/script/download.php#windows
 2. затем библиотеку Wand - включена в requirements.txt
 """
 
-from config import svg_templates_files_folder, dim_scale, font_path, bold_font_path, DPI, temp_folder
+from config import svg_templates_files_folder, dim_scale, temp_folder, font_path
 
 import os
 from bs4 import BeautifulSoup
-
-# from PIL import Image, ImageDraw, ImageFont
 
 from wand.image import Image as WandImage
 from wand.color import Color
 from wand.drawing import Drawing
 
+import numpy as np
+# from PIL import Image as PilImage
+
+
 text_dir = {'right': -1, 'center': 0}  # коэффициент для вычисления центра надписи в зависимости от выравнивания текста
 font_sizes = {}
 font_weights = {}
-img = WandImage(width=700, height=30, background=Color("white"))
 
 
 # Временный рендер надписи для определения размера
-def get_text_size(text, font_size, bold=False):
-    get_text_size.i = -1 if not hasattr(get_text_size, 'i') else get_text_size.i + 1
+def getTextSize(text, font_size, bold=False):
+    getTextSize.i = 0 if not hasattr(getTextSize, 'i') else getTextSize.i + 1  # iterator
 
     draw = Drawing()
     draw.fill_color = Color("black")
-    draw.font = font_path
-    draw.font_size = height = round(font_size * dim_scale)
-    draw.font_weight = 700 if bold else 400
-    # Корректировка под кернинг текста при отрисовке из svg
-    draw.text_kerning = draw.text_kerning + height/200 if bold else draw.text_kerning - height/300
-    m = draw.get_font_metrics(img, text)
-    width = int(m.text_width)
-    text_image = WandImage(width=width, height=height, background=Color("white"))
 
-    draw.text(0, height - round(3 * dim_scale), text)
+    draw.font_size = height = round(font_size*dim_scale)
+    draw.font_weight = 700 if bold else 400
+
+    text_image = WandImage(width=20*len(text), height=height, background=Color("white"))
+
+    metrics = draw.get_font_metrics(text_image, text, multiline=False)
+    y = height + int(metrics.descender)  # позиционирование текста по верхнему краю холста
+
+    draw.text(0, y, text)
     draw.draw(text_image)
 
-    fn = os.path.join(temp_folder, f'{get_text_size.i}.png')
+    # Преобразование изображения в массив NumPy
+    np_img = np.array(text_image)[:, :, 0]
 
-    print(get_text_size.i, ':  ', text, '  | font:', draw.font_weight, draw.font_size)
+    # Определение границ текста
+    rows = np.any(np_img < 255, axis=1)
+    cols = np.any(np_img < 255, axis=0)
+    min_row, max_row = np.where(rows)[0][[0, -1]]
+    min_col, max_col = np.where(cols)[0][[0, -1]]
 
-    # Сохранение изображения в файл
-    text_image.format = 'png'
-    text_image.save(filename=fn)
+    # Вычисление ширины и высоты обрезанного изображения
+    real_width = max_col - min_col + 1
+    real_height = max_row - min_row + 1
 
-    return width, height
+    # # Обрезание изображения
+    # trimmed_img = np_img[min_row:max_row + 1, min_col:max_col + 1]
+    # # Преобразование обрезанного изображения в целочисленный тип, затем в PIL Image
+    # trimmed_img = trimmed_img.astype(np.uint8)
+    # bitmap_image = PilImage.fromarray(trimmed_img, mode='L')
+    # filename = os.path.join(svg_templates_files_folder, 'temp', f'000_{getTextSize.i}.png')
+    # bitmap_image.save(filename)
+    # print(f'#{getTextSize.i}:', text, [real_width, real_height])
+
+    return real_width, real_height, y
 
 
 # Вычисляю координаты центра и метрики текстовой надписи
-def get_text_metrics(text_elem):
+def getTextMetrics(text_elem):
 
     align = 1  # Коэффициент для левого выравнивания текста
     font_class = '.fnt5'
@@ -75,15 +90,25 @@ def get_text_metrics(text_elem):
     bold = font_weights.get(font_class, False)
     text = text_elem.string.strip()
 
-    tw, th = get_text_size(text, font_size / 100, bold)
-    cx = int(float(text_elem['x']) / 100 * dim_scale + align * tw / 2)
-    cy = round(float(text_elem['y']) / 100 * dim_scale + th / 2)
+    tw, th, shift = getTextSize(text, round(font_size / 100), bold)
+    x = round(float(text_elem['x']) / 100 * dim_scale)
+    cx = round(x + align * tw / 2)
+    y = round(float(text_elem['y']) / 100 * dim_scale - shift)
+    cy = round(y + th / 2)
 
     return [[cx, cy, tw, th], font_size, bold, align]
 
 
+def getFontClass(elem):
+    classes = elem.get('class', '').split(' ')
+    if len(classes) > 1:
+        return classes[1]
+    else:
+        return 'fnt5'
+
+
 # Создание SVG-файлов из JSON-данных по шаблону эталонного SVG-файла
-def generate_svg_templates(json_data, base_svg_file):
+def generateSvgTemplates(json_data, base_svg_file):
 
     with open(base_svg_file, 'r', encoding='utf-8') as svg_file:
         base_soup = BeautifulSoup(svg_file, 'xml')
@@ -112,8 +137,8 @@ def generate_svg_templates(json_data, base_svg_file):
 
         invoice['bbox_cx_cy_w_h'] = {}  # раздел метрик вставляемых текстовых надписей
 
-        base_keys = [key for key in invoice if key != 'itemsList'] # подстановки вокруг таблицы
-        items = [item for item in invoice['itemsList']] # подстановки в таблице товаров и услуг
+        base_keys = [key for key in invoice if key != 'itemsList']  # подстановки вокруг таблицы
+        items = [item for item in invoice['itemsList']]  # подстановки в таблице товаров и услуг
 
         soup = BeautifulSoup(soup_string, 'xml')  # рабочий суп
         root_svg = soup.find('svg')
@@ -135,11 +160,13 @@ def generate_svg_templates(json_data, base_svg_file):
         for item in items:
             max_text_lines = len(item['name'].split('\n'))
             shift_y += max_text_lines
-        print("lines in table", shift_y)
+
         shift_y = int((shift_y - 1) * table_line_height / 100)
+
         post_lines_keys = ["amount", "nds", "items", "total"]  # подстановки нижней части счета после таблицы
 
         # Проход и подстановка текста вокруг таблицы
+
         for key in base_keys:
 
             text_elem = soup.find('text', string=lambda text: f'_{key}_' in text)
@@ -149,7 +176,8 @@ def generate_svg_templates(json_data, base_svg_file):
 
                 elem_y1 = float(text_elem['y']) if 'y' in text_elem.attrs else 0
 
-                font_size = get_text_metrics(text_elem)[1]
+                font_class = getFontClass(text_elem)
+                font_size = font_sizes.get(font_class, 1300)
 
                 line_height = font_size * 1.2
 
@@ -164,11 +192,13 @@ def generate_svg_templates(json_data, base_svg_file):
                     text_elem.insert_after(new_elem)
 
                     # записываю координаты и размер надписи
-                    metrics = get_text_metrics(new_elem)[0]
-                    print('y', metrics[1], 'shifted y', metrics[1] + shift_y)
+                    metrics = getTextMetrics(new_elem)[0]
 
-                    if key in post_lines_keys: metrics[1] += shift_y  # с учетом сдвига от всей таблицы
-                    print(key, 'metrics', metrics)
+                    # с учетом сдвига от всей таблицы
+                    if key in post_lines_keys:
+                        metrics[1] += int(shift_y * dim_scale)
+
+                    # print(line, metrics)
                     invoice['bbox_cx_cy_w_h'][key][i] = ', '.join(map(lambda x: str(x), metrics))
 
                 original_text_elem.decompose()
@@ -177,8 +207,8 @@ def generate_svg_templates(json_data, base_svg_file):
 
         top_line = float(horizontal_lines[1]['y1'])
         bottom_line = float(horizontal_lines[2]['y1'])
-        items_line_height = bottom_line - top_line
-        border_y = top_line
+        items_line_height = int(bottom_line - top_line)
+        border_y = int(top_line)
 
         invoice['bbox_cx_cy_w_h']['itemsList'] = {}
 
@@ -205,7 +235,8 @@ def generate_svg_templates(json_data, base_svg_file):
                     new_elem['y'] = str(round(table_line_y + i * table_line_height + 200))
                     new_elem['x'] = str(round(float(template['x'])))
                     template.insert_after(new_elem)
-                    metrics = get_text_metrics(new_elem)[0]
+                    metrics = getTextMetrics(new_elem)[0]
+                    # print(line, metrics)
                     invoice['bbox_cx_cy_w_h']['itemsList'][n][key][i] = ', '.join(map(lambda x: str(x), metrics))
 
             # Обновление позиции курсора по Y после добавления строки

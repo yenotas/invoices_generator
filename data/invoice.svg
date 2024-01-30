@@ -8,10 +8,7 @@
         <style type="text/css">
             <![CDATA[
                 svg {fill: #fff; background-color: #fff}
-                @font-face {
-                    font-family: 'Arial';
-                    src: url('Fonts/Arial.ttf') format('truetype');
-                }
+                @font-face {font-family:'Arial'; src: url('fonts/arial.ttf') format('truetype');}
                .str0 {stroke:#000000;stroke-width:100;stroke-miterlimit:10}
                .str1 {stroke:#000000;stroke-width:200;stroke-miterlimit:10}
                .fil0 {fill:black}
@@ -19,15 +16,10 @@
                .fnt0 {font-weight:normal;font-size:1200px;font-family:'Arial';}
                .fnt1 {font-weight:bold;font-size:1300px;font-family:'Arial';}
                .fnt2 {font-weight:bold;font-size:1200px;font-family:'Arial';}
-               .fnt3 {font-weight:normal;font-size:1200px;font-family:'Arial';}
+               .fnt3 {font-weight:normal;font-size:1300px;font-family:'Arial';}
                .fnt4 {font-weight:bold;font-size:1900px;font-family:'Arial';}
-               .fnt5 {font-weight:normal;font-size:1300px;font-family:'Arial';}
-               .fnt6 {font-weight:bold;font-size:1300px;font-family:'Arial';}
-               .fnt7 {font-weight:bold;font-size:1300px;font-family:'Arial';}
-               .fnt8 {font-weight:normal;font-size:1300px;font-family:'Arial';}
                .center { text-anchor: middle; }
                .right { text-anchor: end; }
-               .bold { font-weight: bold; }
             ]]>
         </style>
     </defs>
@@ -42,27 +34,27 @@
     <text x="7010" y="20921" class="fil0 fnt2">_sellerName_</text>
     <text x="52343" y="22438" class="fil0 fnt2 center">_iik_</text>
     <text x="66857" y="22438" class="fil0 fnt2 center">_kbe_</text>
-    <text x="6309" y="23943" class="fil0 fnt3">БИН:</text><text x="10162" y="23943" class="fil0 fnt3">_bin_</text>
-    <text x="6309" y="25543" class="fil0 fnt3">Банк бенефициара:</text>
+    <text x="6309" y="23943" class="fil0 fnt0">БИН:</text>
+    <text x="10162" y="23943" class="fil0 fnt0">_bin_</text>
+    <text x="6309" y="25543" class="fil0 fnt0">Банк бенефициара:</text>
     <text x="49117" y="25559" class="fil0 fnt2">БИК</text>
     <text x="57417" y="25559" class="fil0 fnt2">Код назначения платежа</text>
-    <text x="6977" y="27144" class="fil0 fnt3">_bank_</text>
+    <text x="6977" y="27144" class="fil0 fnt0">_bank_</text>
     <text x="50097" y="27160" class="fil0 fnt2 center">_bik_</text>
     <text x="64619" y="27160" class="fil0 fnt2 center">_knp_</text>
     <text x="6301" y="32522" class="fil0 fnt4">_title_</text>
-    <line class="fil1 str1" x1="6037.2" y1="34318.6" x2="73086.5" y2="34318.6"/>
-    <text x="6341" y="36475" class="fil0 fnt5">Поставщик:</text>
-    <text x="15855" y="36491" class="fil0 fnt6">_seller_</text>
-    <text x="6341" y="40701" class="fil0 fnt5">Покупатель:</text>
-    <text x="15859" y="40693" class="fil0 fnt6">_customer_</text>
-    <text x="15859" y="44948" class="fil0 fnt7">_contract_</text>
-    <text x="6341" y="44926" class="fil0 fnt8">Договор:</text>
-    <text x="7414" y="47632" class="fil0 fnt6">№</text>
-    <text x="20651" y="47632" class="fil0 fnt6">Наименование</text>
-    <text x="41651" y="47632" class="fil0 fnt6">Кол-во</text>
-    <text x="48373" y="47632" class="fil0 fnt6">Ед.</text>
-    <text x="55144" y="47632" class="fil0 fnt6">Цена</text>
-    <text x="64955" y="47632" class="fil0 fnt6">Сумма</text>
+    <text x="6341" y="36475" class="fil0 fnt3">Поставщик:</text>
+    <text x="15855" y="36491" class="fil0 fnt1">_seller_</text>
+    <text x="6341" y="40701" class="fil0 fnt3">Покупатель:</text>
+    <text x="15859" y="40693" class="fil0 fnt1">_customer_</text>
+    <text x="15859" y="44948" class="fil0 fnt1">_contract_</text>
+    <text x="6341" y="44926" class="fil0 fnt3">Договор:</text>
+    <text x="7414" y="47632" class="fil0 fnt1">№</text>
+    <text x="20651" y="47632" class="fil0 fnt1">Наименование</text>
+    <text x="41651" y="47632" class="fil0 fnt1">Кол-во</text>
+    <text x="48373" y="47632" class="fil0 fnt1">Ед.</text>
+    <text x="55144" y="47632" class="fil0 fnt1">Цена</text>
+    <text x="64955" y="47632" class="fil0 fnt1">Сумма</text>
     <!-- itemsList -->
     <text x="8300" y="49100" class="fil0 fnt0 center">_num_</text>
     <text x="11000" y="49100" class="fil0 fnt0">_name_</text>
@@ -74,18 +66,19 @@
     <g transform="matrix(1 0 0 1 0 0)" id="bottom">
         <line class="fil1 str1" x1="6037.2" y1="62521.2" x2="72660.8" y2="62521.2"/>
         <line class="fil1 str0 stamp_line" x1="16537.2" y1="65304.9" x2="45956.3" y2="65304.9"/>
-        <text x="57337" y="54194" class="fil0 fnt6">Итого:</text>
-        <text x="72756" y="54194" class="fil0 fnt6 right">_amount_</text>
-        <text x="49926" y="55923" class="fil0 fnt6">В том числе НДС:</text>
-        <text x="72729" y="55923" class="fil0 fnt6 right">_nds_</text>
-        <text x="6341.3" y="59348" class="fil0 fnt5">Всего наименований </text>
-        <text x="20000" y="59348" class="fil0 fnt5">_items_</text>
-        <text x="6357" y="61109" class="fil0 fnt6">Всего к оплате: </text>
-        <text x="17457" y="61109" class="fil0 fnt6">_total_</text>
-        <text x="6357" y="64854" class="fil0 fnt6">Исполнитель</text>
+        <text x="57337" y="54194" class="fil0 fnt1">Итого:</text>
+        <text x="72756" y="54194" class="fil0 fnt1 right">_amount_</text>
+        <text x="49926" y="55923" class="fil0 fnt1">В том числе НДС:</text>
+        <text x="72729" y="55923" class="fil0 fnt1 right">_nds_</text>
+        <text x="6341.3" y="59348" class="fil0 fnt3">Всего наименований </text>
+        <text x="20000" y="59348" class="fil0 fnt3">_items_</text>
+        <text x="6357" y="61109" class="fil0 fnt1">Всего к оплате: </text>
+        <text x="17457" y="61109" class="fil0 fnt1">_total_</text>
+        <text x="6357" y="64854" class="fil0 fnt1">Исполнитель</text>
         <text x="46212" y="64918" class="fil0 fnt0">/</text>
         <text x="64212" y="64918" class="fil0 fnt0">/</text>
     </g>
+    <line class="fil1 str1" x1="6037.2" y1="34318.6" x2="73086.5" y2="34318.6"/>
     <line class="fil1 str0" x1="6086.6" y1="18133.8" x2="73111.8" y2="18133.8"/>
     <line class="fil1 str0" x1="6086.6" y1="27628.1" x2="6086.6" y2="18084.4"/>
     <line class="fil1 str0" x1="43894.2" y1="27628.1" x2="43894.2" y2="18084.4"/>

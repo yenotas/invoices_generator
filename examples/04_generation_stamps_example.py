@@ -3,10 +3,10 @@
 
 import json
 
-from config import stamps_files_folder, json_file_name
+from config import stamps_files_folder, json_file_path
 from modules.stamps_generator import generate_stamp
 
-with open(json_file_name, 'r', encoding='utf-8') as json_file:
+with open(json_file_path, 'r', encoding='utf-8') as json_file:
     json_data = json.load(json_file)
 
 for i in range(0, len(json_data)):

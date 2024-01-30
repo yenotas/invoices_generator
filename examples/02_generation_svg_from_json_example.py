@@ -3,16 +3,16 @@
 
 import json
 
-from config import json_file_name, base_svg_file_name, svg_templates_files_folder, DPI
-from modules.svg_templates_generator import generate_svg_templates
+from config import json_file_path, svg_file_path, svg_templates_files_folder, DPI, embed_svg_path
+from modules.svg_templates_generator import generateSvgTemplates
 
-with open(json_file_name, 'r', encoding='utf-8') as json_file:
+with open(json_file_path, 'r', encoding='utf-8') as json_file:
     json_data = json.load(json_file)
 
-new_data = generate_svg_templates(json_data, base_svg_file_name)
+new_data = generateSvgTemplates(json_data, svg_file_path)
 
 # Сохраняю дополненный координатами json
-with open(json_file_name, 'w', encoding='utf-8') as json_file:
+with open(json_file_path, 'w', encoding='utf-8') as json_file:
     json.dump(new_data, json_file, ensure_ascii=False, indent=4)
 
 print()
