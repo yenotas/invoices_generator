@@ -45,41 +45,41 @@ numeric = '0123456789'
 
 
 # случайный пробел
-def random_space():
+def randomSpace():
     return random.choice([' ', ''])
 
 
-def random_invoice_startswith():
-    return random.choice(['Счет ', 'Счет №' + random_space(), 'Счет на оплату №' + random_space()])
+def randomInvoiceStartswith():
+    return random.choice(['Счет ', 'Счет №' + randomSpace(), 'Счет на оплату №' + randomSpace()])
 
 
-def random_endswith():
+def randomEndswith():
     return random.choice(['г', 'г.', ''])
 
 
-def random_contract_startswith():
+def randomContractStartswith():
     s = random.choice(['', '№', 'Договор поставки №', 'Договор подряда №', 'Договор №', 'Без договора'])
-    s = s + random_space() if s else s
+    s = s + randomSpace() if s else s
     return s
 
 
 # генератор номера из n цифр без нуля в начале
-def random_num_notnull_startswith(n):
+def randomNumNotnullStartswith(n):
     return str(random.randint(1, 9)) + ''.join(random.choices(numeric, k=n - 1))
 
 
 # альтернатива заполнителю - генератор нулей, по умолчанию = 0000
-def nulls_str_generator(nulls_len=4):
+def nullsStrGenerator(nulls_len=4):
     return ''.join(['0'] * nulls_len)
 
 
 # вывод [n] результатов функции [func] для проверки. формат: loop_print(n, lambda: func(**args))
-def loop_print(n, func):
+def loopPrint(n, func):
     for _ in range(n):
         print(func())
 
 
-def str_generator(num_symbols=10, letters_len=0, holder='', lang='EN' ):
+def strGenerator(num_symbols=10, letters_len=0, holder='', lang='EN'):
     '''
     генератор строки заданной длинны, количества первых символов и заполнителем:
     - num_symbols - длина получаемой строки
@@ -105,12 +105,12 @@ def str_generator(num_symbols=10, letters_len=0, holder='', lang='EN' ):
         numbers_str = str(num)
         nulls_len = numbers_len - len(numbers_str)
         if nulls_len > 0:
-            numbers_str = nulls_str_generator(nulls_len) + numbers_str
+            numbers_str = nullsStrGenerator(nulls_len) + numbers_str
 
     return letters + holder + numbers_str
 
 
-def set_splitters(invoice_str, letters_len=0, holder_len=0, num_splitters=1):
+def setSplitters(invoice_str, letters_len=0, holder_len=0, num_splitters=1):
     '''
     расстановщик разделителей [base_splitters] в строке с учетом количества букв
     и длины заполнителя:
@@ -165,12 +165,12 @@ def set_splitters(invoice_str, letters_len=0, holder_len=0, num_splitters=1):
 
 
 # генератор строки даты в указанном диапазоне лет в формате dd.mm.yyyy
-def rus_text_date_generator(str_date):
+def rusTextDateGenerator(str_date):
     text_date = str_date.split('.')
     return text_date[0] + ' ' + month[text_date[1]] + ' ' + text_date[2]
 
 
-def numeric_date_generator(start=2010, end=2023):
+def numericDateGenerator(start=2010, end=2023):
     start_date = datetime(start, 1, 1)
     end_date = datetime(end, 12, 31)
     time_between_dates = end_date - start_date
@@ -183,122 +183,122 @@ def numeric_date_generator(start=2010, end=2023):
 
 
 # миксер вариантов генерации номера счета
-def random_invoice_number():
+def randomInvoiceNumber():
     return random.choice([
-        lambda: set_splitters(str_generator(12, 3, ''), 3, 0, 3),
-        lambda: set_splitters(str_generator(12, 2, '000'), 2, 3, 3),
-        lambda: set_splitters(str_generator(10, 0, '00'), 0, 2, 3),
-        lambda: set_splitters(str_generator(8, 0, ''), 0, 0, 2),
-        lambda: set_splitters(str_generator(6, 0, ''), 0, 0, 1),
-        lambda: str_generator(4, 0, '0'),
-        lambda: str_generator(6, 0, ''),
-        lambda: str_generator(6, 1, '-', 'RU'),
-        lambda: str_generator(9, 2, '-'),
-        lambda: str_generator(10, 0, ''),
-        lambda: str_generator(11, 3, '-'),
-        lambda: str_generator(12, 0, '')
+        lambda: setSplitters(strGenerator(12, 3, ''), 3, 0, 3),
+        lambda: setSplitters(strGenerator(12, 2, '000'), 2, 3, 3),
+        lambda: setSplitters(strGenerator(10, 0, '00'), 0, 2, 3),
+        lambda: setSplitters(strGenerator(8, 0, ''), 0, 0, 2),
+        lambda: setSplitters(strGenerator(6, 0, ''), 0, 0, 1),
+        lambda: strGenerator(4, 0, '0'),
+        lambda: strGenerator(6, 0, ''),
+        lambda: strGenerator(6, 1, '-', 'RU'),
+        lambda: strGenerator(9, 2, '-'),
+        lambda: strGenerator(10, 0, ''),
+        lambda: strGenerator(11, 3, '-'),
+        lambda: strGenerator(12, 0, '')
     ])()
 
 
 # миксер вариантов генерации номера договора
-def random_contract_number():
-    d = numeric_date_generator().split('.')
+def randomContractNumber():
+    d = numericDateGenerator().split('.')
     s = random.choice(base_splitters)
     return random.choice([
-        lambda: set_splitters(str_generator(8, 2, ''), 2, 2, 2),
-        lambda: set_splitters(str_generator(6, 0, ''), 0, 0, 1),
-        lambda: str_generator(4, 0, '0'),
-        lambda: str_generator(6, 0, ''),
-        lambda: str_generator(9, 1, s, 'RU'),
-        lambda: str_generator(10, 0, '0'),
-        lambda: str_generator(11, 3, s),
-        lambda: str_generator(10, 2, s, 'RU'),
-        lambda: str_generator(10, 2, s),
-        lambda: str_generator(12, 0, ''),
-        lambda: str_generator(2, 2, '', 'RU') + s + d[2] + s + d[1] + s + str(random.randint(10, 9999)),
-        lambda: str_generator(2, 2, '') + s + d[2] + s + '0' + str(random.randint(100, 99999))
+        lambda: setSplitters(strGenerator(8, 2, ''), 2, 2, 2),
+        lambda: setSplitters(strGenerator(6, 0, ''), 0, 0, 1),
+        lambda: strGenerator(4, 0, '0'),
+        lambda: strGenerator(6, 0, ''),
+        lambda: strGenerator(9, 1, s, 'RU'),
+        lambda: strGenerator(10, 0, '0'),
+        lambda: strGenerator(11, 3, s),
+        lambda: strGenerator(10, 2, s, 'RU'),
+        lambda: strGenerator(10, 2, s),
+        lambda: strGenerator(12, 0, ''),
+        lambda: strGenerator(2, 2, '', 'RU') + s + d[2] + s + d[1] + s + str(random.randint(10, 9999)),
+        lambda: strGenerator(2, 2, '') + s + d[2] + s + '0' + str(random.randint(100, 99999))
     ])()
 
 
 # миксер вариантов генерации даты
-def random_date(start=2015, end=2023):
-    return random.choice([lambda: numeric_date_generator(start, end),
-                          lambda: rus_text_date_generator(numeric_date_generator(start, end)),
-                          lambda: rus_text_date_generator(numeric_date_generator(start, end))])()
+def randomDate(start=2015, end=2023):
+    return random.choice([lambda: numericDateGenerator(start, end),
+                          lambda: rusTextDateGenerator(numericDateGenerator(start, end)),
+                          lambda: rusTextDateGenerator(numericDateGenerator(start, end))])()
 
 
 # генератор названия счета с номером и датой
-def get_random_invoice_name(start=2015, end=2023):
-    result = random_invoice_startswith()
+def getRandomInvoiceName(start=2015, end=2023):
+    result = randomInvoiceStartswith()
 
     if random.randint(0, 8) == 7:
         result = result.upper()
 
-    result += random_invoice_number() + ' от '
-    result += random_date(start, end) + random_space()
-    result += random_endswith()
+    result += randomInvoiceNumber() + ' от '
+    result += randomDate(start, end) + randomSpace()
+    result += randomEndswith()
 
     return result
 
 
 # генератор названия договора с номером и датой
-def get_random_contract_name(start=2015, end=2023):
-    result = random_contract_startswith()
+def getRandomContractName(start=2015, end=2023):
+    result = randomContractStartswith()
 
     if random.randint(0, 8) == 7:
         result = result.upper()
 
     if not result in ['Без договора', 'БЕЗ ДОГОВОРА']:
-        result += random_space()
-        result += random_contract_number() + ' от '
-        result += random_date(start, end) + random_space()
-        result += random_endswith()
+        result += randomSpace()
+        result += randomContractNumber() + ' от '
+        result += randomDate(start, end) + randomSpace()
+        result += randomEndswith()
 
     return result
 
 
 # генератор БИК банка Контрагента
-def get_random_bik():
-    return str_generator(8, 8, '')
+def getRandomBik():
+    return strGenerator(8, 8, '')
 
 
 # генератор БИН
-def get_random_bin():
-    return random_num_notnull_startswith(12)
+def getRandomBin():
+    return randomNumNotnullStartswith(12)
 
 
 # генератор ИИК
-def get_random_iik():
-    return 'KZ' + random_num_notnull_startswith(18)
+def getRandomIik():
+    return 'KZ' + randomNumNotnullStartswith(18)
 
 
 # генератор кода назначения платежа
-def get_random_knp():
-    return random_num_notnull_startswith(3)
+def getRandomKnp():
+    return randomNumNotnullStartswith(3)
 
 
 # генератор кода кбе
-def get_random_kbe():
-    return random_num_notnull_startswith(2)
+def getRandomKbe():
+    return randomNumNotnullStartswith(2)
 
 
 # генератор почтового индекса
-def get_random_post_index():
-    return random.choice([random.choice('01') + random_num_notnull_startswith(5), ''])
+def getRandomPostIndex():
+    return random.choice([random.choice('01') + randomNumNotnullStartswith(5), ''])
 
 
 # генератор телефона
-def get_random_telephone():
-    return '+7(' + random_num_notnull_startswith(3) + ')-' + set_splitters(random_num_notnull_startswith(7), 3, 2, 2)
+def getRandomTelephone():
+    return '+7(' + randomNumNotnullStartswith(3) + ')-' + setSplitters(randomNumNotnullStartswith(7), 3, 2, 2)
 
 
 # Генерация списка товаров
-def get_random_bank(data):
+def getRandomBank(data):
     return random.choice(data['banks.csv'])[0]
 
 
 # Генерация номера офиса с 10% вероятностью
-def get_random_office():
+def getRandomOffice():
     office = ''
     if random.randint(1, 10) == 1:
         office = f"{random.choice([', офис ', ' к.', ' оф.', ' кв ', '- ', ' п.'])}{random.randint(1, 1000)}"
@@ -307,16 +307,16 @@ def get_random_office():
 
 
 # Замена двойных пробелов
-def text_clean(text):
+def textClean(text):
     return text.replace('  ', ' ')
 
 
 # Разбивка одной строки на неколько с переносом по словам
-def str_line_splitter(text, num_symbols, num_lines):
+def strLineSplitter(text, num_symbols, num_lines):
     text = text.replace('\n', ' ')
     text_len = len(text)
     if text_len < num_symbols + 2:
-        return text_clean(text)
+        return textClean(text)
 
     new_text = [text[i * num_symbols: (i + 1) * num_symbols] for i in range(0, num_lines)]
     line_list, prev_last = [], ''
@@ -326,27 +326,27 @@ def str_line_splitter(text, num_symbols, num_lines):
     i = 0
     for i in range(0, num_lines):
         pos = new_text[i].rfind(" ")
-        line_list.append(text_clean(prev_last + new_text[i][:pos]))
+        line_list.append(textClean(prev_last + new_text[i][:pos]))
         prev_last = new_text[i][pos + 1:]
 
     if len(prev_last + line_list[i]) < num_symbols + 3:
-        line_list[i] = text_clean(line_list[i] + ' ' + prev_last)
+        line_list[i] = textClean(line_list[i] + ' ' + prev_last)
 
     return '\n'.join(line_list)
 
 
 # Генерация полного адреса: индекс и телефон указываются не всегда, пытаемся уложиться в 2 строки
-def gen_full_address(data):
-    companies, addresses = data['companies.tsv'], data['addresses.csv']
+def genFullAddress(data):
+    companies, addresses = data['companies.csv'], data['addresses.csv']
     city, company_name = random.choice(companies)
     company_name = company_name.replace('`', '"')
     street = ''.join(random.choice(addresses))
-    post_index = get_random_post_index() + ' '
+    post_index = getRandomPostIndex() + ' '
     tel = random.choice([', тел:', ', тел:', ', т:', ', телефон:', ', т/ф:', ''])
-    tel = '' if tel == '' else f"{tel}{get_random_telephone()}"
-    full_address = f"БИН / ИНН {get_random_bin()} {company_name} "
+    tel = '' if tel == '' else f"{tel}{getRandomTelephone()}"
+    full_address = f"БИН / ИНН {getRandomBin()} {company_name} "
     address = f"Республика Казахстан, {city}, {street}{random.choice([', д.', ' д.', ' д.№', ' вл.', ' дом №', ' дом '])}"
-    address += f"{random.randint(1, 300)}{get_random_office()}"
+    address += f"{random.randint(1, 300)}{getRandomOffice()}"
 
     if len(full_address + post_index + address) < 156:
         full_address = full_address + post_index + address
@@ -360,7 +360,7 @@ def gen_full_address(data):
 
 
 # Генерация списка товаров (с разбивкой наименования до 3х строк)
-def gen_products_list(data, n=3):
+def genProductsList(data, n=3):
     products = data['products.csv']
 
     if not products: return
@@ -374,7 +374,7 @@ def gen_products_list(data, n=3):
             rnd = random.choice(products)
         name, unit, price = rnd
         price_val = float(price) + random.uniform(0.00, 0.99)
-        product_names.append(str_line_splitter(name, 46, 3))
+        product_names.append(strLineSplitter(name, 46, 3))
         units.append(unit)
         prices.append("{:.2f}".format(price_val))
         if price_val < 100:
@@ -395,22 +395,22 @@ def gen_products_list(data, n=3):
 
 # Генерация всех значиний в счете номер [number] на [n] товаров
 # Сборка в JSON
-def gen_invoice_json(data, number=0, product_lines=1):
-    customer_addr, customer_name = gen_full_address(data)
-    seller_addr, seller_name = gen_full_address(data)
+def genInvoiceJson(data, number=0, product_lines=1):
+    customer_addr, customer_name = genFullAddress(data)
+    seller_addr, seller_name = genFullAddress(data)
 
-    customer = str_line_splitter(customer_addr, 78, 2)
-    seller = str_line_splitter(seller_addr, 78, 2)
-    seller_name = str_line_splitter(seller_name, 55, 2)
-    binn = get_random_bin()
-    bank = get_random_bank(data)
-    iik = get_random_iik()
-    kbe = get_random_kbe()
-    knp = get_random_knp()
-    bik = get_random_bik()
-    title = get_random_invoice_name()
-    contract = get_random_contract_name()
-    product_names, units, prices, vals, summ, amount = gen_products_list(data, product_lines)
+    customer = strLineSplitter(customer_addr, 78, 2)
+    seller = strLineSplitter(seller_addr, 78, 2)
+    seller_name = strLineSplitter(seller_name, 55, 2)
+    binn = getRandomBin()
+    bank = getRandomBank(data)
+    iik = getRandomIik()
+    kbe = getRandomKbe()
+    knp = getRandomKnp()
+    bik = getRandomBik()
+    title = getRandomInvoiceName()
+    contract = getRandomContractName()
+    product_names, units, prices, vals, summ, amount = genProductsList(data, product_lines)
 
     total = "{:.2f}".format(round(amount, 2))
     nds = "{:.2f}".format(round(amount * 12 / (12 + 100), 2))
@@ -452,7 +452,7 @@ def gen_invoice_json(data, number=0, product_lines=1):
     return fields
 
 
-def download_file(fn, url):
+def downloadFile(fn, url):
     response = requests.get(url)
     if response.status_code == 200:
         print("Загрузка", fn)
@@ -462,9 +462,9 @@ def download_file(fn, url):
         print("Не удалось загрузить", fn, response.status_code)
 
 
-def load_data_from_file(fn, url=''):
+def loadDataFromFile(fn, url=''):
     if url:
-        download_file(fn, url)
+        downloadFile(fn, url)
     # Читаем файлы в массивы
     delimiter = '\t' if fn[-3:] == 'tsv' else ','
     with open(os.path.join(data_files_folder, fn), 'r', encoding='utf-8') as file:

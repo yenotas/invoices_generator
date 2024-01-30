@@ -1,176 +1,100 @@
-<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="794px" height="1123px" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd" viewBox="0 0 79400 112294.3">
- <defs>
-  <style type="text/css">
-   <![CDATA[
-    .str0 {stroke:#323332;stroke-width:100;stroke-miterlimit:10}
-    .str1 {stroke:#323332;stroke-width:200.1;stroke-miterlimit:10}
-    .fil1 {fill:none;fill-rule:nonzero}
-    .fil0 {fill:black}
-    .fnt0 {font-weight:normal;font-size:1172.4px;font-family:'Arial'}
-    .fnt3 {font-weight:normal;font-size:1200.5px;font-family:'Arial'}
-    .fnt2 {font-weight:bold;font-size:1200.5px;font-family:'Arial'}
-    .fnt5 {font-weight:normal;font-size:1312.5px;font-family:'Arial'}
-    .fnt6 {font-weight:bold;font-size:1312.5px;font-family:'Arial'}
-    .fnt7 {font-weight:bold;font-size:1324px;font-family:'Arial'}
-    .fnt8 {font-weight:normal;font-size:1328.5px;font-family:'Arial'}
-    .fnt1 {font-weight:bold;font-size:1328.5px;font-family:'Arial'}
-    .fnt4 {font-weight:bold;font-size:1904.7px;font-family:'Arial'}
-    .center { text-anchor: middle; }
-    .right { text-anchor: end; }
-    .bold { font-weight: bold; }
-    .ln20 { line-height: 20px; }
-   ]]>
-  </style>
- </defs>
- <g id="invoice">
-  <g transform="matrix(1 0 0 1 -21866.3 -47122.1)">
-   <text x="39700" y="56147.1" class="fil0 fnt0"> Внимание! Оплата данного счета означает согласие с условиями поставки товара. Уведомление об оплате</text>
-  </g>
-  <g transform="matrix(1 0 0 1 -22154.4 -45889.6)">
-   <text x="39850" y="56147.1" class="fil0 fnt0"> обязательно, в противном случае не гарантируется наличие товара на складе. Товар отпускается по факту  </text>
-  </g>
-  <g transform="matrix(1 0 0 1 -21994.4 -44657.2)">
-   <text x="39700" y="56147.1" class="fil0 fnt0">прихода денег на р/с Поставщика, самовывозом, при наличии доверенности и документов удостоверяющих </text>
-  </g>
-  <g transform="matrix(1 0 0 1 2686.93 -43424.7)">
-   <text x="39700" y="56147.1" class="fil0 fnt0">личность.</text>
-  </g>
-  <g transform="matrix(1 0 0 1 -33326.6 -38478.8)">
-   <text x="39700" y="56147.1" class="fil0 fnt1">Образец платежного поручения</text>
-  </g>
-  <line class="fil1 str0" x1="6086.6" y1="18133.8" x2="73111.8" y2="18133.8"/>
-  <g transform="matrix(1 0 0 1 -33358.6 -36830.2)">
-   <text x="39700" y="56147.1" class="fil0 fnt2">Бенефициар: </text>
-  </g>
-  <g transform="matrix(1 0 0 1 11314.2 -36830.2)">
-   <text x="39700" y="56147.1" class="fil0 fnt2">ИИК</text>
-  </g>
-  <g transform="matrix(1 0 0 1 26103.8 -36830.2)">
-   <text x="39700" y="56147.1" class="fil0 fnt2">Кбе</text>
-  </g>
-  <line class="fil1 str0" x1="6086.6" y1="27628.1" x2="6086.6" y2="18084.4"/>
-  <line class="fil1 str0" x1="43894.2" y1="27628.1" x2="43894.2" y2="18084.4"/>
-  <line class="fil1 str0" x1="60700.5" y1="24426.8" x2="60700.5" y2="18084.4"/>
-  <line class="fil1 str0" x1="73135.9" y1="27628.1" x2="73135.9" y2="18084.4"/>
-  <g transform="matrix(1 0 0 1 -33357.9 -35226.4)">
-   <text x="40367.6" y="56147.1" class="fil0 fnt2">_sellerName_</text>
-  </g>
-  <g transform="matrix(1 0 0 1 11592.9 -33709)">
-   <text x="40750" y="56147.1" class="fil0 fnt2 center">_iik_</text>
-  </g>
-  <g transform="matrix(1 0 0 1 25857 -33709)">
-   <text x="41000" y="56147.1" class="fil0 fnt2 center">_kbe_</text>
-  </g>
-  <g transform="matrix(1 0 0 1 -33390.7 -32204.5)">
-   <text x="39700" y="56147.1" class="fil0 fnt3">БИН:</text>
-   <text x="43552.5" y="56147.1" class="fil0 fnt3">_bin_</text>
-  </g>
-  <g transform="matrix(1 0 0 1 -33390.7 -30603.9)">
-   <text x="39700" y="56147.1" class="fil0 fnt3">Банк бенефициара:</text>
-  </g>
-  <g transform="matrix(1 0 0 1 9217.39 -30587.9)">
-   <text x="39900" y="56147.1" class="fil0 fnt2">БИК</text>
-  </g>
-  <g transform="matrix(1 0 0 1 17716.6 -30587.9)">
-   <text x="39700" y="56147.1" class="fil0 fnt2">Код назначения платежа</text>
-  </g>
-  <line class="fil1 str0" x1="6086.6" y1="27576.5" x2="73111.8" y2="27576.5"/>
-  <line class="fil1 str0" x1="56506.9" y1="27628.1" x2="56506.9" y2="24426.8"/>
-  <g transform="matrix(1 0 0 1 -33390.7 -29003.3)">
-   <text x="40367.6" y="56147.1" class="fil0 fnt3">_bank_</text>
-  </g>
-  <g transform="matrix(1 0 0 1 9296.82 -28987.3)">
-   <text x="40800" y="56147.1" class="fil0 fnt2 center">_bik_</text>
-  </g>
-  <g transform="matrix(1 0 0 1 23719 -28987.3)">
-   <text x="40900" y="56147.1" class="fil0 fnt2 center">_knp_</text>
-  </g>
-  <g transform="matrix(1 0 0 1 -33198.6 -23625.2)">
-   <text x="39500" y="56147.1" class="fil0 fnt4">_title_</text>
-  </g>
-  <line class="fil1 str1" x1="6037.2" y1="34318.6" x2="73086.5" y2="34318.6"/>
-  <g transform="matrix(1 0 0 1 -33358.6 -19671.7)">
-   <text x="39700" y="56147.1" class="fil0 fnt5">Поставщик:</text>
-  </g>
-  <g transform="matrix(1 0 0 1 -24939.5 -19655.7)">
-   <text x="40794.6" y="56147.1" class="fil0 fnt6">_seller_</text>
-  </g>
-  <g transform="matrix(1 0 0 1 -33358.6 -15446.2)">
-   <text x="39700" y="56147.1" class="fil0 fnt5">Покупатель:</text>
-  </g>
-  <g transform="matrix(0.991284 0 0 1 -24589.8 -15454.1)">
-   <text x="40804.2" y="56147.1" class="fil0 fnt6">_customer_</text>
-  </g>
-  <g transform="matrix(0.991284 0 0 1 -24589.8 -11198.8)">
-   <text x="40804.2" y="56147.1" class="fil0 fnt7">_contract_</text>
-  </g>
-  <g transform="matrix(1 0 0 1 -33358.6 -11220.6)">
-   <text x="39700" y="56147.1" class="fil0 fnt8">Договор:</text>
-  </g>
-  <g transform="matrix(1 0 0 1 -32286.2 -8515.54)">
-   <text x="39700" y="56147.1" class="fil0 fnt6">№</text>
-  </g>
-  <g transform="matrix(1 0 0 1 -19049.3 -8515.54)">
-   <text x="39700" y="56147.1" class="fil0 fnt6">Наименование</text>
-  </g>
-  <g transform="matrix(1 0 0 1 1950.66 -8515.54)">
-   <text x="39700" y="56147.1" class="fil0 fnt6">Кол-во</text>
-  </g>
-  <g transform="matrix(1 0 0 1 8673.19 -8515.54)">
-   <text x="39700" y="56147.1" class="fil0 fnt6">Ед.</text>
-  </g>
-  <g transform="matrix(1 0 0 1 15443.7 -8515.54)">
-   <text x="39700" y="56147.1" class="fil0 fnt6">Цена</text>
-  </g>
-  <g transform="matrix(1 0 0 1 25255.4 -8515.54)">
-   <text x="39700" y="56147.1" class="fil0 fnt6">Сумма</text>
-  </g>
-<!-- itemsList -->
-  <text x="8300" y="49100" class="fil0 fnt0 center">_num_</text>
-  <text x="11000" y="49100" class="fil0 fnt0">_name_</text>
-  <text x="44000" y="49100" class="fil0 fnt0 center">_val_</text>
-  <text x="49400" y="49100" class="fil0 fnt0 center">_unit_</text>
-  <text x="56800" y="49100" class="fil0 fnt0 center">_price_</text>
-  <text x="67100" y="49100" class="fil0 fnt0 center">_sum_</text>
-<!-- itemsList -->
-  <g transform="matrix(1 0 0 1 0 0)" name="bottom">
-    <line class="fil1 str1" x1="6037.2" y1="62521.2" x2="72660.8" y2="62521.2"/>
-    <line class="fil1 str0 stamp_line" x1="16537.2" y1="65304.9" x2="45956.3" y2="65304.9"/><g transform="matrix(1 0 0 1 17636.6 -1953.07)">
-    <text x="39700" y="56147.1" class="fil0 fnt6">Итого:</text>
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve"
+     width="794px" height="1123px" version="1.1"
+     style="shape-rendering:geometricPrecision;
+     text-rendering:geometricPrecision;
+     image-rendering:optimizeQuality; fill-rule:evenodd;
+     clip-rule:evenodd" viewBox="0 0 79400 112300">
+    <defs>
+        <style type="text/css">
+            <![CDATA[
+                svg {fill: #fff; background-color: #fff}
+                @font-face {font-family:'Arial'; src: url('fonts/arial.ttf') format('truetype');}
+               .str0 {stroke:#000000;stroke-width:100;stroke-miterlimit:10}
+               .str1 {stroke:#000000;stroke-width:200;stroke-miterlimit:10}
+               .fil0 {fill:black}
+               .fil1 {fill:none;fill-rule:nonzero}
+               .fnt0 {font-weight:normal;font-size:1200px;font-family:'Arial';}
+               .fnt1 {font-weight:bold;font-size:1300px;font-family:'Arial';}
+               .fnt2 {font-weight:bold;font-size:1200px;font-family:'Arial';}
+               .fnt3 {font-weight:normal;font-size:1300px;font-family:'Arial';}
+               .fnt4 {font-weight:bold;font-size:1900px;font-family:'Arial';}
+               .center { text-anchor: middle; }
+               .right { text-anchor: end; }
+            ]]>
+        </style>
+    </defs>
+    <text x="17834" y="9025" class="fil0 fnt0">Внимание! Оплата данного счета означает согласие с условиями поставки товара. Уведомление об оплате</text>
+    <text x="17696" y="10258" class="fil0 fnt0"> обязательно, в противном случае не гарантируется наличие товара на складе. Товар отпускается по факту  </text>
+    <text x="17706" y="11490" class="fil0 fnt0">прихода денег на р/с Поставщика, самовывозом, при наличии доверенности и документов удостоверяющих </text>
+    <text x="42387" y="12722" class="fil0 fnt0">личность.</text>
+    <text x="6373" y="17668" class="fil0 fnt1">Образец платежного поручения</text>
+    <text x="6341" y="19317" class="fil0 fnt2">Бенефициар: </text>
+    <text x="51014" y="19317" class="fil0 fnt2">ИИК</text>
+    <text x="65804" y="19317" class="fil0 fnt2">Кбе</text>
+    <text x="7010" y="20921" class="fil0 fnt2">_sellerName_</text>
+    <text x="52343" y="22438" class="fil0 fnt2 center">_iik_</text>
+    <text x="66857" y="22438" class="fil0 fnt2 center">_kbe_</text>
+    <text x="6309" y="23943" class="fil0 fnt0">БИН:</text>
+    <text x="10162" y="23943" class="fil0 fnt0">_bin_</text>
+    <text x="6309" y="25543" class="fil0 fnt0">Банк бенефициара:</text>
+    <text x="49117" y="25559" class="fil0 fnt2">БИК</text>
+    <text x="57417" y="25559" class="fil0 fnt2">Код назначения платежа</text>
+    <text x="6977" y="27144" class="fil0 fnt0">_bank_</text>
+    <text x="50097" y="27160" class="fil0 fnt2 center">_bik_</text>
+    <text x="64619" y="27160" class="fil0 fnt2 center">_knp_</text>
+    <text x="6301" y="32522" class="fil0 fnt4">_title_</text>
+    <text x="6341" y="36475" class="fil0 fnt3">Поставщик:</text>
+    <text x="15855" y="36491" class="fil0 fnt1">_seller_</text>
+    <text x="6341" y="40701" class="fil0 fnt3">Покупатель:</text>
+    <text x="15859" y="40693" class="fil0 fnt1">_customer_</text>
+    <text x="15859" y="44948" class="fil0 fnt1">_contract_</text>
+    <text x="6341" y="44926" class="fil0 fnt3">Договор:</text>
+    <text x="7414" y="47632" class="fil0 fnt1">№</text>
+    <text x="20651" y="47632" class="fil0 fnt1">Наименование</text>
+    <text x="41651" y="47632" class="fil0 fnt1">Кол-во</text>
+    <text x="48373" y="47632" class="fil0 fnt1">Ед.</text>
+    <text x="55144" y="47632" class="fil0 fnt1">Цена</text>
+    <text x="64955" y="47632" class="fil0 fnt1">Сумма</text>
+    <!-- itemsList -->
+    <text x="8300" y="49100" class="fil0 fnt0 center">_num_</text>
+    <text x="11000" y="49100" class="fil0 fnt0">_name_</text>
+    <text x="44000" y="49100" class="fil0 fnt0 center">_val_</text>
+    <text x="49400" y="49100" class="fil0 fnt0 center">_unit_</text>
+    <text x="56800" y="49100" class="fil0 fnt0 center">_price_</text>
+    <text x="67100" y="49100" class="fil0 fnt0 center">_sum_</text>
+    <!-- itemsList -->
+    <g transform="matrix(1 0 0 1 0 0)" id="bottom">
+        <line class="fil1 str1" x1="6037.2" y1="62521.2" x2="72660.8" y2="62521.2"/>
+        <line class="fil1 str0 stamp_line" x1="16537.2" y1="65304.9" x2="45956.3" y2="65304.9"/>
+        <text x="57337" y="54194" class="fil0 fnt1">Итого:</text>
+        <text x="72756" y="54194" class="fil0 fnt1 right">_amount_</text>
+        <text x="49926" y="55923" class="fil0 fnt1">В том числе НДС:</text>
+        <text x="72729" y="55923" class="fil0 fnt1 right">_nds_</text>
+        <text x="6341.3" y="59348" class="fil0 fnt3">Всего наименований </text>
+        <text x="20000" y="59348" class="fil0 fnt3">_items_</text>
+        <text x="6357" y="61109" class="fil0 fnt1">Всего к оплате: </text>
+        <text x="17457" y="61109" class="fil0 fnt1">_total_</text>
+        <text x="6357" y="64854" class="fil0 fnt1">Исполнитель</text>
+        <text x="46212" y="64918" class="fil0 fnt0">/</text>
+        <text x="64212" y="64918" class="fil0 fnt0">/</text>
     </g>
-    <g transform="matrix(1 0 0 1 32755.9 -1953.07)">
-    <text x="40000" y="56147.1" class="fil0 fnt6 right">_amount_</text>
-    </g>
-    <g transform="matrix(1 0 0 1 10225.8 -224.418)">
-    <text x="39700" y="56147.1" class="fil0 fnt6">В том числе НДС:</text>
-    </g>
-    <g transform="matrix(1 0 0 1 32728.8 -224.418)">
-    <text x="40000" y="56147.1" class="fil0 fnt6 right">_nds_</text>
-    </g>
-    <text x="6341.3" y="59348" class="fil0 fnt5">Всего наименований </text>
-    <text x="20000" y="59348" class="fil0 fnt5">_items_</text>
-    <g transform="matrix(1 0 0 1 -33342.6 4961.54)">
-    <text x="39700" y="56147.1" class="fil0 fnt6">Всего к оплате: </text>
-    <text x="50800" y="56147.1" class="fil0 fnt6">_total_</text>
-    </g>
-    <g transform="matrix(1 0 0 1 -33342.6 8706.95)">
-    <text x="39700" y="56147.1" class="fil0 fnt6">Исполнитель</text>
-    </g>
-    <g transform="matrix(1 0 0 1 6512.38 8770.97)">
-    <text x="39700" y="56147.1" class="fil0 fnt0">/</text>
-    <text x="57700" y="56147.1" class="fil0 fnt0">/</text>
-    </g>
-  </g>
- </g>
-  <line class="fil1 str1 horizontal_line" x1="6037.2" y1="46387.1" x2="72562.3" y2="46387.1"/>
-  <line class="fil1 str0 horizontal_line" x1="6137.3" y1="48065.1" x2="72562.3" y2="48065.1"/>
-  <line class="fil1 str1 horizontal_line" x1="6037.2" y1="49656.3" x2="72660.8" y2="49656.3"/>  
-  <line class="fil1 str1 vertical_line" x1="6137.3" y1="49656.3" x2="6137.3" y2="46287.1"/>
-  <line class="fil1 str0 vertical_line" x1="10281.5" y1="49656.3" x2="10281.5" y2="46287.1"/>
-  <line class="fil1 str0 vertical_line" x1="40755.6" y1="49616.3" x2="40755.6" y2="46287.1"/>
-  <line class="fil1 str0 vertical_line" x1="47063.4" y1="49616.3" x2="47063.4" y2="46287.1"/>
-  <line class="fil1 str0 vertical_line" x1="51865.2" y1="49616.3" x2="51865.2" y2="46287.1"/>
-  <line class="fil1 str0 vertical_line" x1="61771.6" y1="49616.3" x2="61771.6" y2="46287.1"/>
-  <line class="fil1 str1 vertical_line" x1="72562.3" y1="49656.3" x2="72562.3" y2="46287.1"/>
-  <line class="fil1 str0" x1="6086.6" y1="24426.8" x2="73111.8" y2="24426.8"/>  
+    <line class="fil1 str1" x1="6037.2" y1="34318.6" x2="73086.5" y2="34318.6"/>
+    <line class="fil1 str0" x1="6086.6" y1="18133.8" x2="73111.8" y2="18133.8"/>
+    <line class="fil1 str0" x1="6086.6" y1="27628.1" x2="6086.6" y2="18084.4"/>
+    <line class="fil1 str0" x1="43894.2" y1="27628.1" x2="43894.2" y2="18084.4"/>
+    <line class="fil1 str0" x1="60700.5" y1="24426.8" x2="60700.5" y2="18084.4"/>
+    <line class="fil1 str0" x1="73135.9" y1="27628.1" x2="73135.9" y2="18084.4"/>
+    <line class="fil1 str0" x1="6086.6" y1="27576.5" x2="73111.8" y2="27576.5"/>
+    <line class="fil1 str0" x1="56506.9" y1="27628.1" x2="56506.9" y2="24426.8"/>
+    <line class="fil1 str1 horizontal_line" x1="6037.2" y1="46387.1" x2="72562.3" y2="46387.1"/>
+    <line class="fil1 str0 horizontal_line" x1="6137.3" y1="48065.1" x2="72562.3" y2="48065.1"/>
+    <line class="fil1 str1 horizontal_line" x1="6037.2" y1="49656.3" x2="72660.8" y2="49656.3"/>
+    <line class="fil1 str1 vertical_line" x1="6137.3" y1="49656.3" x2="6137.3" y2="46287.1"/>
+    <line class="fil1 str0 vertical_line" x1="10281.5" y1="49656.3" x2="10281.5" y2="46287.1"/>
+    <line class="fil1 str0 vertical_line" x1="40755.6" y1="49616.3" x2="40755.6" y2="46287.1"/>
+    <line class="fil1 str0 vertical_line" x1="47063.4" y1="49616.3" x2="47063.4" y2="46287.1"/>
+    <line class="fil1 str0 vertical_line" x1="51865.2" y1="49616.3" x2="51865.2" y2="46287.1"/>
+    <line class="fil1 str0 vertical_line" x1="61771.6" y1="49616.3" x2="61771.6" y2="46287.1"/>
+    <line class="fil1 str1 vertical_line" x1="72562.3" y1="49656.3" x2="72562.3" y2="46287.1"/>
+    <line class="fil1 str0" x1="6086.6" y1="24426.8" x2="73111.8" y2="24426.8"/>
 </svg>

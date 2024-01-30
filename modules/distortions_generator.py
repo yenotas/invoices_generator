@@ -10,30 +10,30 @@ import numpy as np
 import cv2
 
 
-def cv_view(np_img):
+def cvView(np_img):
     cv2.imshow('Image', np_img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
 
-def cv_resize(np_img, k):
+def cvResize(np_img, k):
     return cv2.resize(np_img, None, fx=k, fy=k)
 
 
 # Добавление шума
-def create_noise(np_img):
+def createNoise(np_img):
     # Генерируем гауссовский шум (cр. знач. шума, стандартное отклонение шума, размеры изобр.)
     noise = np.random.normal(5, 15, np_img.shape).astype(np.uint8)
     random_image = round(random.uniform(0.9, 1.0), 1)
     random_noise = round(random.uniform(0.0, 0.3), 1)
-    # добавляем сгенерированный шум к исходному изображению с помощью функции cv2.addWeighted
+    # добавляем сгенерированный шум к исходному изображению
     # cv2.bitwise_and, cv2.bitwise_or, cv2.bitwise_xor
     noisy_image = cv2.addWeighted(np_img, random_image, noise, random_noise, 0)
 
     return noisy_image
 
 
-def make_gradient_rectangle(width, height, direction='horizontal'):
+def makeGradientRectangle(width, height, direction='horizontal'):
     gradient = Image.new('L', (width, height), color=0)
     draw = ImageDraw.Draw(gradient)
     direct = width if direction == 'horizontal' else height
@@ -44,7 +44,7 @@ def make_gradient_rectangle(width, height, direction='horizontal'):
 
 
 # Создание абстрактного пятна
-def create_abstract_spot(width, height):
+def createAbstractSpot(width, height):
     # Создание большего рабочего холста
     canvas_width, canvas_height = width * 2, height * 2
     spot_img = Image.new('L', (canvas_width, canvas_height), 0)
@@ -56,7 +56,7 @@ def create_abstract_spot(width, height):
         center_y = random.randint(radius_y+200, canvas_height - radius_y)
         angle = random.randint(0, 90)
 
-        gradient = make_gradient_rectangle(radius_x * 2, radius_y * 2, random.choice(['horizontal', 'vertical']))
+        gradient = makeGradientRectangle(radius_x * 2, radius_y * 2, random.choice(['horizontal', 'vertical']))
 
         mask = Image.new('L', (radius_x * 2, radius_y * 2), 0)
         mask_draw = ImageDraw.Draw(mask)
@@ -94,24 +94,24 @@ def create_abstract_spot(width, height):
 
 
 # Создания абстрактного серого пятна
-def create_grey_spot(np_img):
+def createGreySpot(np_img):
     height, width = np_img.shape
-    overlay_array = create_abstract_spot(width, height)
+    overlay_array = createAbstractSpot(width, height)
     limited_overlay = np.clip(overlay_array, random.randint(0, 20), 100)
     np_array = np.where(limited_overlay < np_img, np_img - limited_overlay, np_img)
     return np_array
 
 
 # Создания абстрактного белого пятна
-def create_light_spot(np_img):
+def createLightSpot(np_img):
     height, width = np_img.shape
-    overlay_array = create_abstract_spot(width, height)
+    overlay_array = createAbstractSpot(width, height)
     limited_overlay = np.clip(overlay_array, random.randint(0, 80), 120)
     np_array = np.where(np_img < limited_overlay, limited_overlay + np_img, np_img)
     return np_array
 
 
-def random_perspective_change(np_img):
+def randomPerspectiveChange(np_img):
     height, width = np_img.shape[:2]
     max_shift_y = height // 20
     max_shift_x = width // 20
@@ -125,14 +125,13 @@ def random_perspective_change(np_img):
 
     matrix2D = cv2.getPerspectiveTransform(corners, new_corners)
     np_img = cv2.warpPerspective(np_img, matrix2D, (width, height))
-    ext_info = ('cдвиг углов (x1,y1); (x2,y2): (' + ', '.join(map(str, new_corners[0].astype(int))) + '); (' +
-                ', '.join(map(str, new_corners[3].astype(int))))+')'
-    return np_img, new_corners.astype(int), ext_info
+    info = 'perspective'
+    return np_img, new_corners.astype(int), info
 
 
-def random_rotate_image(np_img):
+def randomRotateImage(np_img):
     height, width = np_img.shape[:2]
-    angle = random.uniform(0.1, 5.0)
+    angle = round(random.uniform(0.1, 5.0), 2)
     angle *= random.choice([-1, 1])
     matrix2D = cv2.getRotationMatrix2D((width / 2, height / 2), angle, 1)
     np_img = cv2.warpAffine(np_img, matrix2D, (width, height))
@@ -145,12 +144,12 @@ def random_rotate_image(np_img):
         [width, height]
     ])
     new_corners = np.float32(np.dot(matrix2D[:, :2], corners.T).T + matrix2D[:, 2])
-    ext_info = 'угол поворота ' + str(angle)
-    return np_img, new_corners.astype(int), ext_info
+    info = 'rotate'
+    return np_img, new_corners.astype(int), info
 
 
 # Заглушка - никаких преобразований
-def not_distortions(np_img):
+def notDistortions(np_img):
     rows, cols = np_img.shape[:2]
     corners = np.array([
         [0, 0],

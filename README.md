@@ -40,7 +40,6 @@ https://github.com/yenotas/invoices_generator/
 + "pip install -r requirements_p.txt" - если выбрана утилита Poppler (2й способ)
   * *для второго способа конвертации используйте "03_conversion_svg2png_example_p.py"
   работающий на модуле svg_templates_helper_p.py
-+ Перезапустить IDE-редактор
 
 
 

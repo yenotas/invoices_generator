@@ -2,7 +2,7 @@
 # Пример конвертации заполненных SVG-документов в PNG с утилитой ImageMagick
 
 from config import generated_images_files_folder, svg_templates_files_folder
-from svg_templates_helper import convert_svg_to_png
+from modules.svg_png_converter import convertSvgToPng
 import os
 
 # Получаем список SVG-файлов в папке
@@ -13,7 +13,7 @@ for svg_file in svg_files:
     input_path = os.path.join(svg_templates_files_folder, svg_file)
     output_path = os.path.join(generated_images_files_folder, svg_file.replace('.svg', '.png'))
     # конвертация с ImageMagick/Wand
-    convert_svg_to_png(input_path, output_path)
+    convertSvgToPng(input_path, output_path)
 
     print('convert', svg_file, 'is complete')
 
