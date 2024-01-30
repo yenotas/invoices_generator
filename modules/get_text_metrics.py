@@ -14,7 +14,7 @@ from wand.image import Image as WandImage
 from wand.color import Color
 from wand.drawing import Drawing
 
-from config import svg_templates_files_folder, dim_scale
+from config import temp_folder, dim_scale, save_text_fragments
 
 import numpy as np
 from PIL import Image as PilImage
@@ -22,7 +22,7 @@ import os
 
 
 # Временный рендер надписи для определения размера
-def getTextSize(text='тест 0000', font_size=13, bold=False, save=True):
+def getTextSize(text='тест 0000', font_size=13, bold=False, save=save_text_fragments):
     getTextSize.i = 0 if not hasattr(getTextSize, 'i') else getTextSize.i + 1  # iterator
 
     draw = Drawing()
@@ -37,8 +37,6 @@ def getTextSize(text='тест 0000', font_size=13, bold=False, save=True):
 
     real_width = round(metrics.x)-1
     real_height = round(metrics.y2 - metrics.y1)
-
-    print(f'#{getTextSize.i}:', text, [real_width, real_height])
 
     if save:
 
@@ -63,7 +61,9 @@ def getTextSize(text='тест 0000', font_size=13, bold=False, save=True):
         trimmed_img = trimmed_img.astype(np.uint8)
         bitmap_image = PilImage.fromarray(trimmed_img, mode='L')
 
-        filename = os.path.join(svg_templates_files_folder, 'temp', f'text_to_image_{getTextSize.i}.png')
+        filename = os.path.join(temp_folder, f'text_to_image_{getTextSize.i}.png')
         bitmap_image.save(filename)
+
+        print(f'#{getTextSize.i}:', text, [real_width, real_height])
 
     return real_width, real_height, metrics.y2

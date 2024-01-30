@@ -6,7 +6,7 @@ SVG и PNG именуются по формуле "invoice_" + номер зап
 
 """
 
-from config import svg_templates_files_folder, dim_scale
+from config import svg_templates_files_folder, dim_scale, save_text_fragments
 from modules.get_text_metrics import getTextSize
 
 import os
@@ -32,13 +32,13 @@ def getTextMetrics(text_elem):
     bold = font_weights.get(font_class, False)
     text = text_elem.string.strip()
 
-    tw, th, shift = getTextSize(text, round(font_size / 100), bold, save=False)
+    tw, th, shift = getTextSize(text, round(font_size / 100), bold)
     x = round(float(text_elem['x']) / 100 * dim_scale)
     cx = round(x + align * tw / 2)
     y = round(float(text_elem['y']) / 100 * dim_scale - shift)
     cy = round(y + th / 2)
 
-    print((cx, cy))
+    if save_text_fragments: print('x,y:', (cx, cy))
 
     return [[cx, cy, tw, th], font_size, bold, align]
 

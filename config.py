@@ -13,6 +13,9 @@ dim_scale = DPI / 96  # Коэффициент соотношения с баз�
 # Размер печати в пикселях
 stamp_size = int(150 * dim_scale)
 
+# сохранение растровых фрагментов текстовых вставок в папку generated_files/text_fragments, вывод метрик на консоль
+save_text_fragments = False
+
 
 # Имена и пути к рабочим файлам
 list_data_files = {
@@ -26,7 +29,6 @@ json_file_path = os.path.join(base_dir, 'generated_data.json')
 data_files_folder = os.path.join(base_dir, 'data')
 svg_file_path = os.path.join(data_files_folder, 'invoice.svg')
 embed_svg_path = os.path.join(data_files_folder, 'invoice_fnt.svg')
-# font_path = os.path.join(data_files_folder, 'arial.ttf')
 fonts_folder = os.path.join(data_files_folder, 'fonts')
 font_path = os.path.join(fonts_folder, 'arial.ttf')
 
@@ -37,7 +39,7 @@ generated_images_files_folder = os.path.join(generated_files_folder, 'generated_
 stamps_files_folder = os.path.join(generated_files_folder, 'generated_stamps')
 distorted_images_files_folder = os.path.join(generated_files_folder, 'distorted_images')
 stamped_images_files_folder = os.path.join(generated_files_folder, 'stamped_images')
-temp_folder = os.path.join(svg_templates_files_folder, 'temp')
+temp_folder = os.path.join(generated_files_folder, 'text_fragments')
 
 for folder in [generated_files_folder, svg_templates_files_folder, generated_images_files_folder, stamps_files_folder,
                distorted_images_files_folder, stamped_images_files_folder, temp_folder]:
