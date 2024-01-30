@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
 
-
 # Количество генерируемых счетов
-FILES_NUMBER = 10
+FILES_NUMBER = 5
 # Разрешение генерируемых файлов
 DPI = 192
 
@@ -18,7 +17,7 @@ stamp_size = int(150 * dim_scale)
 # Имена и пути к рабочим файлам
 list_data_files = {
     'addresses.csv': 'https://drive.google.com/uc?export=download&id=14qnEbj33g6XDxotNZBjEwZE49MrhrPBQ',
-    'companies.tsv': 'https://drive.google.com/uc?export=download&id=1JnM0XWKVUPMQeeHDZb0O_pzO9yHhU2SL',
+    'companies.csv': 'https://drive.google.com/uc?export=download&id=1oLuaWlcerOiQ-jxdlrg59sYhVJ00rmqK',
     'products.csv': 'https://drive.google.com/uc?export=download&id=158xXZiDMELAChxU4Gci7p6E-2Ns59qsN',
     'banks.csv': 'https://drive.google.com/uc?export=download&id=1axTYKpLPCeuh943r6s6E8K7Nf9wGg0fz'
     }

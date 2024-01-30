@@ -2,7 +2,7 @@ import base64
 from config import svg_file_path, font_path, embed_svg_path
 
 
-def embed_font_in_svg(svg_path, font, new_svg_path):
+def embedFontToSvg(svg_path, font, new_svg_path):
     # Чтение шрифта и кодирование его в base64
     with open(font, 'rb') as font_file:
         font_data = font_file.read()
@@ -25,4 +25,4 @@ def embed_font_in_svg(svg_path, font, new_svg_path):
 
 
 # Пример использования:
-embed_font_in_svg(svg_file_path, font_path, embed_svg_path)
+embedFontToSvg(svg_file_path, font_path, embed_svg_path)

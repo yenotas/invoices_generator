@@ -3,7 +3,7 @@
 
 import json
 
-from config import json_file_path, svg_file_path, svg_templates_files_folder, DPI, embed_svg_path
+from config import json_file_path, svg_file_path, svg_templates_files_folder, dim_scale
 from modules.svg_templates_generator import generateSvgTemplates
 
 with open(json_file_path, 'r', encoding='utf-8') as json_file:
@@ -18,4 +18,4 @@ with open(json_file_path, 'w', encoding='utf-8') as json_file:
 print()
 print('SVG-шаблоны созданы')
 print(f'Файлы сохранены в папке "{svg_templates_files_folder}"')
-print('generated_data.json дополнен координатами и размерами вставленных текстов при DPI =', DPI)
+print('generated_data.json дополнен координатами и размерами вставленных текстов при масштабе =', dim_scale)

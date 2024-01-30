@@ -2,24 +2,24 @@
 # Пример генерации и вывода товаров в счете
 
 import pandas as pd
-from modules.strings_generator import gen_products_list, get_string_by_number, currency_main, \
-    currency_additional, load_data_from_file, get_random_invoice_name, get_random_contract_name, \
-    gen_full_address, str_line_splitter
+from modules.strings_generator import genProductsList, get_string_by_number, currency_main, \
+    currency_additional, loadDataFromFile, getRandomInvoiceName, getRandomContractName, \
+    genFullAddress, strLineSplitter
 from config import list_data_files
 
 json_data = {}
 for filename, url in list_data_files.items():
-    json_data[filename] = load_data_from_file(filename)
+    json_data[filename] = loadDataFromFile(filename)
     # для скачивания из google disk:
     # data[filename] = load_data_from_file(filename, url)
 
 
 n = 4 # количество товаров в счете
-product_names, units, prices, vals, summ, amount = gen_products_list(json_data, n)
-title = get_random_invoice_name()
-contract = get_random_contract_name()
-seller_addr, _ = gen_full_address(json_data)
-seller_addr = str_line_splitter(seller_addr, 55, 3)
+product_names, units, prices, vals, summ, amount = genProductsList(json_data, n)
+title = getRandomInvoiceName()
+contract = getRandomContractName()
+seller_addr, _ = genFullAddress(json_data)
+seller_addr = strLineSplitter(seller_addr, 55, 3)
 
 print()
 print(title, '\n')

@@ -5,20 +5,20 @@
 import re
 
 
-def parse_matrix(matrix_str):
+def parseMatrix(matrix_str):
     # Разбиваем строку матрицы на числа
     matrix_values = list(map(float, re.findall(r'-?\d+\.\d+|-?\d+', matrix_str)))
     return matrix_values
 
 
-def transform_coordinates(matrix_values, x, y):
+def transformCoordinates(matrix_values, x, y):
     # Применяем преобразование координат с использованием матрицы
     new_x = matrix_values[0] * x + matrix_values[2] * y + matrix_values[4]
     new_y = matrix_values[1] * x + matrix_values[3] * y + matrix_values[5]
     return round(new_x), round(new_y)
 
 
-def process_svg(input_file, output_file):
+def processSvg(input_file, output_file):
     with open(input_file, 'r', encoding='utf-8') as f:
         svg_content = f.read()
     # Ищем теги <g> с матрицей преобразования
@@ -26,7 +26,7 @@ def process_svg(input_file, output_file):
 
     for matrix_str, group_content in groups:
 
-        matrix_values = parse_matrix(matrix_str)
+        matrix_values = parseMatrix(matrix_str)
 
         # Ищем элементы внутри <g>
         text_elements = re.findall(r'<text(.*?)<\/text>', group_content, re.DOTALL)
@@ -40,7 +40,7 @@ def process_svg(input_file, output_file):
                 x = float(x_match)
                 y = float(y_match)
 
-                new_x, new_y = transform_coordinates(matrix_values, x, y)
+                new_x, new_y = transformCoordinates(matrix_values, x, y)
 
                 new_text_elements += ('<text' + text_element.replace(x_match, f'{new_x}')
                                 .replace(y_match, f'{new_y}') + '</text>')
@@ -56,4 +56,4 @@ def process_svg(input_file, output_file):
 
 
 # Пример использования
-process_svg('invoice.svg', 'output.svg')
+processSvg('invoice.svg', 'output.svg')
