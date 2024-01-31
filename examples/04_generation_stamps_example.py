@@ -1,4 +1,6 @@
 # Генерация изображений круглых печатей по данным из JSON
+import sys
+sys.path.append('/content/invoices_generator')
 
 import json
 

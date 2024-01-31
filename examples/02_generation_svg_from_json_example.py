@@ -1,4 +1,6 @@
 # Пример генерации заполненных SVG-документов из JSON
+import sys
+sys.path.append('/content/invoices_generator')
 
 import json
 

@@ -1,3 +1,7 @@
+#Создание превью текстовых вставок в документы в растре в \generated_files\text_fragments
+import sys
+sys.path.append('/content/invoices_generator')
+
 import json
 import os
 import random

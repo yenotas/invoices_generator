@@ -1,10 +1,13 @@
+# Утилита чистки больших текстов. В частности - удаление вхождений "(цифры)" и двойных пробелов из текста
+import sys
+sys.path.append('/content/invoices_generator')
+
 import re
 import os
 from config import list_data_files, data_files_folder
 from modules.strings_generator import strip
 
 
-# Функция для удаления вхождений "(цифры)" и двойных пробелов из текста
 def textCleaning(txt):
     return strip(re.sub(r'\(\d{1,3}\)', '', txt))
 

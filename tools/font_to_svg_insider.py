@@ -1,6 +1,9 @@
+# Конвертация файла шрифта и встраивание его в документ SVG
+import sys
+sys.path.append('/content/invoices_generator')
+
 import base64
 from config import svg_file_path, font_path, embed_svg_path
-
 
 def embedFontToSvg(svg_path, font, new_svg_path):
     # Чтение шрифта и кодирование его в base64

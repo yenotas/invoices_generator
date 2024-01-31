@@ -1,4 +1,6 @@
 # Пример конвертации заполненных SVG-документов в PNG с утилитой ImageMagick
+import sys
+sys.path.append('/content/invoices_generator')
 
 from config import generated_images_files_folder, svg_templates_files_folder
 from modules.svg_png_converter import convertSvgToPng

@@ -1,4 +1,6 @@
 # Пример: генерация данных и сохраниение записей для счетов
+import sys
+sys.path.append('/content/invoices_generator')
 
 import random
 import json

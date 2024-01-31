@@ -1,4 +1,6 @@
 # Пример генерации и вывода товаров в счете
+import sys
+sys.path.append('/content/invoices_generator')
 
 import pandas as pd
 from modules.strings_generator import genProductsList, get_string_by_number, currency_main, \

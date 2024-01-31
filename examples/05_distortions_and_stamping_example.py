@@ -1,4 +1,7 @@
 # Случайные геометрические искажения и шумы на документах, наложение печатей и сохранение в JSON данных об искажениях
+import sys
+sys.path.append('/content/invoices_generator')
+
 import os
 import random
 import json
