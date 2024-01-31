@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Пример конвертации заполненных SVG-документов в PNG с утилитой ImageMagick
 
 from config import generated_images_files_folder, svg_templates_files_folder
