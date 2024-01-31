@@ -1,29 +1,30 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Генерация данных для счетов на оплату. Автор: Коваленко А.В. 11.2023
 https://colab.research.google.com/drive/14-MopXdOeDVNon2703N-1R928mNxMmnJ?usp=sharing
 
-set_splitters - расстановщик разделителей в строке с учетом количества первых
+setSplitters - расстановщик разделителей в строке с учетом количества первых
 буквенных символов и длины заполнителя
 
-str_generator - универсальный генератор строки заданной длинны, кол-ва случайных
-символов начала строки и заполнителем. сумма первых символов (a-Z, а-Я) и длины
+strGenerator - универсальный генератор строки заданной длинны, кол-ва случайных
+символов начала строки и заполнителем. Сумма первых символов (a-Z, а-Я) и длины
 заполнителя должна быть меньше или равна числу символов, иначе выдаст "400".
-по умолчанию подставляет латинские символы - последний параметр = "EN". он может
-быть "en", "RU", "ru"
+По-умолчанию подставляет латинские символы - последний параметр = "EN" (может
+быть "en", "RU", "ru")
 
 возможные результаты использования set_splitters(str_generator()):
 aA-bN/cN-dN, aA-bN-cN, aN/bN и т.п.
 aN: b0+cN (b + c = a)
 aA, aA + bA
 где - a,b,c,d - произвольные числа >1, A-буквы, N-цифры
-'''
+"""
 import random
 import string
 import requests
 import csv
 from math import ceil
 import os
+
 from config import data_files_folder, currency_main, currency_additional
 
 from number_to_string import get_string_by_number
@@ -73,15 +74,15 @@ def nullsStrGenerator(nulls_len=4):
     return ''.join(['0'] * nulls_len)
 
 
-# вывод [n] результатов функции [func] для проверки. формат: loop_print(n, lambda: func(**args))
+# вывод [n] результатов функции [func] для проверки. формат: loopPrint(n, lambda: func(**args))
 def loopPrint(n, func):
     for _ in range(n):
         print(func())
 
 
 def strGenerator(num_symbols=10, letters_len=0, holder='', lang='EN'):
-    '''
-    генератор строки заданной длинны, количества первых символов и заполнителем:
+    """
+    Генератор строки заданной длинны, количества первых символов и заполнителем:
     - num_symbols - длина получаемой строки
     - letters_len - длина фрагмента букв в строке
     - holder - заполнитель, которая будет отделена разделителем
@@ -89,8 +90,8 @@ def strGenerator(num_symbols=10, letters_len=0, holder='', lang='EN'):
         * кириллица не включает мягкий и твердый знаки
         * сумма букв и длины заполнителя должна быть меньше или равна
         числу символов, иначе результат "400"
-    '''
-    holder_len =  len(holder)
+    """
+    holder_len = len(holder)
     if letters_len + holder_len > num_symbols: return '400'
 
     letters = ''.join(random.choices(symbols_set[lang], k=letters_len))
@@ -110,20 +111,20 @@ def strGenerator(num_symbols=10, letters_len=0, holder='', lang='EN'):
     return letters + holder + numbers_str
 
 
-def setSplitters(invoice_str, letters_len=0, holder_len=0, num_splitters=1):
-    '''
-    расстановщик разделителей [base_splitters] в строке с учетом количества букв
+def setSplitters(invoice_str='0000', letters_len=0, holder_len=0, num_splitters=1, splitters=base_splitters):
+    """
+    Расстановщик разделителей [base_splitters] в строке с учетом количества букв
     и длины заполнителя:
-        invoice_str - исходная строка,
-        letters_len - длина группы букв, которая не разбивается разделителем,
-        holder_len - длина заполнителя, который не разбивается разделителем
+        invoice_str - исходная строка;
+        letters_len - длина группы букв, не разбиваемая разделителем;
+        holder_len - длина заполнителя, не разбиваемого разделителем;
         num_splitters - количество разделителей:
-        - 1й ставится после группы букв (если задан letters_len),
+        - 1й ставится после группы букв (если задан letters_len);
         - 2й ставится после заполнителя, остальные делят оставшуюся строку на
         фрагменты произвольной длины, но не менее 1 символа между разделителями.
         Если количество разделителей не позволяет оставить хотя бы 1 символ между
         ними - вернет исходную строку.
-    '''
+    """
     invoice_str_len = len(invoice_str)
     remain_num_splitters = num_splitters - int(letters_len>0) - int(holder_len>0)
     remain_symb = invoice_str_len - letters_len - holder_len
@@ -157,7 +158,7 @@ def setSplitters(invoice_str, letters_len=0, holder_len=0, num_splitters=1):
         remain_symb = invoice_str_len + i - pos
         block_len = int(remain_symb / num_blocks)
 
-        splitter = ''.join(random.choices(base_splitters, k=1))
+        splitter = ''.join(random.choices(splitters, k=1))
         invoice_str = invoice_str[0:pos] + splitter + invoice_str[pos:]
         pos += 1
 
@@ -289,12 +290,59 @@ def getRandomPostIndex():
 
 # генератор телефона
 def getRandomTelephone():
-    return '+7(' + randomNumNotnullStartswith(3) + ')-' + setSplitters(randomNumNotnullStartswith(7), 3, 2, 2)
+    return '+7(' + randomNumNotnullStartswith(3) + ')-' + setSplitters(randomNumNotnullStartswith(7), 3, 2, 2, '-')
 
 
 # Генерация списка товаров
 def getRandomBank(data):
     return random.choice(data['banks.csv'])[0]
+
+
+def normalCase(text):
+    text = strip(text)
+    for i, word in enumerate(text.split(' ')):
+        if (word.upper() == word and len(word) > 4) or (i == 0 and word[0].lower() == word[0]):
+            text = text.replace(word, word.title())
+    return text
+
+
+# Замена символов после открывающейся французской кавычки на заглавные буквы
+def upperCaseAfterQuotesStart(text):
+    if '«' in text:
+        for i, word in enumerate(text.split('«')):
+            if not word: continue
+            if word[0].lower() == word[0]:
+                text = text.replace(word, word.capitalize())
+    return text
+
+
+# Чистка текста от избыточных кавычек, замена любых кавычек на парные французские и если открыто больше то закрыть
+def replaceQuotes(text):
+    while '""' in text or "''" in text or "``" in text:
+        text = text.replace('""', '"')
+        text = text.replace("''", "'")
+        text = text.replace("``", "`")
+    while '"' in text:
+        text = text.replace('"', '«', 1).replace('"', '»', 1)
+    while '`' in text:
+        text = text.replace('`', '«', 1).replace('`', '»', 1)
+    while "'" in text:
+        text = text.replace("'", '«', 1).replace("'", '»', 1)
+    if text[-1] in ".!;:?'`\"«":
+        text = text[:-1]
+    if text.count('«') > text.count('»'):
+        text = text + '»'*(text.count('«') - text.count('»'))
+
+    text = strip(text.replace('« ', ' «').replace(' »', '» '))
+
+    return upperCaseAfterQuotesStart(text)
+
+
+def randomReplaceQuotes(text):
+    if random.randint(1, 4) == 1:
+        return replaceQuotes(text)
+    else:
+        return replaceQuotes(text).replace('«', '"').replace('»', '"')
 
 
 # Генерация номера офиса с 10% вероятностью
@@ -306,17 +354,24 @@ def getRandomOffice():
     return office
 
 
+def strip(text):
+    text = text.strip()+'\n' if text[-1] == '\n' else text.strip()
+    return textDoubleSpacesClean(text)
+
+
 # Замена двойных пробелов
-def textClean(text):
-    return text.replace('  ', ' ')
+def textDoubleSpacesClean(text):
+    while '  ' in text:
+        text = text.replace('  ', ' ')
+    return text
 
 
 # Разбивка одной строки на неколько с переносом по словам
 def strLineSplitter(text, num_symbols, num_lines):
-    text = text.replace('\n', ' ')
+    text = textDoubleSpacesClean(text[:num_symbols * num_lines].strip().replace('\n', ' '))
     text_len = len(text)
     if text_len < num_symbols + 2:
-        return textClean(text)
+        return text
 
     new_text = [text[i * num_symbols: (i + 1) * num_symbols] for i in range(0, num_lines)]
     line_list, prev_last = [], ''
@@ -326,11 +381,11 @@ def strLineSplitter(text, num_symbols, num_lines):
     i = 0
     for i in range(0, num_lines):
         pos = new_text[i].rfind(" ")
-        line_list.append(textClean(prev_last + new_text[i][:pos]))
+        line_list.append(prev_last + new_text[i][:pos])
         prev_last = new_text[i][pos + 1:]
 
     if len(prev_last + line_list[i]) < num_symbols + 3:
-        line_list[i] = textClean(line_list[i] + ' ' + prev_last)
+        line_list[i] = line_list[i] + ' ' + prev_last
 
     return '\n'.join(line_list)
 
@@ -339,7 +394,7 @@ def strLineSplitter(text, num_symbols, num_lines):
 def genFullAddress(data):
     companies, addresses = data['companies.csv'], data['addresses.csv']
     city, company_name = random.choice(companies)
-    company_name = company_name.replace('`', '"')
+    company_name = randomReplaceQuotes(normalCase(company_name))
     street = ''.join(random.choice(addresses))
     post_index = getRandomPostIndex() + ' '
     tel = random.choice([', тел:', ', тел:', ', т:', ', телефон:', ', т/ф:', ''])
@@ -349,12 +404,12 @@ def genFullAddress(data):
     address += f"{random.randint(1, 300)}{getRandomOffice()}"
 
     if len(full_address + post_index + address) < 156:
-        full_address = full_address + post_index + address
+        full_address += post_index + address
     else:
-        full_address = full_address + address
+        full_address += address
 
     if len(full_address + tel) < 156:
-        full_address = full_address + tel
+        full_address += tel
 
     return full_address, company_name
 
@@ -374,7 +429,7 @@ def genProductsList(data, n=3):
             rnd = random.choice(products)
         name, unit, price = rnd
         price_val = float(price) + random.uniform(0.00, 0.99)
-        product_names.append(strLineSplitter(name, 46, 3))
+        product_names.append(strLineSplitter(randomReplaceQuotes(normalCase(name)), 44, 3))
         units.append(unit)
         prices.append("{:.2f}".format(price_val))
         if price_val < 100:
@@ -398,12 +453,11 @@ def genProductsList(data, n=3):
 def genInvoiceJson(data, number=0, product_lines=1):
     customer_addr, customer_name = genFullAddress(data)
     seller_addr, seller_name = genFullAddress(data)
-
-    customer = strLineSplitter(customer_addr, 78, 2)
-    seller = strLineSplitter(seller_addr, 78, 2)
-    seller_name = strLineSplitter(seller_name, 55, 2)
+    customer = strLineSplitter(customer_addr, 74, 2)
+    seller = strLineSplitter(seller_addr, 74, 2)
+    seller_name = strLineSplitter(seller_name, 48, 2)
     binn = getRandomBin()
-    bank = getRandomBank(data)
+    bank = randomReplaceQuotes(getRandomBank(data))
     iik = getRandomIik()
     kbe = getRandomKbe()
     knp = getRandomKnp()
@@ -413,7 +467,7 @@ def genInvoiceJson(data, number=0, product_lines=1):
     product_names, units, prices, vals, summ, amount = genProductsList(data, product_lines)
 
     total = "{:.2f}".format(round(amount, 2))
-    nds = "{:.2f}".format(round(amount * 12 / (12 + 100), 2))
+    nds = "{:.2f}".format(round(amount * 12 / 112, 2))
     items = f'{product_lines}, на сумму {total} KZT'
     total_text = get_string_by_number(amount, currency_main, currency_additional)
 

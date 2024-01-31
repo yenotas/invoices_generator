@@ -2,7 +2,9 @@ import json
 import os
 import random
 from PIL import Image, ImageDraw
-from config import json_file_path, generated_images_files_folder
+from config import json_file_path, generated_images_files_folder, markup_images_folder, recreateFolder
+
+recreateFolder(markup_images_folder)
 
 
 # Генерация случайного цвета RGB
@@ -34,6 +36,7 @@ for invoice in json_data:
     file_name = f"invoice_{invoice['number']}.png"
     print('Открываю', file_name)
     image_path = os.path.join(generated_images_files_folder, file_name)
+    output_path = os.path.join(markup_images_folder, file_name)
     bboxes = []
 
     # Распаковка JSON
@@ -47,9 +50,10 @@ for invoice in json_data:
                     for _, bbox_str in subitems.items():
                         bboxes.append(readJSON(bbox_str))
 
-    # Открытие изображения с bbox-ми
+    # Сохранение и/или открытие изображения с bbox-ми
     with Image.open(image_path) as img:
         img = img.convert("RGB")
         draw = ImageDraw.Draw(img)
         drawRectangles(draw, bboxes)
-        img.show()
+        img.save(output_path)
+        # img.show()

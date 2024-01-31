@@ -37,7 +37,7 @@ df.index = df.index + 1
 print(df, '\n')
 print(f"Итого: {'{:.2f}'.format(amount)}")
 print(f"В том числе НДС: {'{:.2f}'.format(round(amount * 12/112, 2))}\n")
-print(f"Всего нанаименований: {n}, на сумму {'{:.2f}'.format(amount)} KZT\n")
+print(f"Всего наименований: {n}, на сумму {'{:.2f}'.format(amount)} KZT\n")
 
 invoice_amount_str = get_string_by_number(amount, currency_main, currency_additional)
 

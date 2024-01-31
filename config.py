@@ -1,20 +1,19 @@
 # -*- coding: utf-8 -*-
 import os
+import shutil
 
 # Количество генерируемых счетов
-FILES_NUMBER = 5
+FILES_NUMBER = 20
+# сохранение растровых фрагментов текстовых вставок в папку generated_files/text_fragments, вывод метрик на консоль
+save_text_fragments = False
 # Разрешение генерируемых файлов
 DPI = 192
-
 
 # Коэффициент масштабирования при искажениях
 distortion_scale = 1.0
 dim_scale = DPI / 96  # Коэффициент соотношения с базовым разрешением. НЕ МЕНЯТЬ: 96 = база!
 # Размер печати в пикселях
 stamp_size = int(150 * dim_scale)
-
-# сохранение растровых фрагментов текстовых вставок в папку generated_files/text_fragments, вывод метрик на консоль
-save_text_fragments = False
 
 
 # Имена и пути к рабочим файлам
@@ -39,10 +38,11 @@ generated_images_files_folder = os.path.join(generated_files_folder, 'generated_
 stamps_files_folder = os.path.join(generated_files_folder, 'generated_stamps')
 distorted_images_files_folder = os.path.join(generated_files_folder, 'distorted_images')
 stamped_images_files_folder = os.path.join(generated_files_folder, 'stamped_images')
-temp_folder = os.path.join(generated_files_folder, 'text_fragments')
+text_fragments_folder = os.path.join(generated_files_folder, 'text_fragments')
+markup_images_folder = os.path.join(generated_files_folder, 'markup_images')
 
 for folder in [generated_files_folder, svg_templates_files_folder, generated_images_files_folder, stamps_files_folder,
-               distorted_images_files_folder, stamped_images_files_folder, temp_folder]:
+               distorted_images_files_folder, stamped_images_files_folder, text_fragments_folder, markup_images_folder]:
     if not os.path.exists(folder):
         os.makedirs(folder)
 
@@ -52,3 +52,9 @@ currency_additional = ('тиын', 'тиына', 'тиынов')
 
 # currency_main = ('рубль', 'рубля', 'рублей')
 # currency_additional = ('копейка', 'копейки', 'копеек')
+
+
+def recreateFolder(target_folder):
+    if os.path.exists(target_folder):
+        shutil.rmtree(target_folder)
+    os.makedirs(target_folder, exist_ok=True)

@@ -14,11 +14,18 @@ from wand.image import Image as WandImage
 from wand.color import Color
 from wand.drawing import Drawing
 
-from config import temp_folder, dim_scale, save_text_fragments
+from config import text_fragments_folder, dim_scale, save_text_fragments
 
 import numpy as np
 from PIL import Image as PilImage
+import shutil
 import os
+
+if save_text_fragments:
+    target_folder = text_fragments_folder
+    if os.path.exists(target_folder):
+        shutil.rmtree(target_folder)
+    os.makedirs(target_folder, exist_ok=True)
 
 
 # Временный рендер надписи для определения размера
@@ -30,6 +37,8 @@ def getTextSize(text='тест 0000', font_size=13, bold=False, save=save_text_f
 
     draw.font_size = height = round(font_size*dim_scale)
     draw.font_weight = 700 if bold else 400
+
+    # print(getTextSize.i, text)
 
     text_image = WandImage(width=20*len(text), height=height, background=Color("white"))
 
@@ -54,14 +63,14 @@ def getTextSize(text='тест 0000', font_size=13, bold=False, save=save_text_f
         min_row, max_row = np.where(rows)[0][[0, -1]]
         min_col, max_col = np.where(cols)[0][[0, -1]]
 
-        # Обрезка изображения
+        # Обрезка холста по границам текста
         trimmed_img = np_img[min_row:max_row + 1, min_col:max_col + 1]
 
         # Преобразование обрезанного изображения в целочисленный тип, затем в PIL Image
         trimmed_img = trimmed_img.astype(np.uint8)
         bitmap_image = PilImage.fromarray(trimmed_img, mode='L')
 
-        filename = os.path.join(temp_folder, f'text_to_image_{getTextSize.i}.png')
+        filename = os.path.join(text_fragments_folder, f'text_to_image_{getTextSize.i}.png')
         bitmap_image.save(filename)
 
         print(f'#{getTextSize.i}:', text, [real_width, real_height])

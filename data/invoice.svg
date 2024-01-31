@@ -18,8 +18,8 @@
                .fnt2 {font-weight:bold;font-size:1200px;font-family:'Arial';}
                .fnt3 {font-weight:normal;font-size:1300px;font-family:'Arial';}
                .fnt4 {font-weight:bold;font-size:1900px;font-family:'Arial';}
-               .center { text-anchor: middle; }
-               .right { text-anchor: end; }
+               .center {text-anchor:middle;}
+               .right {text-anchor:end;}
             ]]>
         </style>
     </defs>
