@@ -17,13 +17,15 @@ https://imagemagick.org/script/download.php#windows
 from config import dim_scale, font_path
 from wand.image import Image
 from wand.color import Color
+from wand.font import Font
+
+font = Font(path=font_path)
 
 
 def convertSvgToPng(svg_filename, png_filename):
 
     with Image(width=int(794*dim_scale), height=int(1123*dim_scale), filename=svg_filename, background=Color('white')) as img:
-        # img.font_path = font_path
-        # img.font = 'Arial'
-        # img.font_family = 'Arial'
+        img.font = font
+        img.font_family = 'Arial'
         img.format = 'png'
         img.save(filename=png_filename)
