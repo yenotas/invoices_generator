@@ -7,7 +7,7 @@ import json
 from config import stamps_files_folder, json_file_path
 from modules.stamps_generator import generateStamp
 
-from config import recreateFolder
+from modules.fs_utils import recreateFolder
 recreateFolder(stamps_files_folder)
 
 

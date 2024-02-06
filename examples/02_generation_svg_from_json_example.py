@@ -7,7 +7,7 @@ import json
 from config import json_file_path, svg_file_path, svg_templates_files_folder, dim_scale
 from modules.svg_templates_generator import generateSvgTemplates
 
-from config import recreateFolder
+from modules.fs_utils import recreateFolder
 recreateFolder(svg_templates_files_folder)
 
 

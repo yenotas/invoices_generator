@@ -1,10 +1,10 @@
-from sys import path
 import os
-import shutil
-
+from sys import path
+path.append('/content/invoices_generator')
+from modules.fs_utils import checkFolderExists
 
 # Количество генерируемых счетов
-FILES_NUMBER = 1
+FILES_NUMBER = 100
 # сохранение растровых фрагментов текстовых вставок в папку generated_files/text_fragments, вывод метрик на консоль
 save_text_fragments = False
 # Разрешение генерируемых файлов
@@ -24,7 +24,6 @@ list_data_files = {
     'banks.csv': 'https://drive.google.com/uc?export=download&id=1axTYKpLPCeuh943r6s6E8K7Nf9wGg0fz'
 }
 
-path.append('/content/invoices_generator')
 base_dir = os.path.dirname(os.path.abspath(__file__))
 json_file_path = os.path.join(base_dir, 'generated_data.json')
 data_files_folder = os.path.join(base_dir, 'data')
@@ -42,10 +41,9 @@ stamped_images_files_folder = os.path.join(generated_files_folder, 'stamped_imag
 text_fragments_folder = os.path.join(generated_files_folder, 'text_fragments')
 markup_images_folder = os.path.join(generated_files_folder, 'markup_images')
 
-for folder in [generated_files_folder, svg_templates_files_folder, generated_images_files_folder, stamps_files_folder,
-               distorted_images_files_folder, stamped_images_files_folder, text_fragments_folder, markup_images_folder]:
-    if not os.path.exists(folder):
-        os.makedirs(folder)
+checkFolderExists(generated_files_folder, svg_templates_files_folder, generated_images_files_folder,
+                  stamps_files_folder, distorted_images_files_folder, stamped_images_files_folder,
+                  text_fragments_folder, markup_images_folder)
 
 # Сумма счета словами (по-умолчанию - тенге):
 currency_main = ('тенге', 'тенге', 'тенге')
@@ -55,8 +53,3 @@ currency_additional = ('тиын', 'тиына', 'тиынов')
 # currency_main = ('рубль', 'рубля', 'рублей')
 # currency_additional = ('копейка', 'копейки', 'копеек')
 
-
-def recreateFolder(target_folder):
-    if os.path.exists(target_folder):
-        shutil.rmtree(target_folder)
-    os.makedirs(target_folder, exist_ok=True)

@@ -1,11 +1,13 @@
 """
-Временный рендер надписи для определения размера
-1. установить ImageMagick по ссылке:
-Для Windows:
-https://imagemagick.org/script/download.php#windows
-(Для Linux: sudo apt-get install imagemagick
-Для macOS: brew install imagemagick)
-2. затем библиотеку Wand - включена в requirements.txt
+Конвертер SVG-файлов в PNG:
+- читаю шрифты из папки в массив
+- выбираю шрифт
+- читаю свг: если есть группы - разбиваю и перечитываю.
+- если есть таблица - определяю по координатам, что к ней относится и определяю в нулевую группу
+
+- стили и размеры сохраняю
+
+
 """
 
 from wand.image import Image as WandImage
@@ -26,6 +28,7 @@ if save_text_fragments:
     os.makedirs(target_folder, exist_ok=True)
 
 
+# Временный рендер надписи для определения размера
 def getTextSize(text='тест 0000', font_size=13, bold=False, save=save_text_fragments):
     getTextSize.i = 0 if not hasattr(getTextSize, 'i') else getTextSize.i + 1  # iterator
 
