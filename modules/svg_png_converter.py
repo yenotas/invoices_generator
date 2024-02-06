@@ -1,17 +1,7 @@
-# -*- coding: utf-8 -*-
 """
 Конвертер в SVG-PNG.
 SVG и PNG именуются по формуле "invoice_" + номер записи JSON (invoice['number'])
 Автор: Коваленко А.В. 12.2023
-
-Для конвертации SVG-файлов в PNG:
-(1 способ - смотри README)
-1. установить ImageMagick по ссылке:
-Для Windows:
-https://imagemagick.org/script/download.php#windows
-(Для Linux: sudo apt-get install imagemagick
-Для macOS: brew install imagemagick)
-2. затем библиотеку Wand - включена в requirements.txt
 """
 
 from config import dim_scale, font_path

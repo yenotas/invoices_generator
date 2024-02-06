@@ -1,22 +1,5 @@
-# -*- coding: utf-8 -*-
 """
 Генерация данных для счетов на оплату. Автор: Коваленко А.В. 11.2023
-https://colab.research.google.com/drive/14-MopXdOeDVNon2703N-1R928mNxMmnJ?usp=sharing
-
-setSplitters - расстановщик разделителей в строке с учетом количества первых
-буквенных символов и длины заполнителя
-
-strGenerator - универсальный генератор строки заданной длинны, кол-ва случайных
-символов начала строки и заполнителем. Сумма первых символов (a-Z, а-Я) и длины
-заполнителя должна быть меньше или равна числу символов, иначе выдаст "400".
-По-умолчанию подставляет латинские символы - последний параметр = "EN" (может
-быть "en", "RU", "ru")
-
-возможные результаты использования set_splitters(str_generator()):
-aA-bN/cN-dN, aA-bN-cN, aN/bN и т.п.
-aN: b0+cN (b + c = a)
-aA, aA + bA
-где - a,b,c,d - произвольные числа >1, A-буквы, N-цифры
 """
 import random
 import string
@@ -65,104 +48,95 @@ def randomContractStartswith():
 
 
 # генератор номера из n цифр без нуля в начале
-def randomNumNotnullStartswith(n):
+def notNullDigits(n):
     return str(random.randint(1, 9)) + ''.join(random.choices(numeric, k=n - 1))
 
 
 # альтернатива заполнителю - генератор нулей, по умолчанию = 0000
-def nullsStrGenerator(nulls_len=4):
+def nullsStr(nulls_len=4):
     return ''.join(['0'] * nulls_len)
 
 
-# вывод [n] результатов функции [func] для проверки. формат: loopPrint(n, lambda: func(**args))
-def loopPrint(n, func):
+# вывод [n] выполнений функций [*func] для проверки: nPrint(n, lambda: func(*args), lambda: func(*args), ...)
+def nPrint(n, *func):
     for _ in range(n):
-        print(func())
+        for f in func:
+            print(f())
 
 
-def strGenerator(num_symbols=10, letters_len=0, holder='', lang='EN'):
+def strGenerator(num_symbols=1, letters_len=1, holder='', num_splitters=0, lang='EN', splitters=base_splitters):
     """
-    Генератор строки заданной длинны, количества первых символов и заполнителем:
+    Генератор строки заданной длинны, количества первых символов и заполнителем с разделителями,
+    все параметры не обязательны:
     - num_symbols - длина получаемой строки
-    - letters_len - длина фрагмента букв в строке
-    - holder - заполнитель, которая будет отделена разделителем
-    - lang - язык букв 'RU'/'ru'/'En'/'en'
-        * кириллица не включает мягкий и твердый знаки
-        * сумма букв и длины заполнителя должна быть меньше или равна
-        числу символов, иначе результат "400"
+    - letters_len - длина фрагмента букв в строке, будет отделен разделителем от holder или цифр
+    - holder - строка-заполнитель, которая будет отделена разделителем
+    - num_splitters - количество разделителей на всю получаемую строку
+    - lang - язык букв 'RU'/'ru'/'En'/'en' (кириллица не включает мягкий и твердый знаки)
+    - splitters - символы-разделители, например "#*|" (выбираются случайно)
     """
+
     holder_len = len(holder)
-    if letters_len + holder_len > num_symbols: return '400'
+    n = num_symbols - letters_len - holder_len
 
-    letters = ''.join(random.choices(symbols_set[lang], k=letters_len))
+    letters = '' if letters_len == 0 else ''.join(random.choices(symbols_set[lang], k=letters_len))
 
-    numbers_len = num_symbols - letters_len - holder_len
-    num, numbers_str = 0, ''
-    if numbers_len:
-        num = random.randint(1, 10**numbers_len - 1)
-        if random.randint(0, 2): # вероятность чисел меньше 3000
-            num = min(num, random.randint(1, 3000))
+    has_digit = int(n > 0)
+    split_hd = int(holder_len > 0 and num_splitters > 0) * has_digit
+    split_lh = int(letters_len > 0 and num_splitters > 0 and (n > 0 or holder_len > 0))
 
-        numbers_str = str(num)
-        nulls_len = numbers_len - len(numbers_str)
-        if nulls_len > 0:
-            numbers_str = nullsStrGenerator(nulls_len) + numbers_str
+    letters += ''.join(random.choices(splitters, k=1)) * split_lh
+    if not has_digit:
+        return (letters + holder)[:num_symbols + split_lh]
 
-    return letters + holder + numbers_str
+    holder += ''.join(random.choices(splitters, k=1)) * split_hd
+
+    n_nulls = random.randint(0, n - 1)
+    digits = '0' * n_nulls + ''.join(random.choices(numeric, k=n - n_nulls))
+
+    num_splitters -= split_hd + split_lh
+    digits = setSplitters(digits, num_splitters, splitters)
+
+    return letters + holder + digits
 
 
-def setSplitters(invoice_str='0000', letters_len=0, holder_len=0, num_splitters=1, splitters=base_splitters):
+def setSplitters(text='0000', num_splitters=1, splitters=base_splitters):
     """
-    Расстановщик разделителей [base_splitters] в строке с учетом количества букв
-    и длины заполнителя:
-        invoice_str - исходная строка;
-        letters_len - длина группы букв, не разбиваемая разделителем;
-        holder_len - длина заполнителя, не разбиваемого разделителем;
-        num_splitters - количество разделителей:
-        - 1й ставится после группы букв (если задан letters_len);
-        - 2й ставится после заполнителя, остальные делят оставшуюся строку на
+    Расстановщик разделителей [base_splitters] в строке:
+        - text - исходная строка;
+        - num_splitters - количество разделителей, делят строку на
         фрагменты произвольной длины, но не менее 1 символа между разделителями.
-        Если количество разделителей не позволяет оставить хотя бы 1 символ между
-        ними - вернет исходную строку.
+        - splitters - символы-разделители, например "#*|" (выбираются случайно)
     """
-    invoice_str_len = len(invoice_str)
-    remain_num_splitters = num_splitters - int(letters_len>0) - int(holder_len>0)
-    remain_symb = invoice_str_len - letters_len - holder_len
-    block_len = int(remain_symb/(remain_num_splitters + 1))
+    text_len = len(text)
+    if num_splitters <= 0 or text_len < 2: return text
 
-    if block_len < 1: return invoice_str
-
-    pos_splitter = []
     i, pos = 0, 0
     num_blocks = num_splitters + 1
-    remain_symb = invoice_str_len
-    block_len = int(remain_symb / num_blocks)
+    symbols_len = text_len
+    block_len = int(symbols_len / num_blocks)
+
+    if block_len < 1:
+        num_splitters = text_len - 1
+        num_blocks = num_splitters + 1
+        block_len = int(symbols_len / num_blocks)
 
     for i in range(0, num_splitters):
 
-        if letters_len and i == 0:
-            pos = letters_len
-
-        elif holder_len:
-            pos += holder_len
-            letters_len, holder_len = 0, 0
-
+        if num_blocks == 2:
+            pos += int(random.uniform(1, symbols_len))
         else:
-            if num_blocks == 2:
-                pos += int(random.uniform(1, remain_symb))
-            else:
-                pos += int(random.uniform(1, block_len + 1))
+            pos += int(random.uniform(1, block_len + 1))
 
-        pos_splitter.append(pos)
         num_blocks -= 1
-        remain_symb = invoice_str_len + i - pos
-        block_len = int(remain_symb / num_blocks)
+        symbols_len = text_len + i - pos
+        block_len = int(symbols_len / num_blocks)
 
         splitter = ''.join(random.choices(splitters, k=1))
-        invoice_str = invoice_str[0:pos] + splitter + invoice_str[pos:]
+        text = text[0:pos] + splitter + text[pos:]
         pos += 1
 
-    return invoice_str
+    return text
 
 
 # генератор строки даты в указанном диапазоне лет в формате dd.mm.yyyy
@@ -186,38 +160,39 @@ def numericDateGenerator(start=2010, end=2023):
 # миксер вариантов генерации номера счета
 def randomInvoiceNumber():
     return random.choice([
-        lambda: setSplitters(strGenerator(12, 3, ''), 3, 0, 3),
-        lambda: setSplitters(strGenerator(12, 2, '000'), 2, 3, 3),
-        lambda: setSplitters(strGenerator(10, 0, '00'), 0, 2, 3),
-        lambda: setSplitters(strGenerator(8, 0, ''), 0, 0, 2),
-        lambda: setSplitters(strGenerator(6, 0, ''), 0, 0, 1),
+        lambda: strGenerator(num_symbols=12, letters_len=3, holder='', num_splitters=3),
+        lambda: strGenerator(10, 2, '', 2),
+        lambda: strGenerator(8, 0, '', 1),
+        lambda: strGenerator(6, 0),
         lambda: strGenerator(4, 0, '0'),
-        lambda: strGenerator(6, 0, ''),
-        lambda: strGenerator(6, 1, '-', 'RU'),
+        lambda: strGenerator(6, 0),
+        lambda: strGenerator(6, 1, '-', lang='RU'),
         lambda: strGenerator(9, 2, '-'),
-        lambda: strGenerator(10, 0, ''),
+        lambda: strGenerator(10, 0),
         lambda: strGenerator(11, 3, '-'),
-        lambda: strGenerator(12, 0, '')
+        lambda: strGenerator(8, 0, '00')
     ])()
 
 
 # миксер вариантов генерации номера договора
 def randomContractNumber():
     d = numericDateGenerator().split('.')
-    s = random.choice(base_splitters)
+    s = random.choice('./-')
     return random.choice([
-        lambda: setSplitters(strGenerator(8, 2, ''), 2, 2, 2),
-        lambda: setSplitters(strGenerator(6, 0, ''), 0, 0, 1),
-        lambda: strGenerator(4, 0, '0'),
+        lambda: strGenerator(num_symbols=12, letters_len=3, num_splitters=3),
+        lambda: strGenerator(num_symbols=10, letters_len=2, num_splitters=3),
+        lambda: strGenerator(8, 2, '', 2),
         lambda: strGenerator(6, 0, ''),
-        lambda: strGenerator(9, 1, s, 'RU'),
+        lambda: strGenerator(4, 0, '0'),
+        lambda: strGenerator(6, 0),
+        lambda: strGenerator(9, 1, s, lang='RU'),
         lambda: strGenerator(10, 0, '0'),
         lambda: strGenerator(11, 3, s),
-        lambda: strGenerator(10, 2, s, 'RU'),
+        lambda: strGenerator(10, 2, s, lang='RU'),
         lambda: strGenerator(10, 2, s),
-        lambda: strGenerator(12, 0, ''),
-        lambda: strGenerator(2, 2, '', 'RU') + s + d[2] + s + d[1] + s + str(random.randint(10, 9999)),
-        lambda: strGenerator(2, 2, '') + s + d[2] + s + '0' + str(random.randint(100, 99999))
+        lambda: strGenerator(12, 0),
+        lambda: strGenerator(2, 2, '', lang='RU') + s + d[2] + s + d[1] + s + str(random.randint(10, 9999)),
+        lambda: strGenerator(2, 2) + s + d[2] + s + '0' + str(random.randint(100, 99999))
     ])()
 
 
@@ -265,32 +240,32 @@ def getRandomBik():
 
 # генератор БИН
 def getRandomBin():
-    return randomNumNotnullStartswith(12)
+    return notNullDigits(12)
 
 
 # генератор ИИК
 def getRandomIik():
-    return 'KZ' + randomNumNotnullStartswith(18)
+    return 'KZ' + notNullDigits(18)
 
 
 # генератор кода назначения платежа
 def getRandomKnp():
-    return randomNumNotnullStartswith(3)
+    return notNullDigits(3)
 
 
 # генератор кода кбе
 def getRandomKbe():
-    return randomNumNotnullStartswith(2)
+    return notNullDigits(2)
 
 
 # генератор почтового индекса
 def getRandomPostIndex():
-    return random.choice([random.choice('01') + randomNumNotnullStartswith(5), ''])
+    return random.choice([random.choice('01') + notNullDigits(5), ''])
 
 
 # генератор телефона
 def getRandomTelephone():
-    return '+7(' + randomNumNotnullStartswith(3) + ')-' + setSplitters(randomNumNotnullStartswith(7), 3, 2, 2, '-')
+    return '+7(' + notNullDigits(3) + ')-' + setSplitters(notNullDigits(7), 3)
 
 
 # Генерация списка товаров

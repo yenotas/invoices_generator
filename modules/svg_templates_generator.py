@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 """
 Генератор SVG-файлов счетов из JSON
 SVG и PNG именуются по формуле "invoice_" + номер записи JSON (invoice['number'])
 Автор: Коваленко А.В. 01.2024
-
 """
 
 from config import svg_templates_files_folder, dim_scale, save_text_fragments
@@ -17,7 +15,7 @@ font_sizes = {}
 font_weights = {}
 
 
-# Вычисляю координаты центра и метрики текстовой надписи
+# Вычисляю координаты центра и метрики текстовой надписи в растре
 def getTextMetrics(text_elem):
 
     align = 1  # Коэффициент для левого выравнивания текста

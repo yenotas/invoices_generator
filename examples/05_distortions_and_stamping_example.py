@@ -16,7 +16,7 @@ from modules.distortions_generator import (cvResize, randomPerspectiveChange, ra
                                            createGreySpot, createLightSpot, createNoise,
                                            notDistortions)
 
-from config import recreateFolder
+from modules.fs_utils import recreateFolder
 recreateFolder(stamped_images_files_folder)
 recreateFolder(distorted_images_files_folder)
 
