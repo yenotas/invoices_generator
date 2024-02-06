@@ -64,9 +64,9 @@ def nPrint(n, *func):
             print(f())
 
 
-def strGenerator(num_symbols=1, letters_len=1, holder='', num_splitters=0, lang='EN', splitters=base_splitters):
+def strGenerator(num_symbols=1, letters_len=1, holder='', num_splitters=0, splitters=base_splitters, lang='EN'):
     """
-    Генератор строки заданной длинны, количества первых символов и заполнителем с разделителями,
+    Генератор строки заданной длинны, нужного количества первых буквенных символов, с заполнителем и разделителями,
     все параметры не обязательны:
     - num_symbols - длина получаемой строки
     - letters_len - длина фрагмента букв в строке, будет отделен разделителем от holder или цифр
@@ -185,11 +185,11 @@ def randomContractNumber():
         lambda: strGenerator(6, 0, ''),
         lambda: strGenerator(4, 0, '0'),
         lambda: strGenerator(6, 0),
-        lambda: strGenerator(9, 1, s, lang='RU'),
+        lambda: strGenerator(9, 1, holder=s, lang='RU'),
         lambda: strGenerator(10, 0, '0'),
-        lambda: strGenerator(11, 3, s),
-        lambda: strGenerator(10, 2, s, lang='RU'),
-        lambda: strGenerator(10, 2, s),
+        lambda: strGenerator(11, 3, holder=s),
+        lambda: strGenerator(10, 2, holder=s, lang='RU'),
+        lambda: strGenerator(10, 2, holder=s),
         lambda: strGenerator(12, 0),
         lambda: strGenerator(2, 2, '', lang='RU') + s + d[2] + s + d[1] + s + str(random.randint(10, 9999)),
         lambda: strGenerator(2, 2) + s + d[2] + s + '0' + str(random.randint(100, 99999))
