@@ -4,49 +4,11 @@ SVG и PNG именуются по формуле "invoice_" + номер зап
 Автор: Коваленко А.В. 01.2024
 """
 
-from config import svg_templates_files_folder, dim_scale, save_text_fragments
-from modules.get_text_metrics import getTextSize
+from config import svg_templates_files_folder, dim_scale
+from modules.svg_text_metrics import unpackClassesSVG, getFontClass, getTextMetrics
 
 import os
 from bs4 import BeautifulSoup
-
-text_dir = {'right': -1, 'center': 0}  # коэффициент для вычисления центра надписи в зависимости от выравнивания текста
-font_sizes = {}
-font_weights = {}
-
-
-# Вычисляю координаты центра и метрики текстовой надписи в растре
-def getTextMetrics(text_elem):
-
-    align = 1  # Коэффициент для левого выравнивания текста
-    font_class = '.fnt5'
-    classes = text_elem.get('class', '').split(' ')
-    if len(classes) > 1:
-        font_class = '.' + classes[1]
-        if len(classes) > 2:
-            align = text_dir.get(classes[2], 1)
-
-    font_size = font_sizes.get(font_class, 1300)
-    bold = font_weights.get(font_class, False)
-    text = text_elem.string.strip()
-
-    tw, th, shift = getTextSize(text, round(font_size / 100), bold)
-    x = round(float(text_elem['x']) / 100 * dim_scale)
-    cx = round(x + align * tw / 2)
-    y = round(float(text_elem['y']) / 100 * dim_scale - shift)
-    cy = round(y + th / 2)
-
-    if save_text_fragments: print('x,y:', (cx, cy))
-
-    return [[cx, cy, tw, th], font_size, bold, align]
-
-
-def getFontClass(elem):
-    classes = elem.get('class', '').split(' ')
-    if len(classes) > 1:
-        return classes[1]
-    else:
-        return 'fnt5'
 
 
 # Создание SVG-файлов из JSON-данных по шаблону эталонного SVG-файла
@@ -55,25 +17,11 @@ def generateSvgTemplates(json_data, base_svg_file):
     with open(base_svg_file, 'r', encoding='utf-8') as svg_file:
         base_soup = BeautifulSoup(svg_file, 'xml')
 
-    soup_string = str(base_soup)  # клон чистого svg
-
     # Разбор стилей
-    style_content = base_soup.find('style').string if base_soup.find('style') else ''
+    font_sizes, font_weights, ls = unpackClassesSVG(base_soup)
+    print(font_sizes, font_weights, ls)
 
-    global font_sizes, font_weights
-
-    for line in style_content.split('\n'):
-        if '.fn' in line:
-            class_name = line.split('{')[0].strip()
-            font_size = next((float(value.split(':')[1].replace('px', '').strip())
-                              for value in line.split('{')[1].split(';') if 'font-size' in value), 1200)
-            font_sizes[class_name] = round(font_size/100)*100
-            font_weight = next((value.split(':')[1].strip()
-                                for value in line.split('{')[1].split(';') if 'font-weight' in value), 'normal')
-            font_weights[class_name] = True if font_weight == 'bold' else False
-            # font_weight = next((value.split(':')[1].strip()
-            #                     for value in line.split('{')[1].split(';') if 'font-family' in value), 'FontNormal')
-            # font_weights[class_name] = True if 'FontBold' in font_weight else False
+    soup_string = str(base_soup)  # клон чистого svg
 
     for invoice in json_data:
 
@@ -82,7 +30,7 @@ def generateSvgTemplates(json_data, base_svg_file):
         base_keys = [key for key in invoice if key != 'itemsList']  # подстановки вокруг таблицы
         items = [item for item in invoice['itemsList']]  # подстановки в таблице товаров и услуг
 
-        soup = BeautifulSoup(soup_string, 'xml')  # рабочий суп
+        soup = BeautifulSoup(soup_string, 'xml')  # новый рабочий суп
         root_svg = soup.find('svg')
 
         # Находим горизонтальные и вертикальные линии в таблице товаров
@@ -134,7 +82,7 @@ def generateSvgTemplates(json_data, base_svg_file):
                     text_elem.insert_after(new_elem)
 
                     # записываю координаты и размер надписи
-                    metrics = getTextMetrics(new_elem)[0]
+                    metrics = getTextMetrics(new_elem, font_sizes, font_weights)[0]
 
                     # с учетом сдвига от всей таблицы
                     if key in post_lines_keys:
@@ -176,7 +124,8 @@ def generateSvgTemplates(json_data, base_svg_file):
                     new_elem['x'] = str(round(float(template['x'])))
                     template.insert_after(new_elem)
 
-                    metrics = getTextMetrics(new_elem)[0]
+                    metrics = getTextMetrics(new_elem, font_sizes, font_weights)[0]
+
                     invoice['bbox_cx_cy_w_h']['itemsList'][n][key][i] = ', '.join(map(lambda x: str(x), metrics))
 
             # Обновление позиции курсора по Y после добавления строки
@@ -218,3 +167,4 @@ def generateSvgTemplates(json_data, base_svg_file):
             file.write(correct_svg_str)
 
     return json_data
+

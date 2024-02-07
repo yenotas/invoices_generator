@@ -50,20 +50,30 @@
     <text x="15859" y="40693" class="fil0 fnt1">_customer_</text>
     <text x="15859" y="44948" class="fil0 fnt1">_contract_</text>
     <text x="6341" y="44926" class="fil0 fnt3">Договор:</text>
-    <text x="7414" y="47632" class="fil0 fnt1">№</text>
-    <text x="20651" y="47632" class="fil0 fnt1">Наименование</text>
-    <text x="41651" y="47632" class="fil0 fnt1">Кол-во</text>
-    <text x="48373" y="47632" class="fil0 fnt1">Ед.</text>
-    <text x="55144" y="47632" class="fil0 fnt1">Цена</text>
-    <text x="64955" y="47632" class="fil0 fnt1">Сумма</text>
-    <!-- itemsList -->
-    <text x="8300" y="49100" class="fil0 fnt0 center">_num_</text>
-    <text x="11000" y="49100" class="fil0 fnt0">_name_</text>
-    <text x="44000" y="49100" class="fil0 fnt0 center">_val_</text>
-    <text x="49400" y="49100" class="fil0 fnt0 center">_unit_</text>
-    <text x="56800" y="49100" class="fil0 fnt0 center">_price_</text>
-    <text x="67100" y="49100" class="fil0 fnt0 center">_sum_</text>
-    <!-- itemsList -->
+    <g transform="matrix(1 0 0 1 0 0)" id="table">
+        <text x="7414" y="47632" class="fil0 fnt1">№</text>
+        <text x="20651" y="47632" class="fil0 fnt1">Наименование</text>
+        <text x="41651" y="47632" class="fil0 fnt1">Кол-во</text>
+        <text x="48373" y="47632" class="fil0 fnt1">Ед.</text>
+        <text x="55144" y="47632" class="fil0 fnt1">Цена</text>
+        <text x="64955" y="47632" class="fil0 fnt1">Сумма</text>
+        <text x="8300" y="49100" class="fil0 fnt0 center">_num_</text>
+        <text x="11000" y="49100" class="fil0 fnt0">_name_</text>
+        <text x="44000" y="49100" class="fil0 fnt0 center">_val_</text>
+        <text x="49400" y="49100" class="fil0 fnt0 center">_unit_</text>
+        <text x="56800" y="49100" class="fil0 fnt0 center">_price_</text>
+        <text x="67100" y="49100" class="fil0 fnt0 center">_sum_</text>
+        <line class="fil1 str1 horizontal_line" x1="6037.2" y1="46387.1" x2="72562.3" y2="46387.1"/>
+        <line class="fil1 str0 horizontal_line" x1="6137.3" y1="48065.1" x2="72562.3" y2="48065.1"/>
+        <line class="fil1 str1 horizontal_line" x1="6037.2" y1="49656.3" x2="72660.8" y2="49656.3"/>
+        <line class="fil1 str1 vertical_line" x1="6137.3" y1="49656.3" x2="6137.3" y2="46287.1"/>
+        <line class="fil1 str0 vertical_line" x1="10281.5" y1="49656.3" x2="10281.5" y2="46287.1"/>
+        <line class="fil1 str0 vertical_line" x1="40755.6" y1="49616.3" x2="40755.6" y2="46287.1"/>
+        <line class="fil1 str0 vertical_line" x1="47063.4" y1="49616.3" x2="47063.4" y2="46287.1"/>
+        <line class="fil1 str0 vertical_line" x1="51865.2" y1="49616.3" x2="51865.2" y2="46287.1"/>
+        <line class="fil1 str0 vertical_line" x1="61771.6" y1="49616.3" x2="61771.6" y2="46287.1"/>
+        <line class="fil1 str1 vertical_line" x1="72562.3" y1="49656.3" x2="72562.3" y2="46287.1"/>
+    </g>
     <g transform="matrix(1 0 0 1 0 0)" id="bottom">
         <line class="fil1 str1" x1="6037.2" y1="62521.2" x2="72660.8" y2="62521.2"/>
         <line class="fil1 str0 stamp_line" x1="16537.2" y1="65304.9" x2="45956.3" y2="65304.9"/>
@@ -87,15 +97,5 @@
     <line class="fil1 str0" x1="73135.9" y1="27628.1" x2="73135.9" y2="18084.4"/>
     <line class="fil1 str0" x1="6086.6" y1="27576.5" x2="73111.8" y2="27576.5"/>
     <line class="fil1 str0" x1="56506.9" y1="27628.1" x2="56506.9" y2="24426.8"/>
-    <line class="fil1 str1 horizontal_line" x1="6037.2" y1="46387.1" x2="72562.3" y2="46387.1"/>
-    <line class="fil1 str0 horizontal_line" x1="6137.3" y1="48065.1" x2="72562.3" y2="48065.1"/>
-    <line class="fil1 str1 horizontal_line" x1="6037.2" y1="49656.3" x2="72660.8" y2="49656.3"/>
-    <line class="fil1 str1 vertical_line" x1="6137.3" y1="49656.3" x2="6137.3" y2="46287.1"/>
-    <line class="fil1 str0 vertical_line" x1="10281.5" y1="49656.3" x2="10281.5" y2="46287.1"/>
-    <line class="fil1 str0 vertical_line" x1="40755.6" y1="49616.3" x2="40755.6" y2="46287.1"/>
-    <line class="fil1 str0 vertical_line" x1="47063.4" y1="49616.3" x2="47063.4" y2="46287.1"/>
-    <line class="fil1 str0 vertical_line" x1="51865.2" y1="49616.3" x2="51865.2" y2="46287.1"/>
-    <line class="fil1 str0 vertical_line" x1="61771.6" y1="49616.3" x2="61771.6" y2="46287.1"/>
-    <line class="fil1 str1 vertical_line" x1="72562.3" y1="49656.3" x2="72562.3" y2="46287.1"/>
     <line class="fil1 str0" x1="6086.6" y1="24426.8" x2="73111.8" y2="24426.8"/>
 </svg>
