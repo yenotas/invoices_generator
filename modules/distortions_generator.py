@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-'''
-Генератор случайных искажений документов в PNG, иммитирующих сканы документов разного качества.
+"""
+Генератор случайных искажений документов в PNG, имитирующих сканы документов разного качества.
 Автор: Коваленко А.В. 12.2023
-'''
-
+https://github.com/yenotas/invoices_generator
+"""
 import random
 from PIL import Image, ImageDraw, ImageFilter
 import numpy as np

@@ -7,9 +7,6 @@ import json
 from config import stamps_files_folder, json_file_path
 from modules.stamps_generator import generateStamp
 
-from modules.fs_utils import recreateFolder
-recreateFolder(stamps_files_folder)
-
 
 with open(json_file_path, 'r', encoding='utf-8') as json_file:
     json_data = json.load(json_file)

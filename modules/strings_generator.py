@@ -1,5 +1,6 @@
 """
 Генерация данных для счетов на оплату. Автор: Коваленко А.В. 11.2023
+https://github.com/yenotas/invoices_generator
 """
 import random
 import string
@@ -9,9 +10,7 @@ from math import ceil
 import os
 
 from config import data_files_folder, currency_main, currency_additional
-
 from number_to_string import get_string_by_number
-
 from datetime import datetime, timedelta
 
 month = {'01': 'января', '02': 'февраля', '03': 'марта', '04': 'апреля', '05': 'мая', '06': 'июня', '07': 'июля',

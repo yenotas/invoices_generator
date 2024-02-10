@@ -16,10 +16,6 @@ from modules.distortions_generator import (cvResize, randomPerspectiveChange, ra
                                            createGreySpot, createLightSpot, createNoise,
                                            notDistortions)
 
-from modules.fs_utils import recreateFolder
-recreateFolder(stamped_images_files_folder)
-recreateFolder(distorted_images_files_folder)
-
 
 # Чтение изображений из папки
 def load_images_from_folder(folder):
