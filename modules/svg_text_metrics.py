@@ -110,7 +110,7 @@ def unpackClassesSVG(base_soup):
                               for value in line.split('{')[1].split(';') if 'font-size' in value), 1200)
             font_sizes[class_name] = round(font_size / 100) * 100
             font_weight = next((value.split(':')[1].strip()
-                             for value in line.split('{')[1].split(';') if 'font-weight' in value), 'normal')
+                             for value in line.split('{')[1].split(';') if 'font-weight' in value), 'regular')
             font_weights[class_name] = True if font_weight == 'bold' else False
         if '.str' in line:
             class_name = line.split('{')[0].strip().replace('.', '')

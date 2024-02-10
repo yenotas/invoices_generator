@@ -26,6 +26,7 @@ def generateSvgTemplates(json_data, base_svg_file):
     for invoice in json_data:
 
         font = getRandomFont('')
+        print(font[0])
 
         invoice['bbox_cx_cy_w_h'] = {}  # раздел метрик вставляемых текстовых надписей
 
@@ -160,8 +161,8 @@ def generateSvgTemplates(json_data, base_svg_file):
         correct_svg_str = str(soup)
         correct_svg_str = correct_svg_str.replace('<g id="bottom" transform="matrix(1 0 0 1 0 0)">',
                                                   f'<g id="bottom" transform="matrix(1 0 0 1 0 {shift_y * 100})">')
-        correct_svg_str = (correct_svg_str.replace("font-family: Arial", f"font-family: {font[0].title()}")
-                           .replace('arial.ttf', font[0]+'.ttf'))
+        correct_svg_str = (correct_svg_str.replace("font-family: Arial", f"font-family: {font[0]}")
+                           .replace('Arial.ttf', font[0]+'.ttf'))
         if 'italic' in font[1]:
             correct_svg_str = correct_svg_str.replace('{font-weight:', '{font-style: italic; font-weight:')
 

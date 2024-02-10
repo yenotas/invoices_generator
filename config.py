@@ -34,12 +34,11 @@ base_dir = os.path.dirname(os.path.abspath(__file__))
 json_file_path = os.path.join(base_dir, 'generated_data.json')
 data_files_folder = os.path.join(base_dir, 'data')
 svg_file_path = os.path.join(data_files_folder, 'invoice.svg')
-embed_svg_path = os.path.join(data_files_folder, 'invoice_fnt.svg')
 fonts_folder = os.path.join(data_files_folder, 'fonts')
-normal_font_path = os.path.join(fonts_folder, 'normal')
+normal_font_path = os.path.join(fonts_folder, 'regular')
 bold_font_path = os.path.join(fonts_folder, 'bold')
 italic_font_path = os.path.join(fonts_folder, 'italic')
-italic_bold_font_path = os.path.join(fonts_folder, 'italicbold')
+italic_bold_font_path = os.path.join(fonts_folder, 'bolditalic')
 
 
 generated_files_folder = os.path.join(base_dir, 'generated_files')
@@ -52,9 +51,10 @@ text_fragments_folder = os.path.join(generated_files_folder, 'text_fragments')
 markup_images_folder = os.path.join(generated_files_folder, 'markup_images')
 temp_folder = os.path.join(generated_files_folder, 'temp')
 
-checkFolderExists(generated_files_folder, svg_templates_files_folder, generated_images_files_folder,
-                  stamps_files_folder, distorted_images_files_folder, stamped_images_files_folder, markup_images_folder)
+base_folders = [generated_files_folder, svg_templates_files_folder, generated_images_files_folder, text_fragments_folder,
+                stamps_files_folder, distorted_images_files_folder, stamped_images_files_folder, markup_images_folder]
 
+checkFolderExists(base_folders)
 
 # Читаем шрифты
 normal_fonts = {os.path.splitext(f)[0]: os.path.join(normal_font_path, f)

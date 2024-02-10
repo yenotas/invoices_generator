@@ -4,12 +4,12 @@ sys.path.append('/content/invoices_generator')
 
 import json
 
-from config import json_file_path, svg_file_path, svg_templates_files_folder, dim_scale, text_fragments_folder
+from config import json_file_path, svg_file_path, svg_templates_files_folder, dim_scale, base_folders
 from modules.svg_templates_generator import generateSvgTemplates
 
 from modules.fs_utils import recreateFolder
-recreateFolder(svg_templates_files_folder)
-recreateFolder(text_fragments_folder)
+recreateFolder(base_folders)
+
 
 with open(json_file_path, 'r', encoding='utf-8') as json_file:
     json_data = json.load(json_file)

@@ -6,10 +6,11 @@ import os
 import shutil
 
 
-def recreateFolder(target_folder):
-    if os.path.exists(target_folder):
-        shutil.rmtree(target_folder)
-    os.makedirs(target_folder, exist_ok=True)
+def recreateFolder(folders):
+    for folder in folders:
+        if os.path.exists(folder):
+            shutil.rmtree(folder)
+        os.makedirs(folder, exist_ok=True)
 
 
 def getFileNames(target_folder):
@@ -28,7 +29,7 @@ def getFilePaths(target_folder):
     return files
 
 
-def checkFolderExists(*folders):
+def checkFolderExists(folders):
     for folder in folders:
         if not os.path.exists(folder):
             os.makedirs(folder)

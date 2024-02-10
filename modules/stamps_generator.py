@@ -7,8 +7,11 @@ https://github.com/yenotas/invoices_generator
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import math
 import random
-from config import font_path, stamp_size
+from config import normal_fonts, stamp_size
 import os
+
+
+font_path = normal_fonts['Arial']
 
 
 def drawTextAroundCircle(image, draw, text, radius, center, font, color, start_angle=-math.pi / 2):
