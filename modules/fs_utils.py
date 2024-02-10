@@ -1,3 +1,7 @@
+"""
+Файловые утилиты
+https://github.com/yenotas/invoices_generator
+"""
 import os
 import shutil
 

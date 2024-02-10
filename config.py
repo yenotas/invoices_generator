@@ -8,7 +8,7 @@ FILES_NUMBER = 5
 
 # сохранение растровых фрагментов текстовых вставок в папку generated_files/text_fragments и вывод метрик на консоль
 # 0 или 1
-save_text_fragments = 0
+save_text_fragments = 1
 
 # Разрешение генерируемых файлов
 DPI = 192
@@ -36,8 +36,11 @@ data_files_folder = os.path.join(base_dir, 'data')
 svg_file_path = os.path.join(data_files_folder, 'invoice.svg')
 embed_svg_path = os.path.join(data_files_folder, 'invoice_fnt.svg')
 fonts_folder = os.path.join(data_files_folder, 'fonts')
-font_path = os.path.join(fonts_folder, 'arial.ttf')
-bold_font_path = os.path.join(fonts_folder, 'arialbd.ttf')
+normal_font_path = os.path.join(fonts_folder, 'normal')
+bold_font_path = os.path.join(fonts_folder, 'bold')
+italic_font_path = os.path.join(fonts_folder, 'italic')
+italic_bold_font_path = os.path.join(fonts_folder, 'italicbold')
+
 
 generated_files_folder = os.path.join(base_dir, 'generated_files')
 svg_templates_files_folder = os.path.join(generated_files_folder, 'svg_templates')
@@ -53,12 +56,18 @@ checkFolderExists(generated_files_folder, svg_templates_files_folder, generated_
                   stamps_files_folder, distorted_images_files_folder, stamped_images_files_folder, markup_images_folder)
 
 
-# Размеры SVG-макета
-with open(svg_file_path, 'r', encoding='utf-8') as svg:
-    content = svg.read().split('<defs>')[0]
-WIDTH = round(int(content.split('width="')[1].split('px')[0])*dim_scale)
-HEIGHT = round(int(content.split('height="')[1].split('px')[0])*dim_scale)
+# Читаем шрифты
+normal_fonts = {os.path.splitext(f)[0]: os.path.join(normal_font_path, f)
+                for f in os.listdir(normal_font_path) if f.endswith('.ttf')}
 
+bold_fonts = {os.path.splitext(f)[0]: os.path.join(bold_font_path, f)
+              for f in os.listdir(bold_font_path) if f.endswith('.ttf')}
+
+italic_fonts = {os.path.splitext(f)[0]: os.path.join(italic_font_path, f)
+                for f in os.listdir(italic_font_path) if f.endswith('.ttf')}
+
+italic_bold_fonts = {os.path.splitext(f)[0]: os.path.join(italic_bold_font_path, f)
+                     for f in os.listdir(italic_bold_font_path) if f.endswith('.ttf')}
 
 # Сумма счета словами (по-умолчанию - тенге):
 currency_main = ('тенге', 'тенге', 'тенге')

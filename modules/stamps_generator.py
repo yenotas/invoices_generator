@@ -1,6 +1,7 @@
 """
 Генератор случайных искажений документов в PNG, имитирующих сканы документов разного качества.
 Автор: Коваленко А.В. 12.2023
+https://github.com/yenotas/invoices_generator
 """
 
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
