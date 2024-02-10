@@ -9,7 +9,7 @@ from PIL import Image, ImageDraw
 from config import json_file_path, generated_images_files_folder, markup_images_folder
 from modules.fs_utils import recreateFolder
 
-recreateFolder(markup_images_folder)
+recreateFolder([markup_images_folder])
 
 
 # Генерация случайного цвета RGB
