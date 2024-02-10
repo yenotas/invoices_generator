@@ -6,7 +6,7 @@ lxml==5.1.0
 number-to-string==1.0.3
 numpy==1.26.4
 opencv-python==4.9.0.80
-pillow==10.1.0
+pillow==10.0.0
 requests==2.31.0
 soupsieve==2.5
 urllib3==2.2.0

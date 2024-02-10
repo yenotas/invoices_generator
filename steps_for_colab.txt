@@ -1,7 +1,0 @@
-!git clone https://github.com/yenotas/invoices_generator.git
-!apt-get install imagemagick
-!cp /etc/ImageMagick-6/policy.xml /etc/ImageMagick-6/policy.xml.backup
-!sed -i '/pattern="PDF"/d' /etc/ImageMagick-6/policy.xml
-%cd /content/invoices_generator
-!pip install -r requirements.txt
-!cp /content/invoices_generator/data/fonts/arial.ttf /usr/share/fonts/

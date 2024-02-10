@@ -53,6 +53,15 @@ generated_files/markup_images
 + !git clone https://github.com/yenotas/invoices_generator.git
 + %cd /content/invoices_generator
 + !pip install -r requirements.txt
++ restart session
++ %cd /content/invoices_generator/examples
++ !python 01_generation_json_data_example.py      # сгенерировать данные для счетов
++ !python 02_generation_svg_from_json_example.py  # создать шаблоны SVG
++ !python 03_conversion_svg2png_example.py        # конвертировать SVG в PNG
++ !python 04_generation_stamps_example.py         # сгенерировать печати
++ !python 05_distortions_and_stamping_example.py  # создать искажения и наложить печати
++ %cd /content/invoices_generator/tools/
++ !python bbox_viewer.py                          # Посмотреть разметку bbox-ов
 
 
 
