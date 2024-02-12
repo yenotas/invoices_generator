@@ -94,10 +94,10 @@ def getElementClasses(elem):
 def getRandomFont(font_name):
     if not font_name:
         font_name = random.choice(list(normal_fonts.keys()))
+    res = [font_name, normal_fonts[font_name], bold_fonts[font_name]]
     if italic_fonts.get(font_name, None) and italic_bold_fonts.get(font_name, None) and random.randint(0, 1) == 0:
-        return [font_name, italic_fonts[font_name], italic_bold_fonts[font_name]]
-    else:
-        return [font_name, normal_fonts[font_name], bold_fonts[font_name]]
+        res = [font_name, italic_fonts[font_name], italic_bold_fonts[font_name]]
+    return res
 
 
 def unpackClassesSVG(base_soup):

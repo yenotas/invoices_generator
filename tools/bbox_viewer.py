@@ -26,7 +26,7 @@ def readJSON(json_str):
     cx, cy, w, h = [int(value.strip()) for value in values]
     x1, y1 = cx - w // 2, cy - h // 2
     x2, y2 = cx + w // 2, cy + h // 2
-    return  [x1, y1, x2, y2]
+    return [x1, y1, x2, y2]
 
 
 # Чтение JSON файла
@@ -38,6 +38,12 @@ for invoice in json_data:
     file_name = f"invoice_{invoice['number']}.png"
     print('Открываю', file_name)
     image_path = os.path.join(generated_images_files_folder, file_name)
+    if os.path.exists(image_path):
+        print('Открываю', file_name)
+    else:
+        print(file_name + " отсутствует. Проверь папку " + generated_images_files_folder)
+        continue
+
     output_path = os.path.join(markup_images_folder, file_name)
     bboxes = []
 

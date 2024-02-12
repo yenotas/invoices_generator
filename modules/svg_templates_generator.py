@@ -26,7 +26,6 @@ def generateSvgTemplates(json_data, base_svg_file):
     for invoice in json_data:
 
         font = getRandomFont('')
-        print(font[0])
 
         invoice['bbox_cx_cy_w_h'] = {}  # раздел метрик вставляемых текстовых надписей
 
@@ -123,13 +122,17 @@ def generateSvgTemplates(json_data, base_svg_file):
                 for i, line in enumerate(text_lines):
                     new_elem = soup.new_tag('text', **{attr: template[attr] for attr in template.attrs})
                     new_elem.string = line
-                    new_elem['y'] = str(round(table_line_y + i * table_line_height + 200))
+                    y = round(table_line_y + i * table_line_height)
+                    new_elem['y'] = str(y)
                     new_elem['x'] = str(round(float(template['x'])))
                     template.insert_after(new_elem)
 
-                    metrics = getTextMetrics(new_elem, font, font_sizes, font_weights)[0]
+                    metrics = getTextMetrics(new_elem, font, font_sizes, font_weights)
+                    # text_bottom = metrics[1][1] + metrics[1][3]
+                    # if y+font_size >= table_line_y + items_line_height:
+                    #     text_offset = y+font_size - table_line_y - items_line_height + 200
 
-                    invoice['bbox_cx_cy_w_h']['itemsList'][n][key][i] = ', '.join(map(lambda x: str(x), metrics))
+                    invoice['bbox_cx_cy_w_h']['itemsList'][n][key][i] = ', '.join(map(lambda x: str(x), metrics[0]))
 
             # Обновление позиции курсора по Y после добавления строки
             shift_line = round(items_line_height * max_text_lines)
@@ -163,14 +166,18 @@ def generateSvgTemplates(json_data, base_svg_file):
                                                   f'<g id="bottom" transform="matrix(1 0 0 1 0 {shift_y * 100})">')
         correct_svg_str = (correct_svg_str.replace("font-family: Arial", f"font-family: {font[0]}")
                            .replace('Arial.ttf', font[0]+'.ttf'))
+        is_italic = ''
         if 'italic' in font[1]:
             correct_svg_str = correct_svg_str.replace('{font-weight:', '{font-style: italic; font-weight:')
+            is_italic = ' наклонный'
+
+        correct_svg_str = correct_svg_str.replace('fonts/regular/', '../../data/fonts/regular/')
 
         invoice['magnet_stamp_y'] = str(int((magnet_stamp_y + shift_y) * dim_scale))  # уровень по y для штампа
 
         # Сохраняю SVG
         file_name = f"invoice_{invoice['number']}.svg"
-        print("Сохраняю", file_name)
+        print("Сохраняю", file_name, "шрифт", font[0] + is_italic)
         full_path_svg = os.path.join(svg_templates_files_folder, file_name)
         with open(full_path_svg, "w", encoding="utf-8") as file:
             file.write(correct_svg_str)

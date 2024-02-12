@@ -12,7 +12,7 @@ def embedFontToSvg(svg_path, font, new_svg_path):
         font_base64 = base64.b64encode(font_data).decode('utf-8')
 
     # Формирование строки CSS для встраивания шрифта
-    old_font_face = "@font-face {font-family:'Arial'; src: url('fonts/arial.ttf') format('truetype');}"
+    old_font_face = "@font-face {font-family:'Arial'; src: url('fonts/Arial.ttf') format('truetype');}"
     font_face = f"@font-face {{ font-family: 'CustomFont'; src: url(data:font/truetype;charset=utf-8;base64,{font_base64}) format('truetype'); }}"
 
     # Чтение SVG файла
