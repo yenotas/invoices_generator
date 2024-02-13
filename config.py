@@ -8,7 +8,7 @@ FILES_NUMBER = 5
 
 # сохранение растровых фрагментов текстовых вставок в папку generated_files/text_fragments и вывод метрик на консоль
 # 0 или 1
-save_text_fragments = 1
+save_text_fragments = 0
 
 # Разрешение генерируемых файлов
 DPI = 192
@@ -22,9 +22,10 @@ distortion_scale = 1.0
 # Размер печати в пикселях
 stamp_size = int(150 * dim_scale)
 
-# Шрифт, который будет принудительно использован для всех SVG-генераций в svg_templates_generator
+# Имя шрифта (например 'Arial'), из папки 'data\fonts\', который будет принудительно использован
+# для всех SVG-генераций в svg_templates_generator
 # Если оставить '' - будут выбраны случайные из папки Fonts.
-# В примерах операция стартует в 02_generation_svg_from_json_example
+# В примерах (examples) операция стартует в 02_generation_svg_from_json_example
 TEST_FONT_NAME = ''
 
 # Имена и пути к рабочим файлам

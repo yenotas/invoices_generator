@@ -20,7 +20,6 @@ def convert_svg_to_png(input_path, output_path):
     HEIGHT = round(int(content.split('<defs>')[0].split('height="')[1].split('px')[0]) * dim_scale)
     font_name = content.split("@font-face {font-family: ")[1].split(";")[0]
     italic = 'italic' if "text {font-style: italic;" in content else 'not'
-    print(font_name, italic)
     font = getRandomFont(font_name, italic)
 
     soup = BeautifulSoup(content, 'xml')
