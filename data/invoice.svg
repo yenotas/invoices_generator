@@ -92,9 +92,9 @@
         <text x="72756" y="54194" class="fil0 fnt1 right">_amount_</text>
         <text x="49926" y="55923" class="fil0 fnt1">В том числе НДС:</text>
         <text x="72729" y="55923" class="fil0 fnt1 right">_nds_</text>
-        <text x="6341.3" y="59348" class="fil0 fnt3">Всего наименований </text>
+        <text x="6341.3" y="59348" class="fil0 fnt3">Всего наименований</text>
         <text x="20000" y="59348" class="fil0 fnt3">_items_</text>
-        <text x="6357" y="61109" class="fil0 fnt1">Всего к оплате: </text>
+        <text x="6357" y="61109" class="fil0 fnt1">Всего к оплате:</text>
         <text x="17457" y="61109" class="fil0 fnt1">_total_</text>
         <text x="6357" y="64854" class="fil0 fnt1">Исполнитель</text>
         <text x="46212" y="64918" class="fil0 fnt0">/</text>

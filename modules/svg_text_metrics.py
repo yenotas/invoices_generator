@@ -29,9 +29,9 @@ def drawText(img):
 
 
 # Вычисление размеров текстовой надписи и отступа по У от базовой линии в растре
-def getTextSize(text='Iq', font=None, font_size=13, bold=False):
+def getTextSize(text='Iq', font_attr=None, font_size=13, bold=False):
 
-    font_name, normal_font, bold_font = getRandomFont('') if not font else font[0], font[1], font[2]
+    font_name, normal_font, bold_font = getRandomFont('') if not font_attr else font_attr[0], font_attr[1], font_attr[2]
 
     font_path = bold_font if bold else normal_font
 
@@ -39,14 +39,14 @@ def getTextSize(text='Iq', font=None, font_size=13, bold=False):
     img = PilImage.new('L', font.getbbox(text)[2:4], color=255)
     imgDraw = ImageDraw.Draw(img)
     imgDraw.text((0, 0), text, fill=0, font=font)
-    textbbox = imgDraw.textbbox((0, 0), text, font=font)
+    text_bbox = imgDraw.textbbox((0, 0), text, font=font)
 
     img = drawText(img)
 
-    text_width = textbbox[2] - textbbox[0]
-    text_height = textbbox[3] - textbbox[1] + 1
+    text_width = text_bbox[2] - text_bbox[0]
+    text_height = text_bbox[3] - text_bbox[1] + 1
 
-    return text_width, text_height, font_size - textbbox[1] - 1, img
+    return text_width, text_height, font_size - text_bbox[1] - 1, img
 
 
 # Определение координат размещения текста в растре,
@@ -91,11 +91,11 @@ def getElementClasses(elem):
         return []
 
 
-def getRandomFont(font_name):
+def getRandomFont(font_name, italic=''):
     if not font_name:
         font_name = random.choice(list(normal_fonts.keys()))
     res = [font_name, normal_fonts[font_name], bold_fonts[font_name]]
-    if italic_fonts.get(font_name, None) and italic_bold_fonts.get(font_name, None) and random.randint(0, 1) == 0:
+    if italic_fonts.get(font_name, None) and italic_bold_fonts.get(font_name, None) and (italic or random.randint(0, 1) == 0):
         res = [font_name, italic_fonts[font_name], italic_bold_fonts[font_name]]
     return res
 

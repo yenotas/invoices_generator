@@ -6,7 +6,7 @@ https://github.com/yenotas/invoices_generator
 """
 
 from config import svg_templates_files_folder, dim_scale
-from modules.svg_text_metrics import unpackClassesSVG, getElementClasses, getTextMetrics, getRandomFont
+from modules.svg_text_metrics import unpackClassesSVG, getElementClasses, getTextMetrics, getRandomFont, getTextSize
 
 import os
 from bs4 import BeautifulSoup
@@ -58,6 +58,17 @@ def generateSvgTemplates(json_data, base_svg_file):
 
         post_lines_keys = ["amount", "nds", "items", "total"]  # подстановки нижней части счета после таблицы
 
+        # Отодвинуть надпись с суммой от холдера 'Всего наименований' если холдер заходит на надпись при таком шрифте
+        summ_text = soup.find('text', string=lambda text: f'_items_' in text)
+        items_summ_x = float(summ_text['x'])
+        pre_summ_text = 'Всего наименований'
+        pre_summ_text_el = soup.find('text', string=lambda text: pre_summ_text in text)
+        pre_summ_text_x = float(pre_summ_text_el['x'])
+        pre_summ_text_w = getTextSize(pre_summ_text, font, font_sizes['fnt3'])[0]
+        offset_x = pre_summ_text_x + pre_summ_text_w
+        if offset_x > items_summ_x:
+            items_summ_x = offset_x + 1000
+
         # Проход и подстановка текста вокруг таблицы
 
         for key in base_keys:
@@ -82,6 +93,8 @@ def generateSvgTemplates(json_data, base_svg_file):
                     new_elem.string = line
                     new_elem['y'] = str(round(elem_y1 + i * line_height))
                     new_elem['x'] = str(round(float(text_elem['x'])))
+                    if key == 'items':
+                        new_elem['x'] = str(int(items_summ_x))
                     text_elem.insert_after(new_elem)
 
                     # записываю координаты и размер надписи
@@ -90,6 +103,7 @@ def generateSvgTemplates(json_data, base_svg_file):
                     # с учетом сдвига от всей таблицы
                     if key in post_lines_keys:
                         metrics[1] += int(shift_y * dim_scale)
+
                     invoice['bbox_cx_cy_w_h'][key][i] = ', '.join(map(lambda x: str(x), metrics))
 
                 original_text_elem.decompose()

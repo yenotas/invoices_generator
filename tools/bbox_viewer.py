@@ -36,7 +36,6 @@ with open(json_file_path, 'r', encoding='utf-8') as json_file:
 for invoice in json_data:
     
     file_name = f"invoice_{invoice['number']}.png"
-    print('Открываю', file_name)
     image_path = os.path.join(generated_images_files_folder, file_name)
     if os.path.exists(image_path):
         print('Открываю', file_name)
@@ -65,3 +64,7 @@ for invoice in json_data:
         drawRectangles(draw, bboxes)
         img.save(output_path)
         # img.show()
+
+print('Разметка текстовых фрагментов прочитана!')
+print('Сгенерированные тексты обведены рамками по координатам из generated_data.json')
+print('Файлы с превью в папке ' + markup_images_folder)

@@ -19,7 +19,8 @@ def convert_svg_to_png(input_path, output_path):
     WIDTH = round(int(content.split('<defs>')[0].split('width="')[1].split('px')[0]) * dim_scale)
     HEIGHT = round(int(content.split('<defs>')[0].split('height="')[1].split('px')[0]) * dim_scale)
     font_name = content.split("@font-face {font-family: ")[1].split(";")[0]
-    font = getRandomFont(font_name)
+    italic = 'italic' if "{font-style: italic;" in content else ''
+    font = getRandomFont(font_name, italic)
 
     soup = BeautifulSoup(content, 'xml')
     font_sizes, font_weights, line_widths = unpackClassesSVG(soup)
