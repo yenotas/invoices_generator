@@ -5,7 +5,7 @@ SVG и PNG именуются по формуле "invoice_" + номер зап
 https://github.com/yenotas/invoices_generator
 """
 
-from config import svg_templates_files_folder, dim_scale
+from config import svg_templates_files_folder, dim_scale, TEST_FONT_NAME
 from modules.svg_text_metrics import unpackClassesSVG, getElementClasses, getTextMetrics, getRandomFont, getTextSize
 
 import os
@@ -25,7 +25,7 @@ def generateSvgTemplates(json_data, base_svg_file):
 
     for invoice in json_data:
 
-        font = getRandomFont('')
+        font = getRandomFont(TEST_FONT_NAME)  # указан в config.py, если пустой '' то шрифт случайный.
 
         invoice['bbox_cx_cy_w_h'] = {}  # раздел метрик вставляемых текстовых надписей
 
@@ -180,8 +180,8 @@ def generateSvgTemplates(json_data, base_svg_file):
                            .replace('Arial.ttf', font[0]+'.ttf'))
         is_italic = ''
         if 'italic' in font[1]:
-            correct_svg_str = correct_svg_str.replace('{font-weight:', '{font-style: italic; font-weight:')
-            is_italic = ' наклонный'
+            correct_svg_str = correct_svg_str.replace('text {font-family:', 'text {font-style: italic; font-family:')
+            is_italic = 'наклонный'
 
         correct_svg_str = correct_svg_str.replace('fonts/regular/', '../../data/fonts/regular/')
 
@@ -189,7 +189,7 @@ def generateSvgTemplates(json_data, base_svg_file):
 
         # Сохраняю SVG
         file_name = f"invoice_{invoice['number']}.svg"
-        print("Сохраняю", file_name, "шрифт", font[0] + is_italic)
+        print("Сохраняю", file_name, "шрифт", font[0], is_italic)
         full_path_svg = os.path.join(svg_templates_files_folder, file_name)
         with open(full_path_svg, "w", encoding="utf-8") as file:
             file.write(correct_svg_str)

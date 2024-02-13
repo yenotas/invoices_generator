@@ -46,7 +46,7 @@ def getTextSize(text='Iq', font_attr=None, font_size=13, bold=False):
     text_width = text_bbox[2] - text_bbox[0]
     text_height = text_bbox[3] - text_bbox[1]
 
-    return text_width, text_height, font_size - text_bbox[1] - 1, img
+    return text_width, text_height, font_size - text_bbox[1], img
 
 
 # Определение координат размещения текста в растре,
@@ -94,7 +94,9 @@ def getRandomFont(font_name, italic=''):
     if not font_name:
         font_name = random.choice(list(normal_fonts.keys()))
     res = [font_name, normal_fonts[font_name], bold_fonts[font_name]]
-    if italic_fonts.get(font_name, None) and italic_bold_fonts.get(font_name, None) and (italic or random.randint(0, 1) == 0):
+    # Закомментировать блок if если наклонный стиль не нужен
+    if not italic == 'not' and (italic_fonts.get(font_name, None) and italic_bold_fonts.get(font_name, None) and
+                                (italic == 'italic' or random.randint(0, 1) == 0)):
         res = [font_name, italic_fonts[font_name], italic_bold_fonts[font_name]]
     return res
 
@@ -109,12 +111,12 @@ def unpackClassesSVG(base_soup):
                               for value in line.split('{')[1].split(';') if 'font-size' in value), 1200)
             font_sizes[class_name] = round(font_size / 100) * 100
             font_weight = next((value.split(':')[1].strip()
-                             for value in line.split('{')[1].split(';') if 'font-weight' in value), 'regular')
+                                for value in line.split('{')[1].split(';') if 'font-weight' in value), 'regular')
             font_weights[class_name] = True if font_weight == 'bold' else False
         if '.str' in line:
             class_name = line.split('{')[0].strip().replace('.', '')
             line_width = next((value.split(':')[1].strip()
-                             for value in line.split('{')[1].split(';') if 'stroke-width' in value), '100')
+                               for value in line.split('{')[1].split(';') if 'stroke-width' in value), '100')
             line_widths[class_name] = line_width
 
     return font_sizes, font_weights, line_widths

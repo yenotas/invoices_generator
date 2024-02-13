@@ -22,6 +22,11 @@ distortion_scale = 1.0
 # Размер печати в пикселях
 stamp_size = int(150 * dim_scale)
 
+# Шрифт, который будет принудительно использован для всех SVG-генераций в svg_templates_generator
+# Если оставить '' - будут выбраны случайные из папки Fonts.
+# В примерах операция стартует в 02_generation_svg_from_json_example
+TEST_FONT_NAME = ''
+
 # Имена и пути к рабочим файлам
 list_data_files = {
     'addresses.csv': 'https://drive.google.com/uc?export=download&id=14qnEbj33g6XDxotNZBjEwZE49MrhrPBQ',

@@ -40,10 +40,10 @@
         <text x="10162" y="23943" class="fil0 fnt0">_bin_</text>
         <text x="6309" y="25543" class="fil0 fnt0">Банк бенефициара:</text>
         <text x="49117" y="25559" class="fil0 fnt2">БИК</text>
-        <text x="57417" y="25559" class="fil0 fnt2">Код назначения платежа</text>
         <text x="6977" y="27144" class="fil0 fnt0">_bank_</text>
         <text x="50097" y="27160" class="fil0 fnt2 center">_bik_</text>
-        <text x="64619" y="27160" class="fil0 fnt2 center">_knp_</text>
+        <text x="64800" y="25559" class="fil0 fnt2 center">Код назначения платежа</text>
+        <text x="64800" y="27160" class="fil0 fnt2 center">_knp_</text>
         <text x="6301" y="32522" class="fil0 fnt4">_title_</text>
         <text x="6341" y="36475" class="fil0 fnt3">Поставщик:</text>
         <text x="15855" y="36491" class="fil0 fnt1">_seller_</text>
