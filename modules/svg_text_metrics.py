@@ -44,7 +44,7 @@ def getTextSize(text='Iq', font_attr=None, font_size=13, bold=False):
     img = drawText(img)
 
     text_width = text_bbox[2] - text_bbox[0]
-    text_height = text_bbox[3] - text_bbox[1] + 1
+    text_height = text_bbox[3] - text_bbox[1]
 
     return text_width, text_height, font_size - text_bbox[1] - 1, img
 
@@ -76,7 +76,6 @@ def getTextMetrics(text_elem, font, font_sizes, font_weights, save=save_text_fra
     cy = round(y + th / 2)
 
     if save == 1:
-        # print(text, 'x,y:', (x, y), 'w, h:', tw, th)
         filename = os.path.join(text_fragments_folder, f'text_{getTextMetrics.i}.png')
         img.save(filename)
 

@@ -340,30 +340,6 @@ def textDoubleSpacesClean(text):
     return text
 
 
-# Разбивка одной строки на неколько с переносом по словам
-def strLineSplitter(text, num_symbols, num_lines):
-    text = textDoubleSpacesClean(text[:num_symbols * num_lines].strip().replace('\n', ' '))
-    text_len = len(text)
-    if text_len < num_symbols + 2:
-        return text
-
-    new_text = [text[i * num_symbols: (i + 1) * num_symbols] for i in range(0, num_lines)]
-    line_list, prev_last = [], ''
-
-    num_lines = min(num_lines, ceil(text_len / num_symbols))  # наименьшее необходимое число строк
-
-    i = 0
-    for i in range(0, num_lines):
-        pos = new_text[i].rfind(" ")
-        line_list.append(prev_last + new_text[i][:pos])
-        prev_last = new_text[i][pos + 1:]
-
-    if len(prev_last + line_list[i]) < num_symbols + 3:
-        line_list[i] = line_list[i] + ' ' + prev_last
-
-    return '\n'.join(line_list)
-
-
 # Генерация полного адреса: индекс и телефон указываются не всегда, пытаемся уложиться в 2 строки
 def genFullAddress(data):
     companies, addresses = data['companies.csv'], data['addresses.csv']
@@ -497,3 +473,72 @@ def loadDataFromFile(fn, url=''):
     delimiter = '\t' if fn[-3:] == 'tsv' else ','
     with open(os.path.join(data_files_folder, fn), 'r', encoding='utf-8') as file:
         return [row for row in csv.reader(file, delimiter=delimiter)]
+
+
+# Разбивка одной строки на несколько с переносом по словам
+def strLineSplitter(text, num_symbols, num_lines):
+    """
+    Делит строку на num_lines строк, каждая из которых содержит не более num_symbols символов.
+    Если текст не умещается, он обрезается по последнему пробелу.
+
+    :param text: Исходный текст для разделения.
+    :param num_symbols: Максимальное количество символов в строке.
+    :param num_lines: Желаемое количество строк.
+    :return: Текст, разделенный на строки с учетом заданных ограничений.
+    """
+    # Разделяем текст на слова
+    words = text.split()
+
+    # Подготавливаем переменные для результата и текущей строки
+    result = []
+    current_line = ""
+
+    for word in words:
+        # Проверяем, не превышает ли добавление слова максимальную длину строки
+        if len(current_line + word) <= num_symbols:
+            # Если не превышает, добавляем слово в текущую строку
+            current_line += (word + " ")
+        else:
+            # Если превышает, сохраняем текущую строку и начинаем новую
+            result.append(current_line.strip())
+            current_line = word + " "
+            # Проверяем, достигнуто ли максимальное количество строк
+            if len(result) == num_lines:
+                break  # Останавливаем добавление строк
+
+    # Добавляем оставшуюся часть, если не достигнуто максимальное количество строк
+    if len(result) < num_lines:
+        result.append(current_line.strip())
+
+    # Обрезаем текст до нужного количества строк
+    result = result[:num_lines]
+
+    # Возвращаем строки, объединенные переносами
+    return "\n".join(result)
+
+
+def strLineSplitter_(text, num_symbols, num_lines):
+    """Что не так с алгоритмом - делает осечки, посмотреть.."""
+    text = textDoubleSpacesClean(text[:num_symbols * num_lines].strip().replace('\n', ' '))
+    text_len = len(text)
+    print(text, text_len)
+    if text_len < num_symbols + 2:
+        return text
+
+    new_text = [text[i * num_symbols: (i + 1) * num_symbols] for i in range(0, num_lines)]
+    print(new_text)
+    line_list, prev_last = [], ''
+
+    num_lines = min(num_lines, ceil(text_len / num_symbols))  # наименьшее необходимое число строк
+    print(num_lines)
+
+    i = 0
+    for i in range(0, num_lines):
+        pos = new_text[i].rfind(" ")
+        line_list.append(prev_last + new_text[i][:pos])
+        prev_last = new_text[i][pos + 1:]
+
+    if len(prev_last + line_list[i]) < num_symbols + 3:
+        line_list[i] = line_list[i] + ' ' + prev_last
+
+    return '\n'.join(line_list)

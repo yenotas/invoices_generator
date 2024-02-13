@@ -16,7 +16,7 @@ for svg_file in svg_files:
     output_path = os.path.join(generated_images_files_folder, svg_file.replace('.svg', '.png'))
     convert_svg_to_png(input_path, output_path)
 
-    print('convert', svg_file, 'is complete')
+    print('Сохраняю', svg_file.replace('.svg', '.png'))
 
 print()
 print('Конвертация SVG-шаблонов в PNG произведена')

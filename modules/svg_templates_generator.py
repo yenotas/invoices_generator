@@ -99,6 +99,7 @@ def generateSvgTemplates(json_data, base_svg_file):
 
                     # записываю координаты и размер надписи
                     metrics = getTextMetrics(new_elem, font, font_sizes, font_weights)[0]
+                    # print(line, metrics)
 
                     # с учетом сдвига от всей таблицы
                     if key in post_lines_keys:
@@ -142,9 +143,6 @@ def generateSvgTemplates(json_data, base_svg_file):
                     template.insert_after(new_elem)
 
                     metrics = getTextMetrics(new_elem, font, font_sizes, font_weights)
-                    # text_bottom = metrics[1][1] + metrics[1][3]
-                    # if y+font_size >= table_line_y + items_line_height:
-                    #     text_offset = y+font_size - table_line_y - items_line_height + 200
 
                     invoice['bbox_cx_cy_w_h']['itemsList'][n][key][i] = ', '.join(map(lambda x: str(x), metrics[0]))
 

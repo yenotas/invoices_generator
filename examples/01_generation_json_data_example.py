@@ -25,5 +25,5 @@ with open(json_file_path, "w", encoding="utf-8") as json_file:
     json.dump(dataset, json_file, indent=2, ensure_ascii=False)
 
 print()
-print('Данные JSON созданы')
+print(f'Данные JSON созданы для {FILES_NUMBER} счетов. Поменять количество FILES_NUMBER можно в config.py')
 print('Файл', json_file_path, 'сохранен в корневой папке')
