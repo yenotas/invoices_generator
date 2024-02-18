@@ -11,21 +11,25 @@ from PIL import Image as PilImage, ImageFont, ImageDraw
 import os
 import random
 
+text_dir = {'right': 1.0,  # коэффициент для вычисления координаты Х левого верхнего угла надписи
+            'center': 0.5}  # в зависимости от выравнивания текста
+
 
 def drawText(img):
     # Преобразование изображения в массив NumPy
     np_img = np.array(img)
     # Определение границ текста на холсте
-    rows = np.any(np_img < 255, axis=1)
-    cols = np.any(np_img < 255, axis=0)
+    rows = np.any(np_img < 235, axis=1)
+    cols = np.any(np_img < 235, axis=0)
     min_row, max_row = np.where(rows)[0][[0, -1]]
     min_col, max_col = np.where(cols)[0][[0, -1]]
     # Обрезка холста по границам текста
     trimmed_img = np_img[min_row:max_row + 1, min_col:max_col + 1]
+    h, w = trimmed_img.shape
     # Преобразование обрезанного изображения в целочисленный тип, затем в PIL Image
     trimmed_img = trimmed_img.astype(np.uint8)
     img = PilImage.fromarray(trimmed_img, mode='L')
-    return img
+    return w, h, img
 
 
 # Вычисление размеров текстовой надписи и отступа по У от базовой линии в растре
@@ -37,41 +41,31 @@ def getTextSize(text='Iq', font_attr=None, font_size=13, bold=False):
 
     font = ImageFont.truetype(font_path, size=font_size)
     img = PilImage.new('L', font.getbbox(text)[2:4], color=255)
+
+    # Рисуем текст на изображении
     imgDraw = ImageDraw.Draw(img)
     imgDraw.text((0, 0), text, fill=0, font=font)
-    text_bbox = imgDraw.textbbox((0, 0), text, font=font)
 
-    img = drawText(img)
+    # Обрезаем
+    w, h, img = drawText(img)
 
-    text_width = text_bbox[2] - text_bbox[0]
-    text_height = text_bbox[3] - text_bbox[1]
+    # Получаем координату базовой линии в текст-боксе
+    offset = imgDraw.textbbox((0, 0), text, font=font)[1]
 
-    return text_width, text_height, font_size - text_bbox[1], img
+    return w, h, offset, img
 
 
 # Определение координат размещения текста в растре,
 # обрезка и сохранение фрагментов при включенном save_text_fragments
-def getTextMetrics(text_elem, font, font_sizes, font_weights, save=save_text_fragments):
+def getTextMetrics(text_elem, font, font_size, bold, align, save=save_text_fragments):
 
     getTextMetrics.i = 0 if not hasattr(getTextMetrics, 'i') else getTextMetrics.i + 1  # iterator
 
-    text_dir = {'right': -1.0,  # коэффициент для вычисления центра надписи
-                'center': -0.5}  # в зависимости от выравнивания текста
-    align = 0  # Коэффициент для левого выравнивания текста
-    font_class = 'fnt5'
-    classes = text_elem.get('class', '').split(' ')
-    if len(classes) > 1:
-        font_class = classes[1]
-        if len(classes) > 2:
-            align = text_dir[classes[2]]
-
-    font_size = round(font_sizes[font_class] / 100 * dim_scale)
-    bold = font_weights[font_class]
     text = text_elem.string.strip()
 
     w, h, shift, img = getTextSize(text, font, font_size, bold)
-    x = round(float(text_elem['x']) / 100 * dim_scale + align * w)
-    y = round(float(text_elem['y']) / 100 * dim_scale - shift)
+    x = round(float(text_elem['x']) / 100 * dim_scale - align * w)
+    y = round(float(text_elem['y']) / 100 * dim_scale - font_size + shift)
 
     if save == 1:
         filename = os.path.join(text_fragments_folder, f'text_{getTextMetrics.i}.png')
@@ -86,6 +80,19 @@ def getElementClasses(elem):
         return classes
     else:
         return []
+
+
+def getElementParams(classes, font_sizes, font_weights):
+    align = 0  # Коэффициент для левого выравнивания текста
+    font_size = 13
+    bold = False
+    if len(classes) > 1:
+        font_class = classes[1]
+        if len(classes) > 2:
+            align = text_dir[classes[2]]
+        font_size = round(font_sizes[font_class] / 100 * dim_scale)
+        bold = font_weights[font_class]
+    return font_size, bold, align
 
 
 def getRandomFont(font_name, italic=''):

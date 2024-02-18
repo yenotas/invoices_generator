@@ -8,7 +8,7 @@ from config import dim_scale
 from bs4 import BeautifulSoup
 from PIL import Image, ImageDraw
 
-from modules.svg_text_metrics import unpackClassesSVG, getElementClasses, getTextMetrics, getRandomFont
+from modules.svg_text_metrics import unpackClassesSVG, getElementClasses, getTextMetrics, getRandomFont, getElementParams
 
 
 def convert_svg_to_png(input_path, output_path):
@@ -34,7 +34,10 @@ def convert_svg_to_png(input_path, output_path):
         if group['id'] == 'bottom':
             y_offset = round(int(group['transform'].split(')')[0].split(' ')[-1]) * dim_scale / 100)
         for text_elem in group.find_all('text'):
-            metrics = getTextMetrics(text_elem, font, font_sizes, font_weights)
+            classes = getElementClasses(text_elem)
+            font_size, bold, align = getElementParams(classes, font_sizes, font_weights)
+            # записываю координаты и размер надписи
+            metrics = getTextMetrics(text_elem, font, font_size, bold, align)
             x, y, w, h = metrics[0]
             text_image = metrics[1]
             if group['id'] == 'bottom':

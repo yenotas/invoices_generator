@@ -21,7 +21,7 @@ def drawRectangles(canvas, rects):
         canvas.rectangle(rect, outline=randomColor())
 
 
-def readJSON(json_str):
+def readStrToList(json_str):
     values = json_str.split(',')
     x1, y1, w, h = [round(float(value.strip())) for value in values]
     x2, y2 = x1 + w, y1 + h
@@ -46,12 +46,12 @@ def drawBBoxes(data):
         for category, items in invoice['bbox_x_y_w_h'].items():
             if category != "itemsList":  # Обрабатываем все категории, кроме 'itemsList'
                 for _, bbox_str in items.items():
-                    bboxes.append(readJSON(bbox_str))
+                    bboxes.append(readStrToList(bbox_str))
             else:  # Обрабатываем 'itemsList'
                 for _, item in items.items():
                     for _, sub_items in item.items():
                         for _, bbox_str in sub_items.items():
-                            bboxes.append(readJSON(bbox_str))
+                            bboxes.append(readStrToList(bbox_str))
 
         # Сохранение и/или открытие изображения с bbox-ми
         with Image.open(image_path) as img:

@@ -6,7 +6,7 @@ https://github.com/yenotas/invoices_generator
 """
 
 from config import svg_templates_files_folder, dim_scale, TEST_FONT_NAME
-from modules.svg_text_metrics import unpackClassesSVG, getElementClasses, getTextMetrics, getRandomFont, getTextSize
+from modules.svg_text_metrics import unpackClassesSVG, getElementClasses, getElementParams, getTextMetrics, getRandomFont, getTextSize
 
 import os
 from bs4 import BeautifulSoup
@@ -96,9 +96,10 @@ def generateSvgTemplates(json_data, base_svg_file):
                     if key == 'items':
                         new_elem['x'] = str(int(items_summ_x))
                     text_elem.insert_after(new_elem)
-
+                    classes = getElementClasses(new_elem)
+                    font_size, bold, align = getElementParams(classes, font_sizes, font_weights)
                     # записываю координаты и размер надписи
-                    metrics = getTextMetrics(new_elem, font, font_sizes, font_weights)[0]
+                    metrics = getTextMetrics(new_elem, font, font_size, bold, align)[0]
 
                     # с учетом сдвига от всей таблицы
                     if key in post_lines_keys:
@@ -140,8 +141,9 @@ def generateSvgTemplates(json_data, base_svg_file):
                     new_elem['y'] = str(y)
                     new_elem['x'] = str(round(float(template['x'])))
                     template.insert_after(new_elem)
-
-                    metrics = getTextMetrics(new_elem, font, font_sizes, font_weights)[0]
+                    classes = getElementClasses(new_elem)
+                    font_size, bold, align = getElementParams(classes, font_sizes, font_weights)
+                    metrics = getTextMetrics(new_elem, font, font_size, bold, align)[0]
 
                     invoice['bbox_x_y_w_h']['itemsList'][n][key][i] = ','.join(map(lambda x: str(x), metrics))
 
