@@ -27,7 +27,7 @@ def generateSvgTemplates(json_data, base_svg_file):
 
         font = getRandomFont(TEST_FONT_NAME)  # указан в config.py, если пустой '' то шрифт случайный.
 
-        invoice['bbox_cx_cy_w_h'] = {}  # раздел метрик вставляемых текстовых надписей
+        invoice['bbox_x_y_w_h'] = {}  # раздел метрик вставляемых текстовых надписей
 
         base_keys = [key for key in invoice if key != 'itemsList']  # подстановки вокруг таблицы
         items = [item for item in invoice['itemsList']]  # подстановки в таблице товаров и услуг
@@ -76,7 +76,7 @@ def generateSvgTemplates(json_data, base_svg_file):
             text_elem = soup.find('text', string=lambda text: f'_{key}_' in text)
             if text_elem:
 
-                invoice['bbox_cx_cy_w_h'][key] = {}
+                invoice['bbox_x_y_w_h'][key] = {}
 
                 elem_y1 = float(text_elem['y']) if 'y' in text_elem.attrs else 0
 
@@ -99,13 +99,12 @@ def generateSvgTemplates(json_data, base_svg_file):
 
                     # записываю координаты и размер надписи
                     metrics = getTextMetrics(new_elem, font, font_sizes, font_weights)[0]
-                    # print(line, metrics)
 
                     # с учетом сдвига от всей таблицы
                     if key in post_lines_keys:
                         metrics[1] += int(shift_y * dim_scale)
 
-                    invoice['bbox_cx_cy_w_h'][key][i] = ', '.join(map(lambda x: str(x), metrics))
+                    invoice['bbox_x_y_w_h'][key][i] = ', '.join(map(lambda x: str(x), metrics))
 
                 original_text_elem.decompose()
 
@@ -115,7 +114,7 @@ def generateSvgTemplates(json_data, base_svg_file):
         items_line_height = int(bottom_line - top_line)
         border_y = int(top_line)
 
-        invoice['bbox_cx_cy_w_h']['itemsList'] = {}
+        invoice['bbox_x_y_w_h']['itemsList'] = {}
 
         # Сохраняю шаблоны элементов
         templates = {key: soup.find('text', string=lambda text: f'_{key}_' in text)
@@ -125,14 +124,14 @@ def generateSvgTemplates(json_data, base_svg_file):
 
         for n, item in enumerate(items):
             max_text_lines = len(item['name'].split('\n'))
-            invoice['bbox_cx_cy_w_h']['itemsList'][n] = {}
+            invoice['bbox_x_y_w_h']['itemsList'][n] = {}
 
             for key, template in templates.items():
                 if template is None:
                     continue
 
                 text_lines = str(item[key]).split('\n')
-                invoice['bbox_cx_cy_w_h']['itemsList'][n][key] = {}
+                invoice['bbox_x_y_w_h']['itemsList'][n][key] = {}
 
                 for i, line in enumerate(text_lines):
                     new_elem = soup.new_tag('text', **{attr: template[attr] for attr in template.attrs})
@@ -142,9 +141,9 @@ def generateSvgTemplates(json_data, base_svg_file):
                     new_elem['x'] = str(round(float(template['x'])))
                     template.insert_after(new_elem)
 
-                    metrics = getTextMetrics(new_elem, font, font_sizes, font_weights)
+                    metrics = getTextMetrics(new_elem, font, font_sizes, font_weights)[0]
 
-                    invoice['bbox_cx_cy_w_h']['itemsList'][n][key][i] = ', '.join(map(lambda x: str(x), metrics[0]))
+                    invoice['bbox_x_y_w_h']['itemsList'][n][key][i] = ','.join(map(lambda x: str(x), metrics))
 
             # Обновление позиции курсора по Y после добавления строки
             shift_line = round(items_line_height * max_text_lines)

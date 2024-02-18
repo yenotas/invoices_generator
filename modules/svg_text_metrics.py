@@ -55,9 +55,9 @@ def getTextMetrics(text_elem, font, font_sizes, font_weights, save=save_text_fra
 
     getTextMetrics.i = 0 if not hasattr(getTextMetrics, 'i') else getTextMetrics.i + 1  # iterator
 
-    text_dir = {'right': -1,  # коэффициент для вычисления центра надписи
-                'center': 0}  # в зависимости от выравнивания текста
-    align = 1  # Коэффициент для левого выравнивания текста
+    text_dir = {'right': -1.0,  # коэффициент для вычисления центра надписи
+                'center': -0.5}  # в зависимости от выравнивания текста
+    align = 0  # Коэффициент для левого выравнивания текста
     font_class = 'fnt5'
     classes = text_elem.get('class', '').split(' ')
     if len(classes) > 1:
@@ -69,17 +69,15 @@ def getTextMetrics(text_elem, font, font_sizes, font_weights, save=save_text_fra
     bold = font_weights[font_class]
     text = text_elem.string.strip()
 
-    tw, th, shift, img = getTextSize(text, font, font_size, bold)
-    x = round(float(text_elem['x']) / 100 * dim_scale)
-    cx = round(x + align * tw / 2)
+    w, h, shift, img = getTextSize(text, font, font_size, bold)
+    x = round(float(text_elem['x']) / 100 * dim_scale + align * w)
     y = round(float(text_elem['y']) / 100 * dim_scale - shift)
-    cy = round(y + th / 2)
 
     if save == 1:
         filename = os.path.join(text_fragments_folder, f'text_{getTextMetrics.i}.png')
         img.save(filename)
 
-    return [[cx, cy, tw, th], [x, y, tw, th], img, font_size, bold, align]
+    return [[x, y, w, h], img, font_size, bold, align]
 
 
 def getElementClasses(elem):

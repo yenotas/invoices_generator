@@ -15,7 +15,7 @@ for filename, url in list_data_files.items():
     # data[filename] = load_data_from_file(filename, url)
 
 
-n = 4 # количество товаров в счете
+n = 4  # количество товаров в счете
 product_names, units, prices, vals, summ, amount = genProductsList(json_data, n)
 title = getRandomInvoiceName()
 contract = getRandomContractName()

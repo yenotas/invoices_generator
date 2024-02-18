@@ -23,14 +23,13 @@ def drawRectangles(canvas, rects):
 
 def readJSON(json_str):
     values = json_str.split(',')
-    cx, cy, w, h = [round(float(value.strip())) for value in values]
-    x1, y1 = cx - round(w / 2), cy - round(h / 2)
-    x2, y2 = cx + round(w / 2), cy + round(h / 2)
+    x1, y1, w, h = [round(float(value.strip())) for value in values]
+    x2, y2 = x1 + w, y1 + h
     return [x1, y1, x2, y2]
 
 
-def drawBBoxes(json_data):
-    for invoice in json_data:
+def drawBBoxes(data):
+    for invoice in data:
 
         file_name = f"invoice_{invoice['number']}.png"
         image_path = os.path.join(generated_images_files_folder, file_name)
@@ -44,14 +43,14 @@ def drawBBoxes(json_data):
         bboxes = []
 
         # Распаковка JSON
-        for category, items in invoice['bbox_cx_cy_w_h'].items():
+        for category, items in invoice['bbox_x_y_w_h'].items():
             if category != "itemsList":  # Обрабатываем все категории, кроме 'itemsList'
                 for _, bbox_str in items.items():
                     bboxes.append(readJSON(bbox_str))
             else:  # Обрабатываем 'itemsList'
                 for _, item in items.items():
-                    for _, subitems in item.items():
-                        for _, bbox_str in subitems.items():
+                    for _, sub_items in item.items():
+                        for _, bbox_str in sub_items.items():
                             bboxes.append(readJSON(bbox_str))
 
         # Сохранение и/или открытие изображения с bbox-ми

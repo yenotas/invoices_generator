@@ -34,16 +34,11 @@ def convert_svg_to_png(input_path, output_path):
         if group['id'] == 'bottom':
             y_offset = round(int(group['transform'].split(')')[0].split(' ')[-1]) * dim_scale / 100)
         for text_elem in group.find_all('text'):
-            metrics = getTextMetrics(text_elem, font, font_sizes, font_weights, 1)
-            x, y, tw, th = metrics[1]
-            text_image = metrics[2]
-            class_names = getElementClasses(text_elem)
+            metrics = getTextMetrics(text_elem, font, font_sizes, font_weights)
+            x, y, w, h = metrics[0]
+            text_image = metrics[1]
             if group['id'] == 'bottom':
                 y += y_offset
-            if 'center' in class_names:
-                x -= round(tw/2)
-            if 'right' in class_names:
-                x -= tw
             image.paste(text_image, (x, y))
 
         # Обработка линий
