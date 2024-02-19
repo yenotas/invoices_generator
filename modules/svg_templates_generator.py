@@ -59,15 +59,12 @@ def generateSvgTemplates(json_data, base_svg_file):
         post_lines_keys = ["amount", "nds", "items", "total"]  # подстановки нижней части счета после таблицы
 
         # Отодвинуть надпись с суммой от холдера 'Всего наименований' если холдер заходит на надпись при таком шрифте
-        summ_text = soup.find('text', string=lambda text: f'_items_' in text)
-        items_summ_x = float(summ_text['x'])
         pre_summ_text = 'Всего наименований'
         pre_summ_text_el = soup.find('text', string=lambda text: pre_summ_text in text)
         pre_summ_text_x = float(pre_summ_text_el['x'])
-        pre_summ_text_w = getTextSize(pre_summ_text, font, font_sizes['fnt3'])[0]
-        offset_x = pre_summ_text_x + pre_summ_text_w
-        if offset_x > items_summ_x:
-            items_summ_x = offset_x + 1000
+        font_class = getElementClasses(pre_summ_text_el)
+        pre_summ_text_w = getTextSize(pre_summ_text, font, font_sizes[font_class[1]])[0]
+        items_summ_x = pre_summ_text_x + pre_summ_text_w + 1000 * dim_scale
 
         # Проход и подстановка текста вокруг таблицы
 
@@ -112,7 +109,7 @@ def generateSvgTemplates(json_data, base_svg_file):
         # Проход и подстановка текста внутри таблицы
         top_line = float(horizontal_lines[1]['y1'])
         bottom_line = float(horizontal_lines[2]['y1'])
-        items_line_height = int(bottom_line - top_line)
+        items_line_height = (bottom_line - top_line)*100//100
         border_y = int(top_line)
 
         invoice['bbox_x_y_w_h']['itemsList'] = {}
@@ -121,7 +118,14 @@ def generateSvgTemplates(json_data, base_svg_file):
         templates = {key: soup.find('text', string=lambda text: f'_{key}_' in text)
                      for key in ['num', 'name', 'val', 'unit', 'price', 'sum']}
 
-        table_line_y = float(templates['num']['y'])
+        num_elem = templates['num']
+        # Реальная высота для выравнивания текста по средней линии строки
+        classes = getElementClasses(num_elem)
+        font_size, _, _ = getElementParams(classes, font_sizes, font_weights)
+        h = getTextSize('0', font, font_size)[1] * 100 / dim_scale
+
+        # Начало первой строки таблицы
+        table_line_y = int(bottom_line - (items_line_height - h)/2)
 
         for n, item in enumerate(items):
             max_text_lines = len(item['name'].split('\n'))
@@ -137,7 +141,7 @@ def generateSvgTemplates(json_data, base_svg_file):
                 for i, line in enumerate(text_lines):
                     new_elem = soup.new_tag('text', **{attr: template[attr] for attr in template.attrs})
                     new_elem.string = line
-                    y = round(table_line_y + i * table_line_height)
+                    y = round(table_line_y + i * items_line_height)
                     new_elem['y'] = str(y)
                     new_elem['x'] = str(round(float(template['x'])))
                     template.insert_after(new_elem)

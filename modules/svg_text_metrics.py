@@ -50,9 +50,9 @@ def getTextSize(text='Iq', font_attr=None, font_size=13, bold=False):
     w, h, img = drawText(img)
 
     # Получаем координату базовой линии в текст-боксе
-    offset = imgDraw.textbbox((0, 0), text, font=font)[1]
+    base_line = imgDraw.textbbox((0, 0), text, font=font)[1]
 
-    return w, h, offset, img
+    return w, h, base_line, img
 
 
 # Определение координат размещения текста в растре,
