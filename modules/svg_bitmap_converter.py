@@ -37,7 +37,7 @@ def convert_svg_to_png(input_path, output_path):
             classes = getElementClasses(text_elem)
             font_size, bold, align = getElementParams(classes, font_sizes, font_weights)
             # записываю координаты и размер надписи
-            metrics = getTextMetrics(text_elem, font, font_size, bold, align)
+            metrics = getTextMetrics(text_elem, font, font_size * dim_scale, bold, align)
             x, y, w, h = metrics[0]
             text_image = metrics[1]
             if group['id'] == 'bottom':

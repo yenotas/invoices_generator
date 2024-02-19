@@ -6,21 +6,23 @@ https://github.com/yenotas/invoices_generator
 """
 
 from config import svg_templates_files_folder, dim_scale, TEST_FONT_NAME
-from modules.svg_text_metrics import unpackClassesSVG, getElementClasses, getElementParams, getTextMetrics, getRandomFont, getTextSize
+from modules.svg_text_metrics import (unpackClassesSVG, getElementClasses, getElementParams, getTextMetrics,
+                                      getRandomFont, getTextSize)
 
 import os
 from bs4 import BeautifulSoup
 
 
-# Создание SVG-файлов из JSON-данных по шаблону эталонного SVG-файла
-def generateSvgTemplates(json_data, base_svg_file):
+def readSoupFromSVG(svg_file):
+    with open(svg_file, 'r', encoding='utf-8') as svg:
+        return BeautifulSoup(svg, 'xml')
 
-    with open(base_svg_file, 'r', encoding='utf-8') as svg_file:
-        base_soup = BeautifulSoup(svg_file, 'xml')
+
+# Создание SVG-файлов из JSON-данных по шаблону эталонного SVG-файла
+def generateSvgTemplates(json_data, base_soup):
 
     # Разбор стилей
     font_sizes, font_weights, _ = unpackClassesSVG(base_soup)
-
     soup_string = str(base_soup)  # клон чистого svg
 
     for invoice in json_data:
@@ -32,7 +34,7 @@ def generateSvgTemplates(json_data, base_svg_file):
         base_keys = [key for key in invoice if key != 'itemsList']  # подстановки вокруг таблицы
         items = [item for item in invoice['itemsList']]  # подстановки в таблице товаров и услуг
 
-        soup = BeautifulSoup(soup_string, 'xml')  # новый рабочий суп
+        soup = BeautifulSoup(soup_string, 'xml')  # новый рабочий суп для текущего документа
 
         # Находим группы и линии
         table_group = soup.select("g[id='table']")[0]
@@ -58,19 +60,24 @@ def generateSvgTemplates(json_data, base_svg_file):
 
         post_lines_keys = ["amount", "nds", "items", "total"]  # подстановки нижней части счета после таблицы
 
-        # Отодвинуть надпись с суммой от холдера 'Всего наименований' если холдер заходит на надпись при таком шрифте
-        pre_summ_text = 'Всего наименований'
-        pre_summ_text_el = soup.find('text', string=lambda text: pre_summ_text in text)
-        pre_summ_text_x = float(pre_summ_text_el['x'])
-        font_class = getElementClasses(pre_summ_text_el)
-        pre_summ_text_w = getTextSize(pre_summ_text, font, font_sizes[font_class[1]])[0]
-        items_summ_x = pre_summ_text_x + pre_summ_text_w + 1000 * dim_scale
+        # Для svg, где ключи в отдельных тегах, а не включены в текст
+        # отодвинуть надписи с суммой, что бы холдер не заходил на надпись при таком шрифте
+        pre_summ_text = {'items': 'Всего наименований', 'total': 'Всего к оплате:'}
+        x_shift = {}
+        for key in pre_summ_text:
+            el = soup.find('text', string=lambda text: pre_summ_text[key] in text)
+            x = float(el['x'])
+            classes = getElementClasses(el)
+            font_size, bold, _ = getElementParams(classes, font_sizes, font_weights)
+            w = getTextSize(pre_summ_text[key], font, font_size, bold)[0]
+            x_shift[key] = x + w * 100 + 1000
 
         # Проход и подстановка текста вокруг таблицы
 
         for key in base_keys:
 
             text_elem = soup.find('text', string=lambda text: f'_{key}_' in text)
+
             if text_elem:
 
                 invoice['bbox_x_y_w_h'][key] = {}
@@ -88,28 +95,31 @@ def generateSvgTemplates(json_data, base_svg_file):
                 for i, line in enumerate(text_lines):
                     new_elem = soup.new_tag('text', **{attr: text_elem[attr] for attr in text_elem.attrs})
                     new_elem.string = line
-                    new_elem['y'] = str(round(elem_y1 + i * line_height))
+                    # для svg, где ключи не выделены в отдельные теги, а включены в текст как <text>текст _key_</text>
+                    # new_elem.string = line if i > 0 else text_elem.string.replace(f'_{key}_', line)
+                    # для svg, где ключи в отдельных тегах:
+                    if key in x_shift:
+                        text_elem['x'] = str(x_shift[key])
                     new_elem['x'] = str(round(float(text_elem['x'])))
-                    if key == 'items':
-                        new_elem['x'] = str(int(items_summ_x))
+                    new_elem['y'] = str(round(elem_y1 + i * line_height))
                     text_elem.insert_after(new_elem)
                     classes = getElementClasses(new_elem)
                     font_size, bold, align = getElementParams(classes, font_sizes, font_weights)
                     # записываю координаты и размер надписи
-                    metrics = getTextMetrics(new_elem, font, font_size, bold, align)[0]
+                    metrics = getTextMetrics(new_elem, font, font_size * dim_scale, bold, align)[0]
 
                     # с учетом сдвига от всей таблицы
                     if key in post_lines_keys:
                         metrics[1] += int(shift_y * dim_scale)
 
-                    invoice['bbox_x_y_w_h'][key][i] = ', '.join(map(lambda x: str(x), metrics))
+                    invoice['bbox_x_y_w_h'][key][i] = ', '.join(map(lambda e: str(e), metrics))
 
                 original_text_elem.decompose()
 
         # Проход и подстановка текста внутри таблицы
         top_line = float(horizontal_lines[1]['y1'])
         bottom_line = float(horizontal_lines[2]['y1'])
-        items_line_height = (bottom_line - top_line)*100//100
+        items_line_height = bottom_line - top_line
         border_y = int(top_line)
 
         invoice['bbox_x_y_w_h']['itemsList'] = {}
@@ -122,10 +132,11 @@ def generateSvgTemplates(json_data, base_svg_file):
         # Реальная высота для выравнивания текста по средней линии строки
         classes = getElementClasses(num_elem)
         font_size, _, _ = getElementParams(classes, font_sizes, font_weights)
-        h = getTextSize('0', font, font_size)[1] * 100 / dim_scale
+        font_size *= 100
+        h, _, shift, _ = getTextSize('Йp', font, font_size)
 
         # Начало первой строки таблицы
-        table_line_y = int(bottom_line - (items_line_height - h)/2)
+        table_line_y = bottom_line - shift - 140*dim_scale
 
         for n, item in enumerate(items):
             max_text_lines = len(item['name'].split('\n'))
@@ -147,7 +158,7 @@ def generateSvgTemplates(json_data, base_svg_file):
                     template.insert_after(new_elem)
                     classes = getElementClasses(new_elem)
                     font_size, bold, align = getElementParams(classes, font_sizes, font_weights)
-                    metrics = getTextMetrics(new_elem, font, font_size, bold, align)[0]
+                    metrics = getTextMetrics(new_elem, font, font_size * dim_scale, bold, align)[0]
 
                     invoice['bbox_x_y_w_h']['itemsList'][n][key][i] = ','.join(map(lambda x: str(x), metrics))
 

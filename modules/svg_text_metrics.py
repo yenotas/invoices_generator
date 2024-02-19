@@ -90,7 +90,7 @@ def getElementParams(classes, font_sizes, font_weights):
         font_class = classes[1]
         if len(classes) > 2:
             align = text_dir[classes[2]]
-        font_size = round(font_sizes[font_class] / 100 * dim_scale)
+        font_size = round(font_sizes[font_class] / 100)
         bold = font_weights[font_class]
     return font_size, bold, align
 
