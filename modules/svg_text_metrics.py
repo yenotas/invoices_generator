@@ -35,7 +35,7 @@ def drawText(img):
 # Вычисление размеров текстовой надписи и отступа по У от базовой линии в растре
 def getTextSize(text='Iq', font_attr=None, font_size=13, bold=False):
 
-    font_name, normal_font, bold_font = getRandomFont('') if not font_attr else font_attr[0], font_attr[1], font_attr[2]
+    font_name, normal_font, bold_font = getRandomFont('') if font_attr is None else (font_attr[0], font_attr[1], font_attr[2])
 
     font_path = bold_font if bold else normal_font
 
@@ -51,6 +51,7 @@ def getTextSize(text='Iq', font_attr=None, font_size=13, bold=False):
 
     # Получаем координату базовой линии в текст-боксе
     base_line = imgDraw.textbbox((0, 0), text, font=font)[1]
+    print(imgDraw.textbbox((0, 0), text, font=font))
 
     return w, h, base_line, img
 
@@ -125,4 +126,3 @@ def unpackClassesSVG(base_soup):
             line_widths[class_name] = line_width
 
     return font_sizes, font_weights, line_widths
-
