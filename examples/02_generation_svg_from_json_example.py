@@ -16,7 +16,7 @@ with open(json_file_path, 'r', encoding='utf-8') as json_file:
 
 base_soup = readSoupFromSVG(svg_file_path)
 
-new_data = generateSvgTemplates(json_data, base_soup)
+new_data, _ = generateSvgTemplates(json_data, base_soup)
 
 # Сохраняю дополненный координатами json
 with open(json_file_path, 'w', encoding='utf-8') as json_file:

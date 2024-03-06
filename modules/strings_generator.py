@@ -305,7 +305,7 @@ def replaceQuotes(text):
     if text[-1] in ".!;:?'`\"«":
         text = text[:-1]
     if text.count('«') > text.count('»'):
-        text = text + '»'*(text.count('«') - text.count('»'))
+        text = text + '»' * (text.count('«') - text.count('»'))
 
     text = strip(text.replace('« ', ' «').replace(' »', '» '))
 
@@ -329,7 +329,7 @@ def getRandomOffice():
 
 
 def strip(text):
-    text = text.strip()+'\n' if text[-1] == '\n' else text.strip()
+    text = text.strip() + '\n' if text[-1] == '\n' else text.strip()
     return textDoubleSpacesClean(text)
 
 
@@ -375,7 +375,7 @@ def genProductsList(data, n=3):
 
     for i in range(0, n):
         rnd = random.choice(products)
-        while len(rnd) < 3:  # проверяю что ряд содержал 3 значения, а не 2 или 1
+        while len(rnd) != 3:  # проверяю что ряд содержал 3 значения, а не 2 или 1
             rnd = random.choice(products)
         name, unit, price = rnd
         price_val = float(price) + random.uniform(0.00, 0.99)
@@ -454,6 +454,119 @@ def genInvoiceJson(data, number=0, product_lines=1):
         fields["itemsList"].append(item)
 
     return fields
+
+
+def getOneInvoiceJson(data, fn=0):
+    def genProductsListOnes(products):
+        n = len(products)
+        if n == 0: return
+
+        product_names, units, prices, vals, summ = [], [], [], [], []
+        amount = 0.00
+
+        i = 0
+        while i < n:
+            rnd = products[i]
+            while len(rnd) != 3:  # проверяю что ряд содержал 3 значения, а не 2 или 1
+                rnd = products[i]
+                i += 1
+            name, unit, price = rnd
+            price_val = float(price) + random.uniform(0.00, 0.99)
+            product_names.append(strLineSplitter(randomReplaceQuotes(normalCase(name)), 44, 3))
+            units.append(unit)
+            prices.append("{:.2f}".format(price_val))
+            if price_val < 100:
+                val = random.randint(1, 100) * 10
+            elif price_val < 1000:
+                val = random.randint(1, 300)
+            elif price_val < 10000:
+                val = random.randint(1, 50)
+            else:
+                val = random.randint(1, 10)
+            vals.append(f"{val}")
+            sum_val = val * price_val
+            summ.append("{:.2f}".format(sum_val))
+            amount += sum_val
+            i += 1
+
+        return product_names, units, prices, vals, summ, round(amount, 2)
+
+    def getOneFullAddress(data):
+        street = data['addresses.csv']
+        city, company_name = data['companies.csv']
+        company_name = randomReplaceQuotes(normalCase(company_name))
+        post_index = getRandomPostIndex() + ' '
+        tel = random.choice([', тел:', ', тел:', ', т:', ', телефон:', ', т/ф:', ''])
+        tel = '' if tel == '' else f"{tel}{getRandomTelephone()}"
+        full_address = f"БИН / ИНН {getRandomBin()} {company_name} "
+        address = f"Республика Казахстан, {city}, {street}{random.choice([', д.', ' д.', ' д.№', ' вл.', ' дом №', ' дом '])}"
+        address += f"{random.randint(1, 300)}{getRandomOffice()}"
+
+        if len(full_address + post_index + address) < 156:
+            full_address += post_index + address
+        else:
+            full_address += address
+
+        if len(full_address + tel) < 156:
+            full_address += tel
+
+        return full_address, company_name
+
+    customer_addr, customer_name = getOneFullAddress({'addresses.csv': data['addresses.csv'][0],
+                                                      'companies.csv': data['companies.csv'][0]})
+    seller_addr, seller_name = getOneFullAddress({'addresses.csv': data['addresses.csv'][1],
+                                                  'companies.csv': data['companies.csv'][1]})
+    customer = strLineSplitter(customer_addr, 74, 2)
+    seller = strLineSplitter(seller_addr, 74, 2)
+    seller_name = strLineSplitter(seller_name, 48, 2)
+    binn = getRandomBin()
+    bank = randomReplaceQuotes(data['banks.csv'][0])
+    iik = getRandomIik()
+    kbe = getRandomKbe()
+    knp = getRandomKnp()
+    bik = getRandomBik()
+    title = getRandomInvoiceName()
+    contract = getRandomContractName()
+    product_names, units, prices, vals, summ, amount = genProductsListOnes(data['products.csv'])
+    product_lines = len(product_names)
+    total = "{:.2f}".format(round(amount, 2))
+    nds = "{:.2f}".format(round(amount * 12 / 112, 2))
+    items = f'{product_lines}, на сумму {total} KZT'
+    total_text = get_string_by_number(amount, currency_main, currency_additional)
+
+    fields = {
+        "number": f"{fn}",
+        "sellerName": seller_name,
+        "customerName": customer_name,
+        "bin": binn,
+        "bank": bank,
+        "iik": iik,
+        "bik": bik,
+        "kbe": kbe,
+        "knp": knp,
+        "title": title,
+        "seller": seller,
+        "customer": customer,
+        "contract": contract,
+        "itemsList": [],
+        "amount": total,
+        "nds": nds,
+        "items": items,
+        "total": total_text
+    }
+
+    for i in range(product_lines):
+        item = {
+            "num": str(i + 1),  # Номер продукта
+            "name": product_names[i],
+            "val": vals[i],
+            "unit": units[i],
+            "price": prices[i],
+            "sum": summ[i]
+        }
+        fields["itemsList"].append(item)
+
+    return [fields]
 
 
 def downloadFile(fn, url):

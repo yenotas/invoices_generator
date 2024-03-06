@@ -14,9 +14,11 @@ svg_files = [f for f in os.listdir(svg_templates_files_folder) if f.endswith('.s
 for svg_file in svg_files:
     input_path = os.path.join(svg_templates_files_folder, svg_file)
     output_path = os.path.join(generated_images_files_folder, svg_file.replace('.svg', '.png'))
-    convert_svg_to_png(input_path, output_path)
+    with open(input_path, 'r', encoding='utf-8') as svg:
+        content = svg.read()
+    convert_svg_to_png(content, output_path)
 
-    print('Сохраняю', svg_file.replace('.svg', '.png'))
+    print('Сохраняю', input_path.replace('.svg', '.png'))
 
 print()
 print('Конвертация SVG-шаблонов в PNG произведена')

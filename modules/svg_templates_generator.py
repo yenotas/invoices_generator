@@ -20,7 +20,7 @@ def readSoupFromSVG(svg_file):
 
 # Создание SVG-файлов из JSON-данных по шаблону эталонного SVG-файла
 def generateSvgTemplates(json_data, base_soup):
-
+    last_soup = ''
     # Разбор стилей
     font_sizes, font_weights, _ = unpackClassesSVG(base_soup)
     soup_string = str(base_soup)  # клон чистого svg
@@ -29,10 +29,10 @@ def generateSvgTemplates(json_data, base_soup):
 
         font = getRandomFont(TEST_FONT_NAME)  # указан в config.py, если пустой '' то шрифт случайный.
 
-        invoice['bbox_x_y_w_h'] = {}  # раздел метрик вставляемых текстовых надписей
+        invoice["bbox_x_y_w_h"] = {}  # раздел метрик вставляемых текстовых надписей
 
-        base_keys = [key for key in invoice if key != 'itemsList']  # подстановки вокруг таблицы
-        items = [item for item in invoice['itemsList']]  # подстановки в таблице товаров и услуг
+        base_keys = [key for key in invoice if key != "itemsList"]  # подстановки вокруг таблицы
+        items = [item for item in invoice["itemsList"]]  # подстановки в таблице товаров и услуг
 
         soup = BeautifulSoup(soup_string, 'xml')  # новый рабочий суп для текущего документа
 
@@ -80,7 +80,7 @@ def generateSvgTemplates(json_data, base_soup):
 
             if text_elem:
 
-                invoice['bbox_x_y_w_h'][key] = {}
+                invoice["bbox_x_y_w_h"][key] = {}
 
                 elem_y1 = float(text_elem['y']) if 'y' in text_elem.attrs else 0
 
@@ -95,6 +95,7 @@ def generateSvgTemplates(json_data, base_soup):
                 for i, line in enumerate(text_lines):
                     new_elem = soup.new_tag('text', **{attr: text_elem[attr] for attr in text_elem.attrs})
                     new_elem.string = line
+                    if line == '': continue
                     # для svg, где ключи не выделены в отдельные теги, а включены в текст как <text>текст _key_</text>
                     # new_elem.string = line if i > 0 else text_elem.string.replace(f'_{key}_', line)
                     # для svg, где ключи в отдельных тегах:
@@ -106,13 +107,14 @@ def generateSvgTemplates(json_data, base_soup):
                     classes = getElementClasses(new_elem)
                     font_size, bold, align = getElementParams(classes, font_sizes, font_weights)
                     # записываю координаты и размер надписи
+                    
                     metrics = getTextMetrics(new_elem, font, font_size * dim_scale, bold, align)[0]
 
                     # с учетом сдвига от всей таблицы
                     if key in post_lines_keys:
                         metrics[1] += int(shift_y * dim_scale)
 
-                    invoice['bbox_x_y_w_h'][key][i] = ', '.join(map(lambda e: str(e), metrics))
+                    invoice["bbox_x_y_w_h"][key][i] = ', '.join(map(lambda e: str(e), metrics))
 
                 original_text_elem.decompose()
 
@@ -122,7 +124,7 @@ def generateSvgTemplates(json_data, base_soup):
         items_line_height = bottom_line - top_line
         border_y = int(top_line)
 
-        invoice['bbox_x_y_w_h']['itemsList'] = {}
+        invoice["bbox_x_y_w_h"]["itemsList"] = {}
 
         # Сохраняю шаблоны элементов
         templates = {key: soup.find('text', string=lambda text: f'_{key}_' in text)
@@ -140,14 +142,14 @@ def generateSvgTemplates(json_data, base_soup):
 
         for n, item in enumerate(items):
             max_text_lines = len(item['name'].split('\n'))
-            invoice['bbox_x_y_w_h']['itemsList'][n] = {}
+            invoice["bbox_x_y_w_h"]["itemsList"][n] = {}
 
             for key, template in templates.items():
                 if template is None:
                     continue
 
                 text_lines = str(item[key]).split('\n')
-                invoice['bbox_x_y_w_h']['itemsList'][n][key] = {}
+                invoice["bbox_x_y_w_h"]["itemsList"][n][key] = {}
 
                 for i, line in enumerate(text_lines):
                     new_elem = soup.new_tag('text', **{attr: template[attr] for attr in template.attrs})
@@ -160,7 +162,7 @@ def generateSvgTemplates(json_data, base_soup):
                     font_size, bold, align = getElementParams(classes, font_sizes, font_weights)
                     metrics = getTextMetrics(new_elem, font, font_size * dim_scale, bold, align)[0]
 
-                    invoice['bbox_x_y_w_h']['itemsList'][n][key][i] = ','.join(map(lambda x: str(x), metrics))
+                    invoice["bbox_x_y_w_h"]["itemsList"][n][key][i] = ','.join(map(lambda x: str(x), metrics))
 
             # Обновление позиции курсора по Y после добавления строки
             shift_line = round(items_line_height * max_text_lines)
@@ -199,7 +201,7 @@ def generateSvgTemplates(json_data, base_soup):
             correct_svg_str = correct_svg_str.replace('text {font-family:', 'text {font-style: italic; font-family:')
             is_italic = 'наклонный'
 
-        correct_svg_str = correct_svg_str.replace('fonts/regular/', '../../data/fonts/regular/')
+        last_soup = correct_svg_str = correct_svg_str.replace('fonts/regular/', '../../data/fonts/regular/')
 
         invoice['magnet_stamp_y'] = str(int((magnet_stamp_y + shift_y) * dim_scale))  # уровень по y для штампа
 
@@ -207,8 +209,9 @@ def generateSvgTemplates(json_data, base_soup):
         file_name = f"invoice_{invoice['number']}.svg"
         print("Сохраняю", file_name, "шрифт", font[0], is_italic)
         full_path_svg = os.path.join(svg_templates_files_folder, file_name)
+
         with open(full_path_svg, "w", encoding="utf-8") as file:
             file.write(correct_svg_str)
 
-    return json_data
+    return json_data, last_soup
 

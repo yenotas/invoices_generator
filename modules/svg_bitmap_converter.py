@@ -11,10 +11,7 @@ from PIL import Image, ImageDraw
 from modules.svg_text_metrics import unpackClassesSVG, getElementClasses, getTextMetrics, getRandomFont, getElementParams
 
 
-def convert_svg_to_png(input_path, output_path):
-
-    with open(input_path, 'r', encoding='utf-8') as svg_file:
-        content = svg_file.read()
+def convert_svg_to_png(content, output_path):
 
     WIDTH = round(int(content.split('<defs>')[0].split('width="')[1].split('px')[0]) * dim_scale)
     HEIGHT = round(int(content.split('<defs>')[0].split('height="')[1].split('px')[0]) * dim_scale)

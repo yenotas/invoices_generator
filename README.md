@@ -40,6 +40,7 @@ https://github.com/yenotas/invoices_generator/
 #### В "config.py":
 - можно указать количество генерируемых файлов,
 - качество и масштабирование изображений, 
+- режим сложности искажений
 - скорректировать размер печати, 
 - изменить валюту счета, 
 - включить сохранение фрагментов вставок в папку generated_files/text_fragments (save_text_fragments = 1), 
@@ -49,7 +50,8 @@ https://github.com/yenotas/invoices_generator/
 #### В папке "examples": 
 - скрипты, поочередно запуская которые (по номерам),
 можно создать "generated_data.json" и заполнить все папки генерациями - от шаблонов SVG 
-до изображений JPEG с искажениями и добавленными круглыми печатями.
+до изображений JPEG с искажениями и добавления круглых печатей.
+- скрипт-конвейер поштучного создания сразу изображения счета(-ов) с выбранными искажениями
 Папка "generated_files" и соответствующие поддиректории, с генерируемыми файлами, 
 создаются скриптами.
  
@@ -92,8 +94,9 @@ generated_files/markup_images
 + !python 01_generation_json_data_example.py      # сгенерировать данные для счетов
 + !python 02_generation_svg_from_json_example.py  # создать шаблоны SVG
 + !python 03_conversion_svg2png_example.py        # конвертировать SVG в PNG
-+ !python 04_generation_stamps_example.py         # сгенерировать печати
-+ !python 05_distortions_and_stamping_example.py  # создать искажения и наложить печати
++ !python 04_distortions_example.py               # создать искажения
++ !python 05_generation_stamps_example.py         # сгенерировать печати
++ !python 05_stamping_example.py                  # наложить печати
 + %cd /content/invoices_generator/tools/
 + !python bbox_viewer.py                          # Посмотреть разметку bbox-ов
 

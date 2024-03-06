@@ -4,7 +4,14 @@ path.append('/content/invoices_generator')
 from modules.fs_utils import checkFolderExists
 
 # Количество генерируемых счетов
-FILES_NUMBER = 5
+FILES_NUMBER = 20
+
+# Режим искажений:
+# 0 - без искажений чистый документ в PNG
+# 1 - со случайным поворотом
+# 2 - проворот или перспектива и шум
+# 3 - проворот или перспектива, шум, случайные блики и пятна
+MODE = 1
 
 # сохранение растровых фрагментов текстовых вставок в папку generated_files/text_fragments и вывод метрик на консоль
 # 0 или 1
@@ -20,7 +27,7 @@ dim_scale = DPI / 96
 distortion_scale = 1.0
 
 # Размер печати в пикселях
-stamp_size = int(150 * dim_scale)
+stamp_size = int(150 * dim_scale * distortion_scale)
 
 # Имя шрифта (например 'Arial'), из папки 'data\fonts\', который будет принудительно использован
 # для всех SVG-генераций в svg_templates_generator

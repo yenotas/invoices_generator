@@ -3,6 +3,7 @@ import sys
 sys.path.append('/content/invoices_generator')
 
 import json
+import os
 
 from config import stamps_files_folder, json_file_path
 from modules.stamps_generator import generateStamp
@@ -17,8 +18,10 @@ for i in range(0, len(json_data)):
     pos = line[55:100].find(' ')
     text_inner_circle = line[55+pos:pos+105] + ' * '
     text_center = json_data[i]['sellerName'][:6]+'\n'+json_data[i]['sellerName'][6:12]
-    generateStamp(stamps_files_folder, 'stamp_' + str(i + 1) + '.png', text_outer_circle, text_inner_circle, text_center)
+    img = generateStamp(text_outer_circle, text_inner_circle, text_center)
+    print('Печать для счета ', i+1)
+    img.save(os.path.join(stamps_files_folder, 'stamp_' + str(i + 1) + '.png'))
 
 print()
-print('Создание круглых печатей из JSON произведена')
+print('Создание круглых печатей из JSON произведено')
 print(f'Файлы PNG сохранены в папке "{stamps_files_folder}"')

@@ -1,5 +1,5 @@
 """
-Генератор случайных искажений документов в PNG, имитирующих сканы документов разного качества.
+Генератор круглых печатей с синтетическими данными.
 Автор: Коваленко А.В. 12.2023
 https://github.com/yenotas/invoices_generator
 """
@@ -7,6 +7,8 @@ https://github.com/yenotas/invoices_generator
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import math
 import random
+import numpy as np
+import cv2
 from config import normal_fonts, stamp_size
 import os
 
@@ -42,13 +44,13 @@ def drawCenterText(draw, text, center, font, color):
 
 def generateRandomColor():
     # Генерируем случайные значения для RGB
-    r = random.randint(50, 200)
-    g = random.randint(50, 200)
-    b = random.randint(g+20, 255)  # Высокий синий всегда больше зеленого
+    r = random.randint(0, 50)
+    g = random.randint(0, 100)
+    b = random.randint(g+100, 255)  # Высокий синий всегда больше зеленого
     return f'#{r:02x}{g:02x}{b:02x}'
 
 
-def generateStamp(folder, filename, text_outer_circle, text_inner_circle, text_center):
+def generateStamp(text_outer_circle, text_inner_circle, text_center):
     # Параметры изображения и текста
 
     center = (int(stamp_size / 2), int(stamp_size / 2))
@@ -96,5 +98,4 @@ def generateStamp(folder, filename, text_outer_circle, text_inner_circle, text_c
     # Масштабируем изображение вниз
     final_image = rotated_image.resize((stamp_size, stamp_size), Image.LANCZOS)
 
-    # Сохраняем
-    final_image.save(os.path.join(folder, filename))
+    return final_image

@@ -5,14 +5,93 @@ https://github.com/yenotas/invoices_generator
 """
 import random
 from PIL import Image, ImageDraw, ImageFilter
+from config import distortion_scale
 import numpy as np
 import cv2
+import os
 
 
 def cvView(np_img):
     cv2.imshow('Image', np_img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+
+
+# Миксер эффектов
+def random_geometrical_effects(image):
+    effect = random.choice([randomPerspectiveChange, randomRotateImage, notDistortions])
+    print('эффект:', str(effect.__name__))
+    return effect(image)
+
+
+# Наложение штампа на исходный документ
+def mergeStampToImage(background_cv2, overlay_cv2, position):
+    # Переводим изображения в формат float для корректной обработки
+    background = cv2.cvtColor(background_cv2, cv2.COLOR_BGR2RGB).astype(np.float32) / 255
+    overlay = overlay_cv2.astype(np.float32) / 255
+
+    # Размеры штампа
+    oh, ow = overlay.shape[:2]
+
+    # Регион на фоне, где будет штамп
+    x, y = position
+    bg_region = background[y:y + oh, x:x + ow]
+
+    # Альфа-канал для наложения
+    alpha_overlay = overlay[:, :, 3]
+
+    # Пиксели фона, которые будут изменены (осветлены)
+    mask_dark = (bg_region < 0.5).all(axis=2)  # Маска для темных пикселей фона
+
+    # Перекрытие штампа с учетом альфа-канала и осветления темных точек
+    for c in range(3):  # RGB каналы
+        bg_c = bg_region[:, :, c]
+        ol_c = overlay[:, :, c]
+
+        # Осветление темных пикселей фона
+        lightened_bg = bg_c + (ol_c * alpha_overlay * 0.1)
+
+        # Пиксели штампа непосредственно
+        stamp_pixels = ol_c * alpha_overlay + bg_c * (1 - alpha_overlay)
+
+        # Объединяем осветленный фон и пиксели штампа
+        bg_region[:, :, c] = np.where(mask_dark, lightened_bg, stamp_pixels)
+
+    # Записываем измененный регион обратно в исходное изображение
+    background[y:y + oh, x:x + ow] = bg_region
+
+    # Преобразуем обратно в формат, подходящий для отображения с помощью OpenCV
+    result = (background * 255).astype(np.uint8)
+    result = cv2.cvtColor(result, cv2.COLOR_RGB2BGR)
+
+    # Преобразуем результат обратно в формат cv2 для вывода или сохранения
+    result_image = Image.fromarray(np.uint8(result), mode='RGB')
+
+    return result_image
+
+
+# Чтение изображений из папки
+def load_numpy_images_from_folder(folder, mode='L'):
+    """
+    :param folder:
+    :param mode: 'L' = grey, 'C' = color, 'A'|any = without mode | with alfa-channel
+    :return: img_arr array
+    """
+    img_arr = []
+    for filename in os.listdir(folder):
+        img_path = os.path.join(folder, filename)
+        try:
+            if mode == 'L':
+                img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
+            elif mode == 'C':
+                img = cv2.imread(img_path, cv2.IMREAD_COLOR)
+            else:
+                img = cv2.imread(img_path, cv2.IMREAD_UNCHANGED)
+            img = cvResize(img, distortion_scale) if distortion_scale != 1.0 else img
+            img_arr.append((img, filename))
+        except IOError:
+            print(f"Не удалось загрузить изображение: {filename}")
+    return img_arr
 
 
 def cvResize(np_img, k):
@@ -76,7 +155,7 @@ def createAbstractSpot(width, height):
 
     spot = spot_img.filter(ImageFilter.GaussianBlur(random.randint(50, 200)))
 
-    # Рассчёт случайного смещения
+    # Расчёт случайного смещения
     shift_x = random.randint(-width // 2, width // 2)
     shift_y = random.randint(-height // 2, height // 2)
 
@@ -124,27 +203,47 @@ def randomPerspectiveChange(np_img):
 
     matrix2D = cv2.getPerspectiveTransform(corners, new_corners)
     np_img = cv2.warpPerspective(np_img, matrix2D, (width, height))
-    info = 'perspective'
-    return np_img, new_corners.astype(int), info
+    return np_img, new_corners.astype(int), 'perspective'
 
 
 def randomRotateImage(np_img):
     height, width = np_img.shape[:2]
     angle = round(random.uniform(0.1, 5.0), 2)
     angle *= random.choice([-1, 1])
-    matrix2D = cv2.getRotationMatrix2D((width / 2, height / 2), angle, 1)
-    np_img = cv2.warpAffine(np_img, matrix2D, (width, height))
 
-    # Расчёт новых координат углов
+    # Центр поворота изображения
+    center = (width / 2, height / 2)
+
+    # Расчет матрицы поворота без масштабирования
+    matrix2D = cv2.getRotationMatrix2D(center, angle, 1.0)
+
+    # Расчет координат углов после поворота
     corners = np.array([
         [0, 0],
-        [width, 0],
-        [0, height],
-        [width, height]
-    ])
-    new_corners = np.float32(np.dot(matrix2D[:, :2], corners.T).T + matrix2D[:, 2])
-    info = 'rotate'
-    return np_img, new_corners.astype(int), info
+        [width - 1, 0],
+        [0, height - 1],
+        [width - 1, height - 1]
+    ], dtype="float32")
+
+    new_corners = np.dot(matrix2D[:, :2], corners.T).T + matrix2D[:, 2]
+
+    # Вычисление размера ограничивающего прямоугольника новых углов и масштаба
+    x_coords, y_coords = new_corners[:, 0], new_corners[:, 1]
+    new_width = np.max(x_coords) - np.min(x_coords)
+    new_height = np.max(y_coords) - np.min(y_coords)
+
+    scale_w = width / new_width
+    scale_h = height / new_height
+    scale = min(scale_w, scale_h, 1)  # Масштаб не должен быть больше 1
+
+    # Расчет матрицы поворота с учетом масштаба
+    matrix2D = cv2.getRotationMatrix2D(center, angle, scale)
+    np_img = cv2.warpAffine(np_img, matrix2D, (width, height))
+
+    # Вычисление новых координат углов с учетом масштаба
+    new_corners_scaled = np.dot(matrix2D[:, :2], corners.T).T + matrix2D[:, 2]
+
+    return np_img, new_corners_scaled.astype(int), 'rotate'
 
 
 # Заглушка - никаких преобразований
