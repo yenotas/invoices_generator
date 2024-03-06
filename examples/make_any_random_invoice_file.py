@@ -1,8 +1,11 @@
 # Пример генерации данных и создание счетов
 import sys
 
+import numpy as np
+
 from modules.distortions_generator import randomRotateImage, createNoise, random_geometrical_effects, createLightSpot, \
-    createGreySpot
+    createGreySpot, mergeStampToImage
+from modules.stamps_generator import generateStamp
 
 sys.path.append('/content/invoices_generator')
 import time
@@ -12,7 +15,8 @@ import os
 import csv
 import random
 import cv2
-from config import list_data_files, data_files_folder, generated_images_files_folder, distorted_images_files_folder
+from config import list_data_files, data_files_folder, generated_images_files_folder, distorted_images_files_folder, \
+    dim_scale, stamped_images_files_folder
 from modules.strings_generator import getOneInvoiceJson
 from config import svg_file_path, base_folders
 from modules.svg_templates_generator import readSoupFromSVG, generateSvgTemplates
@@ -22,7 +26,8 @@ recreateFolder(base_folders)
 
 # НАСТРОЙКИ ГЕНЕРАЦИИ:
 file_number = 10
-MODE = 0
+MODE = 2
+STAMP = 1
 
 raw_data = {}
 lines, max_lines = {}, {}
@@ -52,8 +57,6 @@ for fn in range(file_number):
     distortion = ''
     new_corners = []
 
-    save_path = os.path.join(distorted_images_files_folder, f'_invoice_{fn}.png')
-
     if MODE == 1:
         # только поворот
         np_img, new_corners, distortion = randomRotateImage(np_img)
@@ -70,7 +73,24 @@ for fn in range(file_number):
         np_img = createNoise(np_img)
         np_img, new_corners, distortion = random_geometrical_effects(np_img)
 
-    cv2.imwrite(save_path, np_img)
+    if STAMP == 1:
+        # + печать
+        line = new_data[0]['seller'].replace('\n', ' ')
+        text_outer_circle = line[:55] + ' * '
+        pos = line[55:100].find(' ')
+        text_inner_circle = line[55 + pos:pos + 105] + ' * '
+        text_center = new_data[0]['sellerName'][:6] + '\n' + new_data[0]['sellerName'][6:12]
+        stamp_image = generateStamp(text_outer_circle, text_inner_circle, text_center)
+        y_offset = int(new_data[0]['magnet_stamp_y']) - int(dim_scale * 100)
+        x_offset = int(np_img.shape[1] // 2 - int(dim_scale * 200) + random.randint(0, 200))
+        image_np = np.array(stamp_image)
+        image_bgr = cv2.cvtColor(image_np, cv2.COLOR_RGBA2BGRA)
+        img = mergeStampToImage(np_img, image_bgr, (x_offset, y_offset))
+        save_path = os.path.join(stamped_images_files_folder, f'_invoice_{fn}.png')
+        img.save(save_path, format='PNG')
+    else:
+        save_path = os.path.join(distorted_images_files_folder,  f'_invoice_{fn}.png')
+        cv2.imwrite(save_path, np_img)
 
 
 end_time = time.time()

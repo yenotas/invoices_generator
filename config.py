@@ -4,14 +4,14 @@ path.append('/content/invoices_generator')
 from modules.fs_utils import checkFolderExists
 
 # Количество генерируемых счетов
-FILES_NUMBER = 20
+FILES_NUMBER = 10
 
 # Режим искажений:
 # 0 - без искажений чистый документ в PNG
 # 1 - со случайным поворотом
 # 2 - проворот или перспектива и шум
 # 3 - проворот или перспектива, шум, случайные блики и пятна
-MODE = 1
+MODE = 3
 
 # сохранение растровых фрагментов текстовых вставок в папку generated_files/text_fragments и вывод метрик на консоль
 # 0 или 1
