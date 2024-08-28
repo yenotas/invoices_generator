@@ -78,7 +78,7 @@ def load_numpy_images_from_folder(folder, mode='L'):
     :return: img_arr array
     """
     img_arr = []
-    for filename in os.listdir(folder):
+    for filename in sorted(os.listdir(folder)):
         img_path = os.path.join(folder, filename)
         try:
             if mode == 'L':
